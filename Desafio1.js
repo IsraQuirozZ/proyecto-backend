@@ -19,6 +19,7 @@ class ProductManager {
   }
 
   getProducts() {
+    console.log("- Get products:");
     console.log(this.products);
     return this.products;
   }
@@ -28,8 +29,10 @@ class ProductManager {
       (product) => product.id === productId
     );
     if (productFound) {
+      console.log("- Get Product by Id: ");
       console.log(productFound);
     } else {
+      console.log("- Get Product by Id: ");
       console.log(`Product with Id: ${productId} not found.`);
     }
     return productFound;
@@ -40,6 +43,7 @@ class ProductManager {
     let codes = [];
     // Validar que todos los campos sean obligatorios
     if (!title || !description || !price || !thumbnail || !code || !stock) {
+      console.log("- Add Product:");
       console.log("error: all fields are required");
     } else {
       // Id autoincrementable
@@ -57,9 +61,11 @@ class ProductManager {
         let dataJson = JSON.stringify(this.products, null, 2);
         fs.promises
           .writeFile(this.path, dataJson)
+          .then((res) => console.log("- Add Product:"))
           .then((res) => console.log(`Product #${product.id} added`))
           .catch((err) => console.log(err));
       } else {
+        console.log("- Add Product:");
         console.log(
           `We can't add this product because it has a repeated code: ${product.code}`
         );
@@ -70,12 +76,14 @@ class ProductManager {
   updateProduct(productId, data) {
     let productFound = this.getProductById(productId);
     if (!productFound) {
+      console.log("- Update Product:");
       console.log("error: not found user to update");
       return "error: not found user to update";
     }
 
     // Verificar si la data no está vacía
     if (Object.keys(data).length === 0 || typeof data !== "object") {
+      console.log("- Update Product:");
       console.log("error: data is required");
       return "error: data is required";
     }
@@ -91,9 +99,11 @@ class ProductManager {
           prop === "stock"
         ) {
         } else if (prop === "code" || prop === "id") {
+          console.log("- Update Product:");
           console.log(`error: you can't modify the ${prop} of a product`);
           return `error: you can't modify the ${prop} of a product`;
         } else {
+          console.log("- Update Product:");
           console.log(`error: "${prop}" is not a property of product`);
           return `error: "${prop}" is not a property of product`;
         }
@@ -104,7 +114,9 @@ class ProductManager {
     let dataJson = JSON.stringify(this.products, null, 2);
     fs.promises
       .writeFile(this.path, dataJson)
+      .then((res) => console.log("- Update Product:"))
       .then((res) => console.log(`Updated product: ${productFound.id}`))
+      .then((res) => console.log(productFound))
       .catch((err) => console.log(err));
   }
 
@@ -134,7 +146,7 @@ class ProductManager {
 let product = new ProductManager();
 // Se creará el archivo JSON con un array vacío
 
-product.getProducts(); // Array vacío
+// product.getProducts(); // Array vacío
 
 product.addProduct({
   title: "Producto prueba",
@@ -144,6 +156,7 @@ product.addProduct({
   code: "abc123",
   stock: 25,
 });
+
 product.addProduct({
   title: "Producto prueba",
   description: "Este es un producto prueba",
@@ -156,4 +169,4 @@ product.addProduct({
 product.getProductById(1); // Objeto anterior
 product.getProductById(3); // Error (no existe el producto con id 3)
 // product.updateProduct(1, { title: "Producto actualizado" }); // Actualizará el producto con id 1
-product.deleteProduct(1); // Se eliminará el producto y el archivo JSON quedará vacío
+// product.deleteProduct(2); // Se eliminará el producto y el archivo JSON quedará vacío
