@@ -1,10 +1,10 @@
 const fs = require("fs");
 
 class ProductManager {
-  constructor() {
+  constructor(path) {
     this.products = [];
-    this.path = "./data/products.json";
-    this.init(this.path);
+    this.path = path; // Ruta que pasamos por parámetro de la clase
+    this.init(path); // Para iniciar instancia
   }
 
   init(path) {
@@ -154,7 +154,7 @@ class ProductManager {
 }
 
 async function manager() {
-  let product = new ProductManager();
+  let product = new ProductManager("./data/products.json");
 
   await product.getProducts();
 
@@ -186,9 +186,9 @@ async function manager() {
   });
 
   await product.getProductById(1); // Objeto anterior
-  await product.getProductById(3); // Error (no existe el producto con id 3)
-  await product.updateProduct(3, { title: "Producto 3 actualizado" }); // Actualizará el producto con id 1
-  await product.deleteProduct(3); // Se eliminará el producto y el archivo JSON quedará vacío
+  await product.getProductById(4); // Error (no existe el producto con id 4)
+  await product.updateProduct(3, { title: "Producto 3 actualizado" }); // Actualizará el producto con id 3
+  await product.deleteProduct(3); // Se eliminará el producto y el archivo JSON quedará con producto 1 y 2
 }
 
 manager();
