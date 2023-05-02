@@ -1,4 +1,5 @@
-const fs = require("fs");
+// const fs = require("fs");
+import fs from "fs";
 
 class ProductManager {
   constructor(path) {
@@ -19,8 +20,8 @@ class ProductManager {
   }
 
   getProducts() {
-    console.log("- Get products:");
-    console.log(this.products);
+    // console.log("- Get products:");
+    // console.log(this.products);
     return this.products;
   }
 
@@ -28,13 +29,13 @@ class ProductManager {
     let productFound = this.products.find(
       (product) => product.id === productId
     );
-    if (productFound) {
-      console.log(`- Get Product by Id (${productFound.id}): `);
-      console.log(productFound);
-    } else {
-      console.log(`- Get Product by Id (${productId}): `);
-      console.log(`Product with Id: ${productId} not found.`);
-    }
+    // if (productFound) {
+    //   console.log(`- Get Product by Id (${productFound.id}): `);
+    //   console.log(productFound);
+    // } else {
+    //   console.log(`- Get Product by Id (${productId}): `);
+    //   console.log(`Product with Id: ${productId} not found.`);
+    // }
     return productFound;
   }
 
@@ -153,9 +154,7 @@ class ProductManager {
   }
 }
 
-async function manager() {
-  let product = new ProductManager("./data/products.json");
-
+async function management() {
   await product.getProducts();
 
   await product.addProduct({
@@ -191,4 +190,6 @@ async function manager() {
   await product.deleteProduct(3); // Se eliminará el producto y el archivo JSON quedará con producto 1 y 2
 }
 
-manager();
+// manager();
+let manager = new ProductManager("./data/products.json");
+export default manager;

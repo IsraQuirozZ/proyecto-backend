@@ -5,8 +5,8 @@
   "main": "product-class.js",
   "type": "module",
   "scripts": {
-    "start": "node ./server.js",
-    "dev": "nodemon ./server.js"
+    "start": "node ./src/app.js",
+    "dev": "nodemon ./src/app.js"
   },
   "repository": {
     "type": "git",
