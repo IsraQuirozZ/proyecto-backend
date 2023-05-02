@@ -154,10 +154,12 @@ class ProductManager {
   }
 }
 
+// Esto para ejecutarlo llamando a managment,actualmente ya no se utilizará
 async function management() {
-  await product.getProducts();
+  let productManager = new ProductManager("../data/products.json");
+  await productManager.getProducts();
 
-  await product.addProduct({
+  await productManager.addProduct({
     title: "Producto 1",
     description: "Este es un producto prueba",
     price: 200,
@@ -166,7 +168,7 @@ async function management() {
     stock: 25,
   });
 
-  await product.addProduct({
+  await productManager.addProduct({
     title: "Producto 2",
     description: "Este es un producto prueba",
     price: 220,
@@ -175,7 +177,7 @@ async function management() {
     stock: 25,
   });
 
-  await product.addProduct({
+  await productManager.addProduct({
     title: "Producto 3",
     description: "Este es un producto prueba",
     price: 230,
@@ -184,12 +186,12 @@ async function management() {
     stock: 25,
   });
 
-  await product.getProductById(1); // Objeto anterior
-  await product.getProductById(4); // Error (no existe el producto con id 4)
-  await product.updateProduct(3, { title: "Producto 3 actualizado" }); // Actualizará el producto con id 3
-  await product.deleteProduct(3); // Se eliminará el producto y el archivo JSON quedará con producto 1 y 2
+  await productManager.getProductById(1); // Objeto anterior
+  await productManager.getProductById(4); // Error (no existe el producto con id 4)
+  await productManager.updateProduct(3, { title: "Producto 3 actualizado" }); // Actualizará el producto con id 3
+  await productManager.deleteProduct(3); // Se eliminará el producto y el archivo JSON quedará con producto 1 y 2
 }
 
 // manager();
-let manager = new ProductManager("./data/products.json");
-export default manager;
+let productManager = new ProductManager("./data/products.json");
+export default productManager;
