@@ -1,4 +1,5 @@
-const fs = require("fs");
+// const fs = require("fs");
+import fs from "fs";
 
 class ProductManager {
   constructor(path) {
@@ -19,8 +20,8 @@ class ProductManager {
   }
 
   getProducts() {
-    console.log("- Get products:");
-    console.log(this.products);
+    // console.log("- Get products:");
+    // console.log(this.products);
     return this.products;
   }
 
@@ -28,13 +29,13 @@ class ProductManager {
     let productFound = this.products.find(
       (product) => product.id === productId
     );
-    if (productFound) {
-      console.log(`- Get Product by Id (${productFound.id}): `);
-      console.log(productFound);
-    } else {
-      console.log(`- Get Product by Id (${productId}): `);
-      console.log(`Product with Id: ${productId} not found.`);
-    }
+    // if (productFound) {
+    //   console.log(`- Get Product by Id (${productFound.id}): `);
+    //   console.log(productFound);
+    // } else {
+    //   console.log(`- Get Product by Id (${productId}): `);
+    //   console.log(`Product with Id: ${productId} not found.`);
+    // }
     return productFound;
   }
 
@@ -153,12 +154,12 @@ class ProductManager {
   }
 }
 
-async function manager() {
-  let product = new ProductManager("./data/products.json");
+// Esto para ejecutarlo llamando a managment,actualmente ya no se utilizará
+async function management() {
+  let productManager = new ProductManager("../data/products.json");
+  await productManager.getProducts();
 
-  await product.getProducts();
-
-  await product.addProduct({
+  await productManager.addProduct({
     title: "Producto 1",
     description: "Este es un producto prueba",
     price: 200,
@@ -167,7 +168,7 @@ async function manager() {
     stock: 25,
   });
 
-  await product.addProduct({
+  await productManager.addProduct({
     title: "Producto 2",
     description: "Este es un producto prueba",
     price: 220,
@@ -176,7 +177,7 @@ async function manager() {
     stock: 25,
   });
 
-  await product.addProduct({
+  await productManager.addProduct({
     title: "Producto 3",
     description: "Este es un producto prueba",
     price: 230,
@@ -185,10 +186,12 @@ async function manager() {
     stock: 25,
   });
 
-  await product.getProductById(1); // Objeto anterior
-  await product.getProductById(4); // Error (no existe el producto con id 4)
-  await product.updateProduct(3, { title: "Producto 3 actualizado" }); // Actualizará el producto con id 3
-  await product.deleteProduct(3); // Se eliminará el producto y el archivo JSON quedará con producto 1 y 2
+  await productManager.getProductById(1); // Objeto anterior
+  await productManager.getProductById(4); // Error (no existe el producto con id 4)
+  await productManager.updateProduct(3, { title: "Producto 3 actualizado" }); // Actualizará el producto con id 3
+  await productManager.deleteProduct(3); // Se eliminará el producto y el archivo JSON quedará con producto 1 y 2
 }
 
-manager();
+// manager();
+let productManager = new ProductManager("./data/products.json");
+export default productManager;

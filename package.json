@@ -1,0 +1,24 @@
+{
+  "name": "proyecto",
+  "version": "1.0.0",
+  "description": "Este es un proyecto para mi curso de Back-End en Coderhouse, en este reposiotrio iré creando un back-end para un E-commerce, a lo largo del curso iremos completando varios desafíos para poco a poco ir armando el back-end de la tienda y se irán mostrando desafiío tras desafío dando una explicación de que se hizo en el.",
+  "main": "product-class.js",
+  "type": "module",
+  "scripts": {
+    "start": "node ./src/app.js",
+    "dev": "nodemon ./src/app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/IsraQuirozZ/proyecto-backend.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/IsraQuirozZ/proyecto-backend/issues"
+  },
+  "homepage": "https://github.com/IsraQuirozZ/proyecto-backend#readme",
+  "dependencies": {
+    "express": "^4.18.2"
+  }
+}
