@@ -1,11 +1,10 @@
-// const fs = require("fs");
 import fs from "fs";
 
 class ProductManager {
   constructor(path) {
     this.products = [];
-    this.path = path; // Ruta que pasamos por parámetro de la clase
-    this.init(path); // Para iniciar instancia
+    this.path = path;
+    this.init(path);
   }
 
   init(path) {
@@ -193,5 +192,5 @@ async function management() {
 }
 
 // manager();
-let productManager = new ProductManager("./data/products.json");
+let productManager = new ProductManager("./src/data/products.json");
 export default productManager;

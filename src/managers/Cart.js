@@ -80,5 +80,5 @@ async function managment() {
 }
 // managment();
 
-let cartManager = new CartManager("./data/carts.json");
+let cartManager = new CartManager("./src/data/carts.json");
 export default cartManager;
