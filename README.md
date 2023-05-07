@@ -2,37 +2,25 @@
 
 ## Descripción Del Proyecto
 
-Este es un proyecto para mi curso de Back-End en Coderhouse, en este reposiotrio iré creando un back-end para un E-commerce, a lo largo del curso iremos completando varios desafíos para poco a poco ir armando el back-end de la tienda y se irán mostrando desafiío tras desafío dando una explicación de que se hizo en el.
+Este es un proyecto para mi curso de Back-End en Coderhouse, en este reposiotrio iré creando un back-end para un E-commerce. A lo largo del curso iremos completando varios desafíos para poco a poco ir armando el back-end de la tienda y se irán mostrando desafío tras desafío dando una explicación de que se hizo en el.
 
 ---
 
-# Desafío 1
+# Desafío 1 - Clases con ECMAScript
 
 ## Consigna
+Defnir una clase "ProductManager" que gestione un conjunto de productos.
 
-Realizar una clase "ProductManager" que gestione un conjunto de productos.
-
-## Aspectos que incluye
-
-1. Se crea desde su constructor con el elemento products, el cual es un arreglo vacío.
+## Cómo usarla:
 
 ```
-const product = new ProductManager()
+let productManager = new ProductManager("../data/products.json")
 ```
 
-2. Cada producto que gestione cuenta con las propiedades:
-
-  - title (nombre del producto)
-  - description (descripción del producto)
-  - price (precio)
-  - thumbnail (ruta de imagen)
-  - code (código identificador)
-  - stock (número de piezas disponibles)
-
-3. Cuenta con el método “addProduct” el cual agrega un producto al arreglo de productos inicial.
-
+## Métodos que incluye:
+1. Add Product
 ```
-product.addProduct({
+productManager.addProduct({
   title: "Producto prueba",
   description: "Este es un producto prueba",
   price: 200,
@@ -42,19 +30,48 @@ product.addProduct({
  })
 ```
 
-   - Se valida que no se repita el campo “code” y que todos los campos sean obligatorios.
-  - Al agregarlo, se crea con un id autoincrementable.
-
-4. Cuenta con el método “getProducts” el cual devuelve el arreglo con todos los productos creados hasta el momento.
-
+2. Get Products
 ```
-product.getProducts()
+productManager.getProducts()
 ```
 
-5. Cuenta con el método “getProductById” el cual busca en el arreglo el producto que coincida con el id proporcionado.
-
+3. Get Product By Id
 ```
-product.getProductById(3)
+productManager.getProductById(id)
 ```
 
-  - En caso de no coincidir ningún id, se muestra en consola un error “Not found”.
+4. Update Product
+```
+productManager.updateProduct(id, data)
+```
+
+5. Delete Product
+```
+productManager.deleteProduct(id)
+```
+---
+
+# Desafío 2 - Manejo de archivos
+
+## Consigna
+Agregar a la clase "ProductManager" una variable ***this.path*** la cual se inicializará desde el constructor y debe recibir la ruta a trabajar desde el momento de generar su instancia.
+```
+let productManager = new ProductManager("../data/products.json")
+```
+
+Los métodos de la clase son capaces de guardar/actualizar/borrar cierta información en el archivo de la ruta dada.
+
+---
+# Desafío 3 - Servidor con express
+
+## Consigna
+Desarrollar un servidor basado en express donde podamos hacer consultas a nuestro archivo de productos.
+
+### Aspectos incluidos
+- Se utiliza la clase ProductManager que actualmente utilizamos con persistencia de archivos. 
+- Desarrollar un servidor express que, en su archivo app.js importe al archivo de ProductManager que actualmente tenemos.
+- El servidor debe contar con los siguientes endpoints:
+  - ruta ‘/products’, la cual lee el archivo de productos y los devuelve dentro de un objeto, cuenta con un query ***limit=number*** el cual sirve para indicar cuantos productos traer.
+  - ruta ‘/products/:pid’, la cual recibe por req.params el pid (product Id), y devuelve sólo el producto solicitado. 
+
+
