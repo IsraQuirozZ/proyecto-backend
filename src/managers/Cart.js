@@ -19,56 +19,62 @@ class CartManager {
   }
 
   getCarts() {
-    console.log("- Get Carts");
-    if (this.carts.length > 0) {
-      console.log(this.carts);
-    } else {
-      console.log("error: Not found");
-    }
     return this.carts;
   }
 
   getCartById(cartId) {
-    console.log("- Get Cart By Id");
-    let cartFound = this.carts.find((cart) => cart.id === cartId);
-    if (cartFound) {
-      console.log(cartFound);
-    } else {
-      console.log(`Product with Id: ${cartId} not found.`);
-    }
-    return cartFound;
+    return this.carts.find((cart) => cart.id === cartId);
   }
 
-  async addCart({ products }) {
+  // Solo tiene que crear un carrito vacío, se modificará más adelante con un método put
+  async addCart() {
     try {
-      console.log("- Add cart:");
-      if (!products || typeof products !== "object") {
-        console.log("error: Chack the data...");
-        return "error: Chack the data...";
+      let cart = { products: [] };
+      if (this.carts.length > 0) {
+        cart.id = this.carts.length + 1;
       } else {
-        let cart = { products }; // products: [{pid, qty},{pid, qty}]
-        if (this.carts.length > 0) {
-          let lastCart = this.carts[this.carts.length - 1];
-          cart.id = lastCart.id + 1;
-        } else {
-          cart.id = 1;
-        }
-        this.carts.push(cart);
-        let dataJson = JSON.stringify(this.carts, null, 2);
-        await fs.promises.writeFile(this.path, dataJson);
-        console.log("The cart has been added");
-        console.log(`Cart: ${cart.id} added`);
-        return cart.id;
+        cart.id = 1;
       }
+      this.carts.push(cart);
+      let dataJson = JSON.stringify(this.carts, null, 2);
+      await fs.promises.writeFile(this.path, dataJson);
+      return 201; // cart created
     } catch (err) {
-      console.log(err);
-      return console.log("error: creating cart");
+      return null; // error: creating cart
+    }
+  }
+
+  async updateCart(cartId, data) {
+    try {
+      let cartFound = this.getCartById(cartId);
+      if (!cartFound) {
+        return null; // error: not found cart to update
+      }
+      // Verificar si la data no está vacía
+      if (
+        Object.keys(data).length === 0 ||
+        typeof data !== "object" ||
+        data.units === 0
+      ) {
+        return null; // error: data is required
+      }
+
+      // Si es el mismo producto subir el stock (no agregar el mismo producto)
+      console.log(cartFound.products);
+      // console.log(cartFound.products[units]);
+      cartFound.products.push(data);
+      let dataJson = JSON.stringify(this.carts, null, 2);
+      await fs.promises.writeFile(this.path, dataJson);
+      return 200; // cart has been updated
+    } catch (error) {
+      // console.log(error);
+      return null; // error: updating cart
     }
   }
 }
 
 async function managment() {
-  let cartManager = new CartManager("../data/carts.json");
+  let cartManager = new CartManager("./src/data/carts.json");
   await cartManager.getCarts();
   await cartManager.getCartById(3);
   await cartManager.addCart({

@@ -14,7 +14,7 @@ router.get("/", (req, res, next) => {
     } else {
       return res.send({
         status: 400,
-        response: "Products not found",
+        response: "not found",
       });
     }
   } catch (error) {
@@ -29,12 +29,8 @@ router.get("/:pid", (req, res, next) => {
     let product = manager.getProductById(id);
     if (product) {
       return res.send({ status: 200, response: product });
-    } else {
-      return res.send({
-        status: 404,
-        response: {},
-      });
     }
+    return res.send({ status: 404, response: "not found" });
   } catch (error) {
     next(error);
   }
@@ -43,24 +39,11 @@ router.get("/:pid", (req, res, next) => {
 // ADD PRODUCT
 router.post("/", async (req, res, next) => {
   try {
-    let title = req.body.title ?? null;
-    let description = req.body.description ?? null;
-    let price = req.body.price ?? null;
-    let thumbnail = req.body.thumbnail ?? null;
-    let code = req.body.code ?? null;
-    let stock = req.body.stock ?? null;
-    if (title && description && price && thumbnail && code && stock) {
-      let product = await manager.addProduct({
-        title,
-        description,
-        price,
-        thumbnail,
-        code,
-        stock,
-      });
-      return res.json({ status: 201, response: product });
+    let product = await manager.addProduct(req.body);
+    if (product === 201) {
+      return res.json({ status: 201, response: "product created" });
     } else {
-      return res.json({ status: 400, response: "all data is required" });
+      return res.json({ status: 400, response: "not created" });
     }
   } catch (error) {
     next(error);
@@ -68,27 +51,31 @@ router.post("/", async (req, res, next) => {
 });
 
 // UPDATE PRODUCT
-router.put("/:pid", (req, res, next) => {
+router.put("/:pid", async (req, res, next) => {
   try {
     if (req.params.pid && Object.entries(req.body).length !== 0) {
       let id = Number(req.params.pid);
       let data = req.body;
-      manager.updateProduct(id, data);
-      return res.json({ status: 200, response: "updated" });
-    } else {
-      return res.json({ status: 400, response: "check data" });
+      let product = await manager.updateProduct(id, data);
+      if (product === 200) {
+        return res.json({ status: 200, response: "product updated" });
+      }
     }
+    return res.json({ status: 400, response: "not updated" });
   } catch (error) {
     next(error);
   }
 });
 
 // DELETE PRODUCT
-router.delete("/:pid", (req, res, next) => {
+router.delete("/:pid", async (req, res, next) => {
   try {
     let id = Number(req.params.pid);
-    manager.deleteProduct(id);
-    return res.json({ status: 200, response: `deleted` });
+    let product = await manager.deleteProduct(id);
+    if (product === 200) {
+      return res.json({ status: 200, response: `product deleted` });
+    }
+    return res.json({ status: 400, response: `not found product to delete` });
   } catch (error) {
     next(error);
   }

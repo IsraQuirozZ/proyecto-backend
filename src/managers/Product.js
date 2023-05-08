@@ -19,23 +19,11 @@ class ProductManager {
   }
 
   getProducts() {
-    // console.log("- Get products:");
-    // console.log(this.products);
     return this.products;
   }
 
   getProductById(productId) {
-    let productFound = this.products.find(
-      (product) => product.id === productId
-    );
-    // if (productFound) {
-    //   console.log(`- Get Product by Id (${productFound.id}): `);
-    //   console.log(productFound);
-    // } else {
-    //   console.log(`- Get Product by Id (${productId}): `);
-    //   console.log(`Product with Id: ${productId} not found.`);
-    // }
-    return productFound;
+    return this.products.find((product) => product.id === productId);
   }
 
   async addProduct({ title, description, price, thumbnail, code, stock }) {
@@ -43,9 +31,7 @@ class ProductManager {
       let codes = [];
       // Validar que todos los campos sean obligatorios
       if (!title || !description || !price || !thumbnail || !code || !stock) {
-        console.log("- Add Product:");
-        console.log("error: all fields are required");
-        return "error: all fields are required";
+        return null; // error: all fields are required
       } else {
         let product = { title, description, price, thumbnail, code, stock };
         // Id autoincrementable
@@ -61,38 +47,25 @@ class ProductManager {
           this.products.push(product);
           let dataJson = JSON.stringify(this.products, null, 2);
           await fs.promises.writeFile(this.path, dataJson);
-          console.log(`- Add Product (${product.id}):`);
-          console.log(`The product has been added`);
-          return `The product has been added`;
+          return 201; // product created
         } else {
-          console.log("- Add Product:");
-          console.log(
-            `We can't add this product because it has a repeated code: ${product.code}`
-          );
-          return `We can't add this product because it has a repeated code: ${product.code}`;
+          return null; // error: repeated code
         }
       }
     } catch (err) {
-      console.log(err);
-      return "error: creating product";
+      return null;
     }
   }
 
   async updateProduct(productId, data) {
     try {
-      // let productFound = this.getProductById(productId); Lo utilizaremos después
-      let productFound = this.products.find((prod) => prod.id === productId); // Mientras utilizaremos esto para simplificar la consola
+      let productFound = this.getProductById(productId);
       if (!productFound) {
-        console.log(`- Update Product (${productId}):`);
-        console.log("error: not found user to update");
-        return "error: not found user to update";
+        return null; // error: not found user to update;
       }
-
       // Verificar si la data no está vacía
       if (Object.keys(data).length === 0 || typeof data !== "object") {
-        console.log(`- Update Product (${productId}):`);
-        console.log("error: data is required");
-        return "error: data is required";
+        return null; // error: data is required
       }
 
       for (let prop in data) {
@@ -106,91 +79,40 @@ class ProductManager {
             prop === "stock"
           ) {
           } else if (prop === "code" || prop === "id") {
-            console.log(`- Update Product (${productId}):`);
-            console.log(`error: you can't modify the "${prop}" of a product`);
-            return `error: you can't modify the "${prop}" of a product`;
+            return null; // error: you can't modify the "${prop}" of a product
           } else {
-            console.log(`- Update Product (${productId}):`);
-            console.log(`error: "${prop}" is not a property of product`);
-            return `error: "${prop}" is not a property of product`;
+            return null; // error: "${prop}" is not a property of product
           }
         }
         productFound[prop] = data[prop];
       }
-
       let dataJson = JSON.stringify(this.products, null, 2);
       await fs.promises.writeFile(this.path, dataJson);
-      console.log(`- Update Product (${productId}):`);
-      console.log(productFound);
-      console.log(`The product has been updated`);
-      return `The product has been updated`;
+      return 200; // The product has been updated
     } catch (err) {
-      console.log(err);
-      return "error: creating product";
+      // console.log(err);
+      return null; // error: creating product
     }
   }
 
   async deleteProduct(productId) {
     try {
-      //  let productFound = this.getProductById(productId);
-      let productFound = this.products.find((prod) => prod.id === productId);
+      let productFound = this.getProductById(productId);
       if (!productFound) {
-        console.log(`Delete Product (${productId}):`);
-        console.log("error: not found user to delete");
-        return "error: not found user to delete";
+        return null; // "error: not found user to delete";
       } else {
         this.products = this.products.filter((prod) => prod.id !== productId);
         let dataJson = JSON.stringify(this.products, null, 2);
         await fs.promises.writeFile(this.path, dataJson);
-        console.log(`Delete Product (${productId}):`);
-        console.log(`The product has been deleted`);
-        return `The product has been deleted`;
+        return 200; // `The product has been deleted`;
       }
     } catch (err) {
-      console.log(err);
-      return "error: creating product";
+      // console.log(err);
+      return null; // error: creating product
     }
   }
 }
 
-// Esto para ejecutarlo llamando a managment,actualmente ya no se utilizará
-async function management() {
-  let productManager = new ProductManager("../data/products.json");
-  await productManager.getProducts();
-
-  await productManager.addProduct({
-    title: "Producto 1",
-    description: "Este es un producto prueba",
-    price: 200,
-    thumbnail: "Sin imagen",
-    code: "abc123",
-    stock: 25,
-  });
-
-  await productManager.addProduct({
-    title: "Producto 2",
-    description: "Este es un producto prueba",
-    price: 220,
-    thumbnail: "Sin imagen",
-    code: "abc124",
-    stock: 25,
-  });
-
-  await productManager.addProduct({
-    title: "Producto 3",
-    description: "Este es un producto prueba",
-    price: 230,
-    thumbnail: "Sin imagen",
-    code: "abc125",
-    stock: 25,
-  });
-
-  await productManager.getProductById(1); // Objeto anterior
-  await productManager.getProductById(4); // Error (no existe el producto con id 4)
-  await productManager.updateProduct(3, { title: "Producto 3 actualizado" }); // Actualizará el producto con id 3
-  await productManager.deleteProduct(3); // Se eliminará el producto y el archivo JSON quedará con producto 1 y 2
-}
-
-// manager();
 let productManager = new ProductManager("./src/data/products.json");
+
 export default productManager;
