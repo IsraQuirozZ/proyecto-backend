@@ -46,26 +46,72 @@ router.post("/", async (req, res, next) => {
 
 // PUT UPDATE CART
 router.put("/:cid/product/:pid/:units", async (req, res, next) => {
-  let cartId = Number(req.params.cid);
-  let productId = Number(req.params.pid);
-  let productUnits = Number(req.params.units);
+  try {
+    let cartId = Number(req.params.cid);
+    let productId = Number(req.params.pid);
+    let productUnits = Number(req.params.units);
 
-  let foundProduct = productManager.getProductById(productId);
-  if (foundProduct !== undefined && productUnits <= foundProduct.stock) {
-    let cart = await manager.updateCart(cartId, {
-      pid: productId,
-      units: productUnits,
-    });
-    if (cart === 200) {
-      await productManager.updateProduct(productId, {
-        stock: foundProduct.stock - productUnits,
+    let productFound = productManager.getProductById(productId);
+    if (productFound !== undefined && productUnits <= productFound.stock) {
+      let cart = await manager.addProducts(cartId, {
+        pid: productId,
+        units: productUnits,
       });
-      return res.json({ status: 200, response: "cart updated" });
+      if (cart === 200) {
+        await productManager.updateProduct(productId, {
+          stock: productFound.stock - productUnits,
+        });
+        return res.json({
+          status: 200,
+          response: `${productUnits} units of product: ${productId} added to the cart`,
+        });
+      }
+    } else if (productFound.stock === 0) {
+      return res.json({ status: 404, response: "out of stock" });
     }
-  } else if (foundProduct.stock === 0) {
-    return res.json({ status: 404, response: "out of stock" });
+    return res.json({ status: 400, response: "cart not updated" });
+  } catch (error) {
+    next(error);
   }
-  return res.json({ status: 400, response: "cart not updated" });
+});
+
+// DELETE CART
+router.delete("/:cid/product/:pid/:units", async (req, res, next) => {
+  try {
+    let cartId = Number(req.params.cid);
+    let productId = Number(req.params.pid);
+    let productUnits = Number(req.params.units);
+
+    let productFound = productManager.getProductById(productId);
+    if (productFound !== undefined && productUnits > 0) {
+      let cart = await manager.deleteProducts(cartId, {
+        pid: productId,
+        units: productUnits,
+      });
+
+      if (cart === 200) {
+        await productManager.updateProduct(productId, {
+          stock: productFound.stock + cart.units,
+        });
+        return res.json({
+          status: 200,
+          response: `${productUnits} units of product: ${productId} deleted from cart: ${cartId}`,
+        });
+      } else if (cart !== null) {
+        // Regresamos las unidades que tenía el prod con cart (número de unidades que tenía el prod)
+        await productManager.updateProduct(productId, {
+          stock: productFound.stock + cart,
+        });
+        return res.json({
+          status: 200,
+          response: `${cart} units of product: ${productId} deleted from cart: ${cartId}`,
+        });
+      }
+    }
+    return res.json({ status: 400, response: "product(s) not deleted" });
+  } catch (error) {
+    next(error);
+  }
 });
 
 export default router;

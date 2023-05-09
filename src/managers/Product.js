@@ -100,12 +100,11 @@ class ProductManager {
       let productFound = this.getProductById(productId);
       if (!productFound) {
         return null; // "error: not found user to delete";
-      } else {
-        this.products = this.products.filter((prod) => prod.id !== productId);
-        let dataJson = JSON.stringify(this.products, null, 2);
-        await fs.promises.writeFile(this.path, dataJson);
-        return 200; // `The product has been deleted`;
       }
+      this.products = this.products.filter((prod) => prod.id !== productId);
+      let dataJson = JSON.stringify(this.products, null, 2);
+      await fs.promises.writeFile(this.path, dataJson);
+      return 200; // `The product has been deleted`;
     } catch (err) {
       // console.log(err);
       return null; // error: creating product

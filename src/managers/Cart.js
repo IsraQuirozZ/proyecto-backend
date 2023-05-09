@@ -26,7 +26,6 @@ class CartManager {
     return this.carts.find((cart) => cart.id === cartId);
   }
 
-  // Solo tiene que crear un carrito vacío, se modificará más adelante con un método put
   async addCart() {
     try {
       let cart = { products: [] };
@@ -44,13 +43,13 @@ class CartManager {
     }
   }
 
-  async updateCart(cartId, data) {
+  async addProducts(cartId, data) {
     try {
       let cartFound = this.getCartById(cartId);
       if (!cartFound) {
         return null; // error: not found cart to update
       }
-      // Verificar si la data no está vacía
+
       if (
         Object.keys(data).length === 0 ||
         typeof data !== "object" ||
@@ -59,16 +58,73 @@ class CartManager {
         return null; // error: data is required
       }
 
-      // Si es el mismo producto subir el stock (no agregar el mismo producto)
-      console.log(cartFound.products);
-      // console.log(cartFound.products[units]);
-      cartFound.products.push(data);
+      if (cartFound.products.length === 0) {
+        cartFound.products.push(data); // Solo se ejecutará cuando el array de productos esté vacío
+      } else {
+        // Si ya existe el producto en el carrito
+        let products = [];
+        cartFound.products.forEach((product) => {
+          products.push(product.pid);
+        });
+
+        if (products.includes(data.pid)) {
+          // aumenta las unidades
+          let productToAddUnits = cartFound.products.find(
+            (product) => product.pid === data.pid
+          );
+          productToAddUnits.units = productToAddUnits.units + data.units;
+        } else {
+          // Agrega todo el producto
+          cartFound.products.push(data);
+        }
+      }
       let dataJson = JSON.stringify(this.carts, null, 2);
       await fs.promises.writeFile(this.path, dataJson);
       return 200; // cart has been updated
     } catch (error) {
       // console.log(error);
       return null; // error: updating cart
+    }
+  }
+
+  async deleteProducts(cartId, data) {
+    try {
+      let cartFound = this.getCartById(cartId);
+      if (!cartFound) {
+        return null;
+      }
+
+      let productInCart = false;
+      let moreUnits = false;
+      let newUnits;
+      cartFound.products.forEach((product) => {
+        if (product.pid === data.pid) {
+          if (data.units >= product.units) {
+            moreUnits = true;
+            newUnits = product.units;
+            cartFound.products = cartFound.products.filter(
+              (product) => product.pid !== data.pid
+            );
+          } else {
+            product.units = product.units - data.units;
+          }
+          productInCart = true;
+        }
+      });
+
+      if (productInCart) {
+        let dataJson = JSON.stringify(this.carts, null, 2);
+        await fs.promises.writeFile(this.path, dataJson);
+        if (moreUnits) {
+          // Si mandan más unidades de las que tiene el prod
+          return newUnits; // Regresamos las unidades del producto (para no aumentar el stock a más de las que tenía)
+        }
+        return 200; // cart has been deleted
+      }
+      return null;
+    } catch (error) {
+      console.log(error);
+      return null;
     }
   }
 }
