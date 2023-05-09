@@ -74,4 +74,44 @@ Desarrollar un servidor basado en express donde podamos hacer consultas a nuestr
   - ruta ‘/products’, la cual lee el archivo de productos y los devuelve dentro de un objeto, cuenta con un query ***limit=number*** el cual sirve para indicar cuantos productos traer.
   - ruta ‘/products/:pid’, la cual recibe por req.params el pid (product Id), y devuelve sólo el producto solicitado. 
 
+---
+# Primera entrega
+
+## Se desarrollará un servidor que contenga los endpoints y servicios necesarios para gestionar los productos y carritos de compra en el e-commerce
+
+### Aspectos incluidos
+- Creamos una nueva clase "CartManager" la cual se encargará de gestionar los carritos.
+- Organizamos las carpetas de nuestro proyecto.
+- Fuimos creando los diferentes endpoints para poder acceder tanto a los métodos de **Productos** como de **Carritos**:
+
+Primero debemos levantar el servidor corriendo el siguiente código en la terminal:
+```
+npm run dev
+```
+
+### Configurar rutas en Postman
+### Productos:
+- Get Products:
+  - Get: http://localhost:8080/api/products
+- Get Products By Id:
+  - Get: http://localhost:8080/api/products/:pid
+- Add Product:
+  - Post: http://localhost:8080/api/products
+- Update Products:
+  - Put: http://localhost:8080/api/products/:pid
+- Delete Product:
+  - Delete: http://localhost:8080/api/products/:pid
+
+---
+### Carts
+- Get Carts:
+  - Get: http://localhost:8080/api/carts
+- Get Cart By Id:
+  - Get: http://localhost:8080/api/carts/:cid
+- Add Cart:
+  - Post: http://localhost:8080/api/carts
+- Add Units:
+  - Put: http://localhost:8080/api/carts/:cid/product/:pid/:units
+- Delete Units:
+  - Delete: [http://localhost:8080/api/products/:pid](http://localhost:8080/api/carts/:cid/product/:pid/:units)
 
