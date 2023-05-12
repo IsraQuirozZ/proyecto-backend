@@ -2,13 +2,16 @@ import express from "express";
 import router from "./routes/index.js";
 import errorHandler from "./middlewares/errorHandler.js";
 import notFoundHandler from "./middlewares/notFoundHandler.js";
+
 import { engine } from 'express-handlebars'
 import { __dirname } from "./utils.js";
+
 
 const server = express();
 
 const PORT = 8080;
 const ready = () => console.log("server ready on port " + PORT);
+
 
 server.engine('handlebars', engine())       // Motor de plantillas
 server.set('view engine', 'handlebars')     // Configuración del motor
