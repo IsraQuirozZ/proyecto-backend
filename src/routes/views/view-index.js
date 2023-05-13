@@ -5,13 +5,13 @@ import products_router from "./products.js";
 const router = Router();
 
 router.get("/", async (req, res, next) => {
-  try {
-    return res.render("index", {
-      title: "Home",
-    });
-  } catch (error) {
-    next(error);
-  }
+    try {
+        return res.render("index", {
+            title: "Home",
+        });
+    } catch (error) {
+        next(error);
+    }
 });
 
 router.use("/", newProduct_router);
