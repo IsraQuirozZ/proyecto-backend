@@ -1,4 +1,32 @@
 <h1>Productos</h1>
-{{#each products}}
-  <h2>{{this.title}}</h2>
-{{/each}}
+
+<div class="productsContainer">
+  {{#each products}}
+    <div class="productCard">
+      <img
+        class="productCard-img"
+        src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRJiT-UHSm6w0Jperb8SitpfoAKeMUE3uynPg5YO-2Drw&s"
+        alt="imagen producto"
+      />
+      <div class="productCard-info">
+        <div class="productInfo_top">
+
+          <h3 class="productTitle">{{this.title}}</h3>
+          <div class="productRating">
+            <i>o</i>
+            <i>o</i>
+            <i>o</i>
+            <i>o</i>
+            <i>o</i>
+          </div>
+          <p class="productDescription">{{this.description}}</p>
+        </div>
+        <div class="productPricing">
+          <p class="productPrice">€ {{this.price}}</p>
+          <button class="buyBtn">Buy Now</button>
+        </div>
+      </div>
+    </div>
+  {{/each}}
+
+</div>
