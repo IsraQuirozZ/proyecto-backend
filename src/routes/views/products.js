@@ -1,5 +1,4 @@
 import { Router } from "express";
-import products_api_router from "../api/products.js";
 
 const router = Router();
 

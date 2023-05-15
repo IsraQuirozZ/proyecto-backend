@@ -20,6 +20,9 @@ header{
 header div i {
 	margin-left: .8rem;
 }
+header .carrito::after {
+	content: "hola";
+}
 
 nav{
 	position: absolute;
@@ -50,6 +53,7 @@ nav ul li a {
 	text-decoration: none;
 	color: #000;
 }
+
 
 form {
 	display: flex;
