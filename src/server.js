@@ -35,6 +35,6 @@ socket_server.on(
 
         // Carrito
 
-        socket.emit('quantity', cart)
+        socket.emit('quantity', quantity)
     }
 )

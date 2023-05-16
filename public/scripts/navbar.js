@@ -34,6 +34,6 @@ update()
 
 let socket = io()
 
-socket.on('quantity', cart => {
-    document.querySelector('#cart').innerHTML = cart.products.length
+socket.on('quantity', quantity => {
+    document.querySelector('#cart').innerHTML = quantity
 })
