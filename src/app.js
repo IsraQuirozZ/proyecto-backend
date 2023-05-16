@@ -2,7 +2,7 @@ import express from "express";
 import router from "./routes/index.js";
 import errorHandler from "./middlewares/errorHandler.js";
 import notFoundHandler from "./middlewares/notFoundHandler.js";
-import { engine } from 'express-handlebars'
+import { engine } from "express-handlebars";
 import { __dirname } from "./utils.js";
 
 const server = express();
