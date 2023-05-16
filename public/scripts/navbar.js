@@ -1,3 +1,5 @@
+// Burguer menu
+
 const open = document.querySelector('.fa-bars')
 const close = document.querySelector('.fa-xmark')
 const menu = document.querySelector('nav')
@@ -27,3 +29,11 @@ const update = () => {
 }
 
 update()
+
+// Cart quantity
+
+let socket = io()
+
+socket.on('quantity', cart => {
+    document.querySelector('#cart').innerHTML = cart.products.length
+})

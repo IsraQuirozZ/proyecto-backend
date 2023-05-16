@@ -1,19 +1,15 @@
-<form
-  class="productForm"
-  action="http://localhost:8080/api/products"
-  method="post"
->
-  <label for="title">Title</label>
-  <input type="text" required name="title" />
-  <label for="description">Description</label>
-  <input type="text" required name="description" />
-  <label for="price">Price</label>
-  <input type="number" required name="price" />
-  <label for="thumbnail">Image</label>
-  <input name="thumbnail" type="file" />
-  <label for="code">Code</label>
-  <input name="code" type="text" />
-  <label for="stock">Stock</label>
-  <input name="stock" type="number" />
-  <button type="submit">Add</button>
+<form action="/api/products" method="POST">
+    <label for="title">Title</label>
+    <input type="text" name="title"/>
+    <label for="description">Description</label>
+    <input type="text" name="description"/>
+    <label for="price">Price</label>
+    <input type="number" name="price"/>
+    <label for="thumbnail">Image</label>
+    <input name="thumbnail" type="file"/>
+    <label for="code">Code</label>
+    <input name="code" type="text"/>
+    <label for="stock">Stock</label>
+    <input name="stock" type="number"/>
+    <input type="submit"/>
 </form>

@@ -31,7 +31,7 @@ class ProductManager {
       let codes = [];
       // Validar que todos los campos sean obligatorios
       if (!title || !description || !price || !thumbnail || !code || !stock) {
-        return null; // error: all fields are required
+        return 400; // error: all fields are required
       } else {
         let product = { title, description, price, thumbnail, code, stock };
         // Id autoincrementable
@@ -49,11 +49,11 @@ class ProductManager {
           await fs.promises.writeFile(this.path, dataJson);
           return 201; // product created
         } else {
-          return null; // error: repeated code
+          return 409; // error: repeated code
         }
       }
     } catch (err) {
-      return null;
+      return 500;
     }
   }
 
@@ -106,7 +106,6 @@ class ProductManager {
       await fs.promises.writeFile(this.path, dataJson);
       return 200; // `The product has been deleted`;
     } catch (err) {
-      // console.log(err);
       return null; // error: creating product
     }
   }
