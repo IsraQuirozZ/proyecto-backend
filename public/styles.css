@@ -16,12 +16,20 @@ header{
 	height: 4rem;
 	padding: 0 .8rem;
 }
-
-header div i {
+header div {
+	display: flex;
+}
+header div div i {
 	margin-left: .8rem;
 }
-header .carrito::after {
-	content: "hola";
+#cart {
+	position: absolute;
+	top: .8rem;
+	right: 2.7rem;
+	font-size: smaller;
+	background-color: #fff;
+	border-radius: 50px;
+	padding: 0 5px;
 }
 
 nav{

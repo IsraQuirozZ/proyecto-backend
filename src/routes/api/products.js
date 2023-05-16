@@ -43,7 +43,7 @@ router.post("/", async (req, res, next) => {
     if (product === 201) {
       return res.json({ status: 201, response: "product created" });
     } else {
-      return res.json({ status: product, response: "not created" });
+      return res.json({ status: product, response: "not created", body: req.body });
     }
   } catch (error) {
     next(error);

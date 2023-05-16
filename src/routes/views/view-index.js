@@ -8,8 +8,7 @@ const router = Router();
 router.get("/", async (req, res, next) => {
     try {
         return res.render("index", {
-            title: "Home",
-            script: './public/scripts/cart.js'
+            title: "Home"
         });
     } catch (error) {
         next(error);
