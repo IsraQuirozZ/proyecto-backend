@@ -44,7 +44,7 @@ router.post("/", async (req, res, next) => {
   }
 });
 
-// PUT UPDATE CART
+// PUT ADD UNITS TO CART
 router.put("/:cid/product/:pid/:units", async (req, res, next) => {
   try {
     let cartId = Number(req.params.cid);
@@ -75,7 +75,7 @@ router.put("/:cid/product/:pid/:units", async (req, res, next) => {
   }
 });
 
-// DELETE CART
+// DELETE UNITS FROM CART
 router.delete("/:cid/product/:pid/:units", async (req, res, next) => {
   try {
     let cartId = Number(req.params.cid);
@@ -91,7 +91,7 @@ router.delete("/:cid/product/:pid/:units", async (req, res, next) => {
 
       if (cart === 200) {
         await productManager.updateProduct(productId, {
-          stock: productFound.stock + cart.units,
+          stock: productFound.stock + productUnits,
         });
         return res.json({
           status: 200,
@@ -100,7 +100,7 @@ router.delete("/:cid/product/:pid/:units", async (req, res, next) => {
       } else if (cart !== null) {
         // Regresamos las unidades que tenía el prod con cart (número de unidades que tenía el prod)
         await productManager.updateProduct(productId, {
-          stock: productFound.stock + cart,
+          stock: productFound.stock + productUnits,
         });
         return res.json({
           status: 200,
