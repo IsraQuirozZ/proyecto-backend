@@ -17,22 +17,24 @@
   <body>
 
     <header>
-        <picture class="logo">
-            <a href="/"><img src="" alt="Logo"></a>
-        </picture>
+      <picture class="logo">
+        <a href="/"><img src="" alt="Logo" /></a>
+      </picture>
+      <div>
+        <div><i class="fa-sharp fa-solid fa-cart-shopping fa-xl"></i><span
+            id="cart"
+          ></span></div>
         <div>
-            <div><i class="fa-sharp fa-solid fa-cart-shopping fa-xl"></i><span id="cart"></span></div>
-            <div>
-                <i class="fa-solid fa-bars fa-2xl"></i>
-                <i class="fa-solid fa-xmark fa-2xl"></i>
-            </div>
+          <i class="fa-solid fa-bars fa-2xl"></i>
+          <i class="fa-solid fa-xmark fa-2xl"></i>
         </div>
-        <nav>
-            <ul>
-                <li><a href="/products">Products</a></li>
-                <li><a href="/chat">Chat</a></li>
-            </ul>
-        </nav>
+      </div>
+      <nav>
+        <ul>
+          <li><a href="/products">Products</a></li>
+          <li><a href="/chat">Chat</a></li>
+        </ul>
+      </nav>
     </header>
 
     <main>
@@ -41,12 +43,15 @@
 
     <footer></footer>
 
-    <script src="https://kit.fontawesome.com/930af3fab0.js" crossorigin="anonymous"></script>
+    <script
+      src="https://kit.fontawesome.com/930af3fab0.js"
+      crossorigin="anonymous"
+    ></script>
     <script src="/socket.io/socket.io.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script src="./public/scripts/navbar.js"></script>
+    <script src="/public/scripts/navbar.js"></script>
     {{#if script}}
-        <script src={{script}}></script>
+      <script src={{script}}></script>
     {{/if}}
 
   </body>

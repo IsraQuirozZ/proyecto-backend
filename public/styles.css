@@ -18,19 +18,19 @@ header {
   padding: 0 0.8rem;
 }
 header div {
-	display: flex;
+  display: flex;
 }
 header div div i {
   margin-left: 1.2rem;
 }
 #cart {
-	position: absolute;
-	top: 0.8rem;
-	right: 3rem;
-	font-size: smaller;
-	background-color: #fff;
-	border-radius: 50px;
-	padding: 0 5px;
+  position: absolute;
+  top: 0.8rem;
+  right: 3rem;
+  font-size: smaller;
+  background-color: #fff;
+  border-radius: 50px;
+  padding: 0 5px;
 }
 
 nav {
@@ -62,7 +62,6 @@ nav ul li a {
   text-decoration: none;
   color: #000;
 }
-
 
 form {
   display: flex;

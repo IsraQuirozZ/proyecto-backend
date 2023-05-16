@@ -19,6 +19,6 @@ router.get("/", async (req, res, next) => {
 router.use("/", newProduct_router);
 router.use("/", products_router);
 router.use("/", cart_router);
-router.use('/', chatbot_router)
+router.use("/", chatbot_router);
 
 export default router;

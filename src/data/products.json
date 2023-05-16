@@ -5,7 +5,7 @@
     "price": 200,
     "thumbnail": "Sin imagen",
     "code": "abc123",
-    "stock": 27,
+    "stock": 23,
     "id": 1
   },
   {
@@ -14,7 +14,7 @@
     "price": 220,
     "thumbnail": "Sin imagen",
     "code": "abc124",
-    "stock": 27,
+    "stock": 28,
     "id": 2
   },
   {
@@ -41,7 +41,7 @@
     "price": 220,
     "thumbnail": "Sin imagen",
     "code": "abc127",
-    "stock": 25,
+    "stock": 24,
     "id": 5
   },
   {
@@ -88,5 +88,14 @@
     "code": "abc10",
     "stock": 25,
     "id": 10
+  },
+  {
+    "title": "product",
+    "description": "Description",
+    "price": "100",
+    "thumbnail": "[object File]",
+    "code": "iDKojgH0tu9S",
+    "stock": "25",
+    "id": 11
   }
 ]
