@@ -3,11 +3,15 @@
     "products": [
       {
         "pid": 1,
-        "units": 3
+        "units": 7
       },
       {
         "pid": 2,
-        "units": 3
+        "units": 2
+      },
+      {
+        "pid": 5,
+        "units": 1
       }
     ],
     "id": 1
