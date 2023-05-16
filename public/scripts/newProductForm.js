@@ -20,13 +20,19 @@ form.addEventListener('submit', async e => {
         });
 
         const data = await res.json();
-        console.log(data);
 
         if (data.status === 201) {
             Swal.fire({
                 title: 'Product created successfully',
-                icon: 'success'
-            }).isConfirmed(res => console.log(res));
+                icon: 'success',
+                allowEscapeKey: false,
+                allowOutsideClick: false,
+                confirmButtonText: 'Go to products'
+            }).then(res => {
+                if (res.isConfirmed) {
+                    window.location.href = 'http://localhost:8080/products'
+                }
+            });
         } else {
             Swal.fire({
                 title: 'Error',

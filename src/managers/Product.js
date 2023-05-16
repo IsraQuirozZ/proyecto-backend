@@ -106,7 +106,6 @@ class ProductManager {
       await fs.promises.writeFile(this.path, dataJson);
       return 200; // `The product has been deleted`;
     } catch (err) {
-      // console.log(err);
       return null; // error: creating product
     }
   }

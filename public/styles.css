@@ -20,12 +20,12 @@ header div {
 	display: flex;
 }
 header div div i {
-	margin-left: .8rem;
+	margin-left: 1.2rem;
 }
 #cart {
 	position: absolute;
 	top: .8rem;
-	right: 2.7rem;
+	right: 3rem;
 	font-size: smaller;
 	background-color: #fff;
 	border-radius: 50px;
