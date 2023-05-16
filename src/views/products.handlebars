@@ -1,32 +1,23 @@
-<h1>Productos</h1>
-
-<div class="productsContainer">
-  {{#each products}}
-    <div class="productCard">
-      <img
-        class="productCard-img"
-        src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRJiT-UHSm6w0Jperb8SitpfoAKeMUE3uynPg5YO-2Drw&s"
-        alt="imagen producto"
-      />
-      <div class="productCard-info">
-        <div class="productInfo_top">
-
+<section class="productsSection" id="productsSection">
+  <h2 class="sectionTitle">Productos</h2>
+  <div class="productsContainer">
+    {{#each products}}
+      <div class="productCard">
+        <a href="/products/{{this.id}}">
+          <img
+            class="productCard-img"
+            src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRJiT-UHSm6w0Jperb8SitpfoAKeMUE3uynPg5YO-2Drw&s"
+            alt="imagen producto"
+          /></a>
+        <div class="productCard-info">
           <h3 class="productTitle">{{this.title}}</h3>
-          <div class="productRating">
-            <i>o</i>
-            <i>o</i>
-            <i>o</i>
-            <i>o</i>
-            <i>o</i>
-          </div>
-          <p class="productDescription">{{this.description}}</p>
+          <i class="fa-sharp fa-solid fa-star productRating"><span
+            >4.6</span></i>
         </div>
-        <div class="productPricing">
-          <p class="productPrice">€ {{this.price}}</p>
-          <button class="buyBtn">Buy Now</button>
-        </div>
+        <p class="productCard-category">Categoría</p>
+        <p class="productPrice">{{this.price}} €</p>
       </div>
-    </div>
-  {{/each}}
+    {{/each}}
 
-</div>
+  </div>
+</section>

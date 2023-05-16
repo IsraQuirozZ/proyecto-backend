@@ -1,35 +1,34 @@
 import { Router } from "express";
-import products_api_router from "../api/products.js";
+import productManager from "../../managers/Product.js";
 
 const router = Router();
-
-async function getProducts() {
-  return await fetch("http://localhost:8080/api/products")
-    .then((res) => res.json())
-    .then((data) => data.response);
-}
 
 router.get("/products", async (req, res, next) => {
   try {
     return res.render("products", {
       title: "Products",
-      products: await fetch("http://localhost:8080/api/products")
-        .then((res) => res.json())
-        .then((data) => data.response),
+      products: await productManager.getProducts(),
     });
   } catch (error) {
     next(error);
   }
 });
 
-// {
-//   "title": "Producto 1",
-//   "description": "Este es un producto prueba",
-//   "price": 200,
-//   "thumbnail": "Sin imagen",
-//   "code": "abc123",
-//   "stock": 25,
-//   "id": 1
-// },
+router.get("/products/:pid", async (req, res, next) => {
+  try {
+    let id = Number(req.params.pid);
+    await fetch(`http://localhost:8080/api/products/${id}`)
+      .then((res) => res.json())
+      .then((data) => {
+        res.render("productDetail", {
+          title: `Product ${data.response.id}`,
+          product: data.status === 200 ? data.response : null,
+          script: "/public/scripts/product.js",
+        });
+      });
+  } catch (error) {
+    next(error);
+  }
+});
 
 export default router;

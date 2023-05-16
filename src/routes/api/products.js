@@ -3,14 +3,20 @@ import manager from "../../managers/Product.js";
 
 const router = Router();
 
+// let socket = io();
+
 // GET PRODUCTS (QUERY)
 // Posible queries --> ?limit=Number
-router.get("/", (req, res, next) => {
+router.get("/", async (req, res, next) => {
   try {
     let limit = req.query.limit;
-    let products = manager.getProducts().slice(0, limit);
+    let products = await manager.getProducts().slice(0, limit);
     if (products.length > 0) {
-      return res.send({ status: 200, response: products });
+      // socket.emit("products", products);
+      return res.send({
+        status: 200,
+        response: products,
+      });
     } else {
       return res.send({
         status: 400,

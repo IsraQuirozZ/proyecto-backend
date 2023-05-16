@@ -5,16 +5,16 @@
     "price": 200,
     "thumbnail": "Sin imagen",
     "code": "abc123",
-    "stock": 25,
+    "stock": 27,
     "id": 1
   },
   {
-    "title": "Producto 2 actualizado",
+    "title": "Producto 2",
     "description": "Este es un producto prueba",
     "price": 220,
     "thumbnail": "Sin imagen",
     "code": "abc124",
-    "stock": 25,
+    "stock": 27,
     "id": 2
   },
   {

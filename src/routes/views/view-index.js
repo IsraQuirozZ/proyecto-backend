@@ -1,6 +1,7 @@
 import { Router } from "express";
 import newProduct_router from "./newProduct.js";
 import products_router from "./products.js";
+import cart_router from "./cart.js";
 
 const router = Router();
 
@@ -16,5 +17,6 @@ router.get("/", async (req, res, next) => {
 
 router.use("/", newProduct_router);
 router.use("/", products_router);
+router.use("/", cart_router);
 
 export default router;

@@ -1,46 +1,54 @@
-<!DOCTYPE html>
 <html lang="en">
 
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{{title}}</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@100;400&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="/public/styles.css">
-</head>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@100;400&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/public/styles.css" />
+  </head>
 
-<body>
+  <body>
 
     <header>
-        <picture class="logo">
-            <a href="/"><img src="" alt="Logo"></a>
-        </picture>
-        <div>
-            <i class="fa-sharp fa-solid fa-cart-shopping fa-xl"></i>
-            <i class="fa-solid fa-bars fa-2xl"></i>
-            <i class="fa-solid fa-xmark fa-2xl"></i>
-        </div>
-        <nav>
-            <ul>
-                <li><a href="/products">Products</a></li>
-                <li><a href="/">Products</a></li>
-                <li><a href="/">Products</a></li>
-            </ul>
-        </nav>
+      <picture class="logo">
+        <a href="/"><img src="" alt="Logo" /></a>
+      </picture>
+      <div>
+        <i class="fa-sharp fa-solid fa-cart-shopping fa-xl"></i>
+        <i class="fa-solid fa-bars fa-2xl"></i>
+        <i class="fa-solid fa-xmark fa-2xl"></i>
+      </div>
+      <nav>
+        <ul>
+          <li><a href="/products">Products</a></li>
+          <li><a href="/">Products</a></li>
+          <li><a href="/">Products</a></li>
+        </ul>
+      </nav>
     </header>
 
     <main>
-        {{{body}}}
+      {{{body}}}
     </main>
 
     <footer></footer>
 
-    <script src="https://kit.fontawesome.com/930af3fab0.js" crossorigin="anonymous"></script>
-    <script src="./public/navbar.js"></script>
+    <script
+      src="https://kit.fontawesome.com/930af3fab0.js"
+      crossorigin="anonymous"
+    ></script>
+    <script src="/public/navbar.js"></script>
+    {{#if script}}
+      <script src={{script}}></script>
+    {{/if}}
 
-</body>
+  </body>
 
 </html>
