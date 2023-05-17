@@ -1,5 +1,6 @@
 import { Router } from "express";
 import productManager from "../../managers/Product.js";
+import fetch from "node-fetch";
 
 const router = Router();
 

@@ -30,6 +30,7 @@ form.addEventListener('submit', async e => {
                 confirmButtonText: 'Go to products'
             }).then(res => {
                 if (res.isConfirmed) {
+                    form.reset()
                     window.location.href = 'http://localhost:8080/products'
                 }
             });
