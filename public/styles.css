@@ -1,11 +1,12 @@
 * {
   margin: 0;
   padding: 0;
+  box-sizing: border-box;
   text-decoration: none;
+  list-style: none;
 }
 
 body {
-  background-color: #444;
   background-color: white;
   font-family: "Montserrat", sans-serif;
 }
@@ -53,13 +54,19 @@ header {
   background-color: #dbdbdb;
   height: 4rem;
   padding: 0 0.8rem;
+  position: fixed;
+  z-index: 99;
+  width: 100%;
 }
+
 header div {
   display: flex;
 }
+
 header div div i {
   margin-left: 1.2rem;
 }
+
 #cart {
   position: absolute;
   top: 0.8rem;
@@ -99,7 +106,7 @@ nav ul li a {
   text-decoration: none;
   color: #000;
 }
-a{
+a {
   color: #000;
 }
 
@@ -124,20 +131,80 @@ form button {
   padding: 8px;
 }
 
-/* PRODUCTS PAGE */
 section {
   width: 100%;
-  text-align: center;
   min-height: 95vh;
+  padding: 30px 7%;
 }
 
+.btn {
+  padding: 15px 20px;
+  background-color: wheat;
+  font-size: 20px;
+  font-weight: bold;
+  border-radius: 5px;
+  border: none;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.btn i {
+  margin-left: 5px;
+}
+
+/* HOME PAGE */
+.homeMain {
+  position: relative;
+}
+
+.homeMain__img {
+  width: 100%;
+  height: 85vh;
+  object-fit: cover;
+}
+
+.homeMain__text,
+.homeMain__btn {
+  text-align: right;
+  position: absolute;
+}
+
+.homeMain__text {
+  /* background-color: rgba(255, 255, 255, 0.7); */
+  width: 50%;
+  /* top: 200px;*/
+  top: 150px;
+  right: 7%;
+}
+
+.homeMain__btn {
+  /* top: 350px; */
+  top: 300px;
+  right: 7%;
+}
+
+.homeMain__btn:hover {
+  background-color: rgb(22, 22, 22);
+  color: white;
+}
+
+/* .homeMain__btn:hover i {
+  margin-left: 15px;
+} */
+
+.homeSection {
+  background-color: pink;
+}
+
+/* PRODUCTS PAGE */
 .sectionTitle {
   font-size: 36px;
-  margin: 30px 0;
+  text-align: center;
+  margin-bottom: 30px;
 }
 
 .productsContainer {
-  padding: 0 7%;
+  /* padding: 0 7%; */
   display: flex;
   flex-wrap: wrap;
   gap: 40px;
@@ -314,7 +381,8 @@ section {
   transition: 0.4s;
 }
 
-.clearProductsBtn:hover, .deleteItem:hover {
+.clearProductsBtn:hover,
+.deleteItem:hover {
   background-color: black;
   color: white;
   cursor: pointer;
@@ -404,7 +472,6 @@ section {
   transition: 0.4s;
 }
 
-
 .cartItem__divider {
   margin: 10px auto;
   width: 90%;
@@ -437,14 +504,15 @@ section {
   color: #ffbf50;
 }
 
-
 /* Chat */
 
-h3{
+h3 {
   text-align: center;
 }
 
-#messages, #chatBox, #userName{
+#messages,
+#chatBox,
+#userName {
   margin: 10px 0 0 10px;
 }
 #messages h6 {

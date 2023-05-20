@@ -18,5 +18,13 @@
   {
     "userName": "Israel",
     "message": "Hola"
+  },
+  {
+    "userName": "Isra",
+    "message": "Hola"
+  },
+  {
+    "userName": "Isra",
+    "message": "Cambié el product.js de scripts, el fetch  estaba mal"
   }
 ]

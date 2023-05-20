@@ -2,16 +2,20 @@
   {
     "products": [
       {
+        "pid": 2,
+        "units": 2
+      },
+      {
+        "pid": 3,
+        "units": 1
+      },
+      {
+        "pid": 8,
+        "units": 1
+      },
+      {
         "pid": 1,
-        "units": 6
-      },
-      {
-        "pid": 5,
-        "units": 5
-      },
-      {
-        "pid": 6,
-        "units": 3
+        "units": 4
       }
     ],
     "id": 1
