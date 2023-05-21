@@ -152,9 +152,15 @@ section {
   margin-left: 5px;
 }
 
+.btn:hover {
+  background-color: rgb(22, 22, 22);
+  color: white;
+}
+
 /* HOME PAGE */
 .homeMain {
   position: relative;
+  margin-bottom: 30px;
 }
 
 .homeMain__img {
@@ -165,35 +171,117 @@ section {
 
 .homeMain__text,
 .homeMain__btn {
-  text-align: right;
   position: absolute;
 }
 
 .homeMain__text {
   /* background-color: rgba(255, 255, 255, 0.7); */
-  width: 50%;
+  text-align: left;
+  width: 45%;
   /* top: 200px;*/
-  top: 150px;
-  right: 7%;
+  top: 120px;
+  left: 7%;
 }
 
 .homeMain__btn {
   /* top: 350px; */
-  top: 300px;
-  right: 7%;
+  top: 280px;
+  left: 7%;
 }
 
-.homeMain__btn:hover {
+.homeMain__btn:hover i,
+.featuredCategoriesSection__btn:hover i {
+  margin-left: 15px;
+}
+
+/* HOME PAGE / CATEGORIES SECTION */
+.featuredCategoriesSection {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  background-color: rgb(215, 209, 197);
+  background-color: white;
+}
+
+.featuredCategories {
+  width: 100%;
+  height: 70vh;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: repeat(2, 1fr);
+  gap: 20px;
+  grid-auto-flow: dense;
+}
+
+.featuredCategoriesSection__btn {
+  border-radius: 25px;
+  /* background-color: inherit; */
+  padding: 8px 12px;
   background-color: rgb(22, 22, 22);
   color: white;
 }
 
-/* .homeMain__btn:hover i {
-  margin-left: 15px;
-} */
+.featuredCategoriesSection__btn:hover {
+  background-color: rgb(215, 209, 197);
+  color: black;
+}
 
-.homeSection {
-  background-color: pink;
+.featuredCategories__principal,
+.featuredCategories__second,
+.featuredCategories__third {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: 20px;
+  aspect-ratio: 1/1;
+}
+
+.featuredCategories__principal {
+  grid-column: 1/3;
+  grid-row: 1/3;
+}
+
+.featuredCategories__principal--img,
+.featuredCategories__second--img,
+.featuredCategories__third--img {
+  width: 100%;
+  height: 100%;
+  border-radius: 20px;
+}
+
+.featuredCategories__btn {
+  position: absolute;
+  bottom: 5%;
+  right: 5%;
+  font-size: 15px;
+  border-radius: 25px;
+  padding: 8px 12px;
+  background-color: white;
+  min-width: 130px;
+}
+
+.featuredCategories__info {
+  width: 100%;
+  height: 100%;
+  grid-column: 3/5;
+  grid-row: 2/3;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.featuredCategories__info--text {
+  text-align: left;
+  font-size: 28px;
+}
+
+.featuredCategories__info--text span {
+  border-bottom: 2px solid black;
+  padding-bottom: 2px;
+}
+
+.featuredCategories__info--btn {
+  font-size: 20px;
 }
 
 /* PRODUCTS PAGE */
