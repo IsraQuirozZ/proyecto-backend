@@ -204,7 +204,7 @@ section {
 }
 
 .featuredCategories {
-  width: 100%;
+  /* width: 100%; */
   height: 70vh;
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -267,7 +267,8 @@ section {
   grid-row: 2/3;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: end;
+  gap: 50px;
 }
 
 .featuredCategories__info--text {
@@ -282,6 +283,60 @@ section {
 
 .featuredCategories__info--btn {
   font-size: 20px;
+}
+
+/* HOME PAGE REVIEW SECTION */
+.homeReviewsSection {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  background: url(/public/img/comedor-moderno-3d-sala-estar-decoracion-lujo.jpg);
+  background-size: cover;
+  /* filter: brightness(70%); */
+}
+
+.homeReviews {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 30px;
+  margin: auto 0;
+}
+
+.homeReviews__review {
+  width: 350px;
+  height: 300px;
+  padding: 20px;
+  background-color: white;
+  border-radius: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+  justify-content: space-between;
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+}
+
+.homeReviews__review--img {
+  width: 100px;
+  height: 100px;
+  background-color: black;
+  border-radius: 50%;
+}
+
+.homeReviews__review--stars {
+  display: flex;
+  gap: 20px;
+  color: #ffbf50;
+}
+
+.homeReviews__review--text {
+  text-align: center;
+}
+
+.homeReviews__review--user {
+  font-size: 18px;
+  font-weight: bold;
 }
 
 /* PRODUCTS PAGE */
