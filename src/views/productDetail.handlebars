@@ -1,10 +1,8 @@
-<section class="productsSection" id="productsSection">
+<section class="productDetailSection" id="productDetailSection">
   {{#if product}}
-    <a class="returnLink" href="/products">
-      <div class="return">
-        <i class="fa-solid fa-arrow-left"></i>
-        <h4>Return</h4>
-      </div>
+    <a class="returnBtn" href="/products">
+      <i class="fa-solid fa-arrow-left"></i>
+      <h4>Return</h4>
     </a>
     <div class="productContainer">
       <div class="detailCard">
@@ -20,8 +18,8 @@
               >4.6</span></i>
           </div>
           <p class="productCard-category">Categoría</p>
-          <p class="productCard-description">{{product.description}}</p>
           <p class="productPrice">{{product.price}} €</p>
+          <p class="productCard-description">{{product.description}}</p>
           <div class="productQuantity">
             <p>Cantidad:</p>
             <div class="productQuantity-counter">
@@ -30,7 +28,7 @@
               <button class="productBtn sumBtn">+</button>
             </div>
           </div>
-          <button class="addBtn" value="{{product.id}}">Add to Cart</button>
+          <button class="btn addBtn" value="{{product.id}}">Add to Cart</button>
         </div>
       </div>
     </div>
