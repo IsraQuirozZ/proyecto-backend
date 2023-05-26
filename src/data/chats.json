@@ -4,27 +4,11 @@
     "message": "Hola"
   },
   {
-    "userName": "Guada",
-    "message": "keloke"
-  },
-  {
-    "userName": "Guada",
-    "message": "alo"
-  },
-  {
-    "userName": "Guada",
-    "message": "ola"
-  },
-  {
     "userName": "Israel",
     "message": "Hola"
   },
   {
-    "userName": "Isra",
-    "message": "Hola"
-  },
-  {
-    "userName": "Isra",
-    "message": "Cambié el product.js de scripts, el fetch  estaba mal"
+    "userName": "Guada",
+    "message": "alo"
   }
 ]
