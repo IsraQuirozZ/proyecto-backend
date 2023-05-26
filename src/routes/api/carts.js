@@ -69,7 +69,7 @@ router.put("/:cid/product/:pid/:units", async (req, res, next) => {
     } else if (productFound.stock === 0) {
       return res.json({ status: 404, response: "out of stock" });
     }
-    return res.json({ status: 400, response: "cart not updated" });
+    return res.json({ status: 400, response: "not enough stock" });
   } catch (error) {
     next(error);
   }

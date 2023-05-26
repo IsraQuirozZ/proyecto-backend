@@ -1,7 +1,7 @@
 // Burguer menu
 
-const open = document.querySelector('.fa-bars')
-const close = document.querySelector('.fa-xmark')
+const open = document.querySelector('#open')
+const close = document.querySelector('#close')
 const menu = document.querySelector('nav')
 
 let opened = false
@@ -19,11 +19,11 @@ close.addEventListener('click', () => {
 const update = () => {
     if (opened) {
         open.style.display = 'none'
-        close.style.display = 'var(--fa-display,inline-block)'
+        close.style.display = 'block'
         menu.style.display = 'block'
     } else {
         close.style.display = 'none'
-        open.style.display = 'var(--fa-display,inline-block)'
+        open.style.display = 'block'
         menu.style.display = 'none'
     }
 }
