@@ -694,6 +694,21 @@ h3 {
 #userName {
   margin: 10px 0 0 10px;
 }
+
+#messages {
+  width: 20%;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
 #messages h6 {
+  background-color: rgb(112, 49, 112);
   font-size: medium;
+  color: white;
+}
+
+.message {
+  width: auto;
+  border: 2px solid black;
 }
