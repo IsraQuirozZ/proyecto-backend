@@ -12,8 +12,8 @@ Swal.fire({
   socket.emit("auth", userName);
 });
 
-const send = e => {
-    if (e.key === 'Enter' && chatBox.value !== ''){
+const send = () => {
+    if (chatBox.value !== ''){
         socket.emit('new_message', {
             userName,
             message: chatBox.value.toString()
@@ -21,6 +21,11 @@ const send = e => {
         chatBox.value = ''
     }
 }
+
+const chatBox = document.querySelector('#chatBox')
+const sendBtn = document.querySelector('#sendBtn')
+chatBox.addEventListener('keyup', e => {if (e.key === 'Enter') send()})
+sendBtn.addEventListener('click', send)
 
 socket.on('all_messages', data => {
     document.querySelector('#messages').innerHTML = data.map(msg => {
@@ -30,11 +35,12 @@ socket.on('all_messages', data => {
         msgElement.appendChild(document.createTextNode(msg.message))
 
         const userNameElement = document.createElement('h6')
-        userNameElement.appendChild(document.createTextNode(msg.userName))
+        userNameElement.appendChild(document.createTextNode('- ' + msg.userName))
 
         const container = document.createElement('div') // Creo el nodo contenedor
         container.append(userNameElement, msgElement)   // Agrego el username y el msg
+        container.classList.add('message')
 
-        return container.innerHTML // Retorno el HTML
+        return container.outerHTML // Retorno el HTML
     }).join('')
 })
