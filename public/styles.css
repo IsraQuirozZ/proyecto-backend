@@ -661,7 +661,7 @@ section {
 .cartItem__divider {
   margin: 10px auto;
   width: 90%;
-  border-bottom: 3px solid rgb(214, 214, 214);
+  border-bottom: 3px solid #d6d6d6;
 }
 
 .cartContainer__bottom {
@@ -697,39 +697,63 @@ h3 {
   height: 100%;
 }
 
-#messages, #userName {
-  margin: 10px 0 0 10px;
-}
-
 #messages {
-  width: 20%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
   position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+  top: 4rem;
+  left: 0;
+  right: 0;
+  bottom: 0;
 }
-#messages h6 {
-  background-color: rgb(112, 49, 112);
+.message h6 {
+  font-weight: bold;
   font-size: medium;
-  color: white;
+  padding: 4px 0 3px 16px;
 }
 
 .message {
-  width: auto;
+  width: 90%;
+  margin-top: 1rem;
+  background-color: #fff;
   border: 2px solid black;
+  border-radius: 50px;
+}
+.message p{
+  padding: 0 0 4px 20px;
 }
 
-#messages, #userName{
-  margin: 10px 0 0 10px;
-}
-#messages h6 {
-  font-size: medium;
-}
-
-#chatBox{
+.msg-input{
+  display: flex;
   position: absolute;
   bottom: 0;
-  padding: .8rem;
   width: 100%;
-  height: 2rem;
+  height: 2.5rem;
+  border: none;
+}
+.msg-input input {
+  border-radius: 50px;
+  border-color: #000;
+  border-style: solid;
+  width: 100%;
+}
+.msg-input input::placeholder {
+  padding-left: 0.8rem;
+}
+.msg-input button {
+  position: absolute;
+  right: 2px;
+  bottom: 2px;
+  height: 2.3rem;
+  border-radius: 50px;
+  border-color: none;
+  border-style: none;
+  padding: 2px 8px 0 6px;
+  background-color: #fff;
+  transition: .2s;
+}
+.msg-input button:hover{
+  background-color: #9c9c9c;
 }
