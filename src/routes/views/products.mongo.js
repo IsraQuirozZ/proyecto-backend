@@ -1,29 +1,31 @@
 import { Router } from "express";
-import productManager from "../../dao/managers/Product.js";
-import fetch from "node-fetch";
 
 const router = Router();
 
 router.get("/products", async (req, res, next) => {
   try {
-    return res.render("products", {
-      title: "Products",
-      products: await productManager.getProducts(),
-    });
+    await fetch("http://localhost:8080/api/products")
+      .then((res) => res.json())
+      .then((data) => {
+        return res.render("products", {
+          title: "Products",
+          products: data.success ? data.response : null,
+        });
+      });
   } catch (error) {
     next(error);
   }
 });
 
-router.get("/products/:pid", async (req, res, next) => {
+router.get("/products/:id", async (req, res, next) => {
   try {
-    let id = Number(req.params.pid);
+    let id = req.params.id;
     await fetch(`http://localhost:8080/api/products/${id}`)
       .then((res) => res.json())
       .then((data) => {
         return res.render("productDetail", {
-          title: `Product ${data.response.id}`,
-          product: data.status === 200 ? data.response : null,
+          title: `${data.response.name}`,
+          product: data.success ? data.response : null,
           script: "/public/scripts/product.js",
         });
       });
