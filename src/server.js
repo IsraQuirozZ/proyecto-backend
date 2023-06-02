@@ -7,34 +7,29 @@ const PORT = 8080;
 const ready = () => console.log("server ready on port " + PORT);
 
 let http_server = server.listen(PORT, ready);
-let socket_server = new Server(http_server)
-const chats = chatManager.getChats()
-const cart = await cartManager.getCartById(1)
+let socket_server = new Server(http_server);
+const chats = chatManager.getChats();
+const cart = await cartManager.getCartById(1);
 let quantity = 0;
-cart.products.forEach(prod => {
-    quantity += prod.units
-})
+cart.products.forEach((prod) => {
+  quantity += prod.units;
+});
 
-socket_server.on(
-    'connection',
-    socket => {
-        
-        // //  console.log(`client ${socket.client.id} connected`)
+socket_server.on("connection", (socket) => {
+  // //  console.log(`client ${socket.client.id} connected`)
 
-        // Chat
+  // Chat
 
+  socket.on("auth", () => {
+    socket_server.emit("all_messages", chats); // Envía los mensajes cuando se autentique
+  });
 
-        socket.on('auth', () => {
-            socket_server.emit('all_messages', chats) // Envía los mensajes cuando se autentique
-        })
+  socket.on("new_message", (data) => {
+    chatManager.addMessage(data);
+    socket_server.emit("all_messages", chats);
+  });
 
-        socket.on('new_message', data => {
-            chatManager.addMessage(data)
-            socket_server.emit('all_messages', chats)
-        })
+  // Carrito
 
-        // Carrito
-
-        socket.emit('quantity', quantity)
-    }
-)
+  socket.emit("quantity", quantity);
+});
