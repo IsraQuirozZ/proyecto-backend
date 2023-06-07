@@ -25,7 +25,7 @@ router.get("/:cid", (req, res, next) => {
     if (cart) {
       return res.json({ status: 200, response: cart });
     }
-    return res.json({ status: 200, response: "cart not found" });
+    return res.json({ status: 400, response: "cart not found" });
   } catch (error) {
     next(error);
   }
