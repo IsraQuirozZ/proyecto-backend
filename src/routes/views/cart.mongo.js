@@ -25,7 +25,7 @@ router.get('/carts', async (req, res, next) => {
 					totalProducts = totalProducts + item.units;
 					totalPrice = totalPrice + item.price;
 				});
-				console.log(products)
+
 				return res.render("cart", {
 					title: "Carrito",
 					products: products,

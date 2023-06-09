@@ -69,8 +69,6 @@ router.delete("/:cid/product/:pid/:units", async (req, res, next) => {
     let productId = req.params.pid;
     let productUnits = Number(req.params.units);
 
-    console.log(productId)
-
     let response = await cartManager.deleteProducts(cartId, {pid: productId, units: productUnits})
 
     if (response === 200) {
