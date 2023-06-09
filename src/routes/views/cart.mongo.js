@@ -13,6 +13,7 @@ router.get('/carts', async (req, res, next) => {
 				let products = [];
 				for (let product of cartProducts) {
 					products.push({
+						id: product.pid,
 						product: await Product.findById(product.pid),
 						units: product.units,
 					  });
@@ -24,6 +25,7 @@ router.get('/carts', async (req, res, next) => {
 					totalProducts = totalProducts + item.units;
 					totalPrice = totalPrice + item.price;
 				});
+
 				return res.render("cart", {
 					title: "Carrito",
 					products: products,
