@@ -46,7 +46,7 @@ router.put("/:cid/product/:pid/:units", async (req, res, next) => {
     let cartId = req.params.cid;
     let productId = req.params.pid;
     let productUnits = Number(req.params.units);
-
+    
 		let response = await cartManager.addProducts(cartId, {pid: productId, units: productUnits})
 
 		if (response === 200) {
@@ -68,6 +68,8 @@ router.delete("/:cid/product/:pid/:units", async (req, res, next) => {
     let cartId = req.params.cid;
     let productId = req.params.pid;
     let productUnits = Number(req.params.units);
+
+    console.log(productId)
 
     let response = await cartManager.deleteProducts(cartId, {pid: productId, units: productUnits})
 

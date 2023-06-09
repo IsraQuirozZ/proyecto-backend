@@ -19,8 +19,8 @@ subBtn.addEventListener("click", () => {
 });
 
 addBtn.addEventListener("click", () => {
-  let id = Number(addBtn.value);
-  fetch(`http://localhost:8080/api/carts/1/product/${id}/${units}`, {
+  let id = addBtn.value;
+  fetch(`http://localhost:8080/api/carts/647f9a508af5814325d1e75a/product/${id}/${units}`, {
     method: "PUT",
   })
     .then((res) => res.json())
