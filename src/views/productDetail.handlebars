@@ -13,11 +13,11 @@
         />
         <div class="detailCard-info">
           <div class="productCard-info">
-            <h3 class="productDetailTitle">{{product.title}}</h3>
+            <h3 class="productDetailTitle">{{product.name}}</h3>
             <i class="fa-sharp fa-solid fa-star productDetailRating"><span
-              >4.6</span></i>
+              >{{product.rating}}</span></i>
           </div>
-          <p class="productCard-category">Categoría</p>
+          <p class="productCard-category">{{product.category}}</p>
           <p class="productPrice">{{product.price}} €</p>
           <p class="productCard-description">{{product.description}}</p>
           <div class="productQuantity">
@@ -28,7 +28,7 @@
               <button class="productBtn sumBtn">+</button>
             </div>
           </div>
-          <button class="btn addBtn" value="{{product.id}}">Add to Cart</button>
+          <button class="btn addBtn" value="{{product._id}}">Add to Cart</button>
         </div>
       </div>
     </div>

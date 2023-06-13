@@ -21,7 +21,7 @@ router.get("/products/:pid", async (req, res, next) => {
     await fetch(`http://localhost:8080/api/products/${id}`)
       .then((res) => res.json())
       .then((data) => {
-        res.render("productDetail", {
+        return res.render("productDetail", {
           title: `Product ${data.response.id}`,
           product: data.status === 200 ? data.response : null,
           script: "/public/scripts/product.js",
