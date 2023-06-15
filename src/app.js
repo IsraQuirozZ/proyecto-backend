@@ -5,8 +5,11 @@ import notFoundHandler from "./middlewares/notFoundHandler.js";
 import { engine } from "express-handlebars";
 import { __dirname } from "./utils.js";
 import router from "./routes/index.js";
+import cors from 'cors'
 
 const server = express();
+
+server.use(cors())
 
 // Template engine
 server.engine("handlebars", engine()); // Motor de plantillas

@@ -1,7 +1,6 @@
 import fetch from "node-fetch";
 import { Router } from "express";
 import Product from "../../dao/models/Product.js";
-import Cart from "../../dao/models/Cart.js";
 
 const router = Router();
 
@@ -21,11 +20,12 @@ router.get("/carts", async (req, res, next) => {
         }
         let totalProducts = 0;
         let totalPrice = 0;
-        // products.forEach((item) => {
-        //   item.price = item.product.price * item.units;
-        //   totalProducts = totalProducts + item.units;
-        //   totalPrice = totalPrice + item.price;
-        // });
+        products.forEach((item) => {
+          item.price = item.product.price * item.units;
+          totalProducts = totalProducts + item.units;
+          totalPrice = totalPrice + item.price;
+        });
+        console.log(products);
         return res.render("cart", {
           title: "Carrito",
           products: products,
@@ -34,9 +34,5 @@ router.get("/carts", async (req, res, next) => {
           script: "/public/scripts/cart.js",
         });
       });
-  } catch (error) {
-    next(error);
-  }
+  } catch (error) {}
 });
-
-export default router;

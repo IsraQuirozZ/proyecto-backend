@@ -18,10 +18,13 @@ router.post("/", async (req, res, next) => {
 
 router.get("/", async (req, res, next) => {
   try {
-    let limit = req.query.limit;
-    let products = await Product.find();
-    if (products.length > 0) {
-      products = products.slice(0, limit);
+    let page = req.query.page ?? 1;
+    let limit = req.query.limit ?? 6;
+    let name = req.query.name
+      ? new RegExp(req.query.name, "i")
+      : new RegExp("");
+    let products = await Product.paginate({ name }, { limit, page });
+    if (products) {
       return res.status(200).json({
         success: true,
         response: products,
