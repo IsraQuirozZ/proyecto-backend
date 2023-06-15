@@ -25,14 +25,14 @@
               alt="product image"
             />
             <div class="cartItem__product--info">
-              <h2 class="productTitle">{{this.product.title}}</h2>
+              {{!-- <h2 class="productTitle">{{this.product.name}}</h2> --}}
               <h4 class="productCategory">Categoría</h4>
             </div>
           </div>
           <h2 class="cartItem__units">{{this.units}}</h2>
           <div class="cartItem__price cartItem__section">
-            <h2 class="cartItem__price--price">{{this.price}} €</h2>
-            <button class="deleteItem" value="{{this.product.id}}"">
+            {{!-- <h2 class="cartItem__price--price">{{this.price}} €</h2> --}}
+            <button class="deleteItem" value="{{this.id}}">
               <i class="fa-regular fa-xmark"></i>
             </button>
           </div>

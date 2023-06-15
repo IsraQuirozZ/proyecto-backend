@@ -10,12 +10,14 @@ let totalPrice = document.querySelector(".totalPrice");
 
 deleteItemBtns.forEach((btn) => {
   btn.addEventListener("click", () => {
-    let id = btn.value;
     let units = 1;
-    fetch(`http://localhost:8080/api/carts/647f9a508af5814325d1e75a/product/${id}/${units}`, {
-      method: "DELETE",
-    }).then(() => {
-      // location.reload();
+    fetch(
+      `http://localhost:8080/api/carts/647f9a508af5814325d1e75a/product/${btn.value}/${units}`,
+      {
+        method: "DELETE",
+      }
+    ).then(() => {
+      location.reload();
     });
   });
 });

@@ -1,9 +1,18 @@
-import { model, Schema } from "mongoose";
+import { model, Schema, Types } from "mongoose";
 
 let collection = "carts";
 
+// let schema = new Schema({
+//   products: { type: Array, required: true },
+// });
 let schema = new Schema({
-  products: { type: Array, required: true }
+  products: [
+    {
+      _id: false,
+      pid: { type: Types.ObjectId, ref: "products" },
+      units: { type: Number },
+    },
+  ],
 });
 
 let Cart = model(collection, schema);
