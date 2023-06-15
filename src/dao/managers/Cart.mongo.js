@@ -65,10 +65,6 @@ class CartManager {
   }
 
   async deleteProducts(cartId, data) {
-    // data = {
-    //   pid: productId,
-    //   units: productUnits,
-    // }
     try {
       let cartFound = await Cart.findById(cartId);
       let productFound = await Product.findById(data.pid);
