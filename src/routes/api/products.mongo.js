@@ -20,11 +20,10 @@ router.get("/", async (req, res, next) => {
   try {
     let page = req.query.page ?? 1;
     let limit = req.query.limit ?? 6;
-    let name = req.query.name ? new RegExp(req.query.name, 'i') : new RegExp('');
-    let products = await Product.paginate(
-      { name },
-      { limit, page }
-      );
+    let name = req.query.name
+      ? new RegExp(req.query.name, "i")
+      : new RegExp("");
+    let products = await Product.paginate({ name }, { limit, page });
     if (products) {
       return res.status(200).json({
         success: true,
