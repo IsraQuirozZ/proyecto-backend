@@ -20,7 +20,7 @@ let schema = new Schema({
     ],
   },
   price: { type: Number, required: true },
-  thumbnail: { type: String, required: true }, // investigar como hacer para tener las imágenes
+  thumbnail: { type: String, required: true },
   stock: { type: Number, default: 25 },
   rating: { type: Number, default: 0 },
 });

@@ -37,9 +37,9 @@ class CartManager {
       this.carts.push(cart);
       let dataJson = JSON.stringify(this.carts, null, 2);
       await fs.promises.writeFile(this.path, dataJson);
-      return 201; // cart created
+      return 201;
     } catch (err) {
-      return null; // error: creating cart
+      return null;
     }
   }
 
@@ -47,7 +47,7 @@ class CartManager {
     try {
       let cartFound = this.getCartById(cartId);
       if (!cartFound) {
-        return null; // error: not found cart to update
+        return null;
       }
 
       if (
@@ -55,35 +55,31 @@ class CartManager {
         typeof data !== "object" ||
         data.units === 0
       ) {
-        return null; // error: data is required
+        return null;
       }
 
       if (cartFound.products.length === 0) {
-        cartFound.products.push(data); // Solo se ejecutará cuando el array de productos esté vacío
+        cartFound.products.push(data);
       } else {
-        // Si ya existe el producto en el carrito
         let products = [];
         cartFound.products.forEach((product) => {
           products.push(product.pid);
         });
 
         if (products.includes(data.pid)) {
-          // aumenta las unidades
           let productToAddUnits = cartFound.products.find(
             (product) => product.pid === data.pid
           );
           productToAddUnits.units = productToAddUnits.units + data.units;
         } else {
-          // Agrega todo el producto
           cartFound.products.push(data);
         }
       }
       let dataJson = JSON.stringify(this.carts, null, 2);
       await fs.promises.writeFile(this.path, dataJson);
-      return 200; // cart has been updated
+      return 200;
     } catch (error) {
-      // console.log(error);
-      return null; // error: updating cart
+      return null;
     }
   }
 
@@ -116,10 +112,9 @@ class CartManager {
         let dataJson = JSON.stringify(this.carts, null, 2);
         await fs.promises.writeFile(this.path, dataJson);
         if (moreUnits) {
-          // Si mandan más unidades de las que tiene el prod
-          return newUnits; // Regresamos las unidades del producto (para no aumentar el stock a más de las que tenía)
+          return newUnits;
         }
-        return 200; // cart has been deleted
+        return 200;
       }
       return null;
     } catch (error) {
@@ -129,17 +124,17 @@ class CartManager {
   }
 }
 
-async function managment() {
-  let cartManager = new CartManager("./src/data/carts.json");
-  await cartManager.getCarts();
-  await cartManager.getCartById(3);
-  await cartManager.addCart({
-    products: [
-      { pid: 1, quantity: 2 },
-      { pid: 2, quantity: 2 },
-    ],
-  });
-}
+// async function managment() {
+//   let cartManager = new CartManager("./src/data/carts.json");
+//   await cartManager.getCarts();
+//   await cartManager.getCartById(3);
+//   await cartManager.addCart({
+//     products: [
+//       { pid: 1, quantity: 2 },
+//       { pid: 2, quantity: 2 },
+//     ],
+//   });
+// }
 // managment();
 
 let cartManager = new CartManager("./src/data/carts.json");

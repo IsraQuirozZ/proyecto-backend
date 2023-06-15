@@ -2,9 +2,6 @@ import { model, Schema, Types } from "mongoose";
 
 let collection = "carts";
 
-// let schema = new Schema({
-//   products: { type: Array, required: true },
-// });
 let schema = new Schema({
   products: [
     {

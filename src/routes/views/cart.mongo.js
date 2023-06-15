@@ -36,3 +36,5 @@ router.get("/carts", async (req, res, next) => {
       });
   } catch (error) {}
 });
+
+export default router;

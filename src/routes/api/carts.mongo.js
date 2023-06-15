@@ -5,13 +5,13 @@ import { Types } from "mongoose";
 
 const router = Router();
 
+// GET CARTS
 router.get("/", async (req, res, next) => {
   try {
-    // let carts = await Cart.find().populate("products.pid");
     let carts = await Cart.aggregate([
       {
         $lookup: {
-          from: "products", // colección
+          from: "products", // Colección
           localField: "products.pid", // Campo de la colección
           foreignField: "_id", // Campo de la colección que debo buscar
           as: "productsPopulated", // Nombre
@@ -23,7 +23,7 @@ router.get("/", async (req, res, next) => {
           preserveNullAndEmptyArrays: true,
         },
       }, // Desagrega el arreglo del lookup, y agrega aquellos que están vacíos
-      { $sort: { "productsPopulated.name": 1 } }, // Ordena por nombre los productos
+      { $sort: { "productsPopulated.name": 1 } },
       {
         $group: {
           _id: "$_id",
@@ -54,6 +54,7 @@ router.get("/", async (req, res, next) => {
   }
 });
 
+// GET CART BY ID
 router.get("/:cid", async (req, res, next) => {
   try {
     let id = req.params.cid;
@@ -67,7 +68,7 @@ router.get("/:cid", async (req, res, next) => {
   }
 });
 
-// Total a pagar de un carrito
+// GET BILL FROM ONE CART
 router.get("/bills/:cid", async (req, res, next) => {
   try {
     let id = req.params.cid;
@@ -102,9 +103,10 @@ router.get("/bills/:cid", async (req, res, next) => {
   }
 });
 
+// CREATE EMPTY CART
 router.post("/", async (req, res, next) => {
   try {
-    let cart = await Cart.create({ products: [] }); // Add empty cart
+    let cart = await Cart.create({ products: [] });
     return res
       .status(201)
       .json({ success: true, response: `cart created with ID ${cart._id}` });
@@ -113,6 +115,7 @@ router.post("/", async (req, res, next) => {
   }
 });
 
+// UPDATE CART (ADD UNITS FROM PRODUCT(ID) TO CART(ID))
 router.put("/:cid/product/:pid/:units", async (req, res, next) => {
   try {
     let cartId = req.params.cid;
@@ -144,6 +147,7 @@ router.put("/:cid/product/:pid/:units", async (req, res, next) => {
   }
 });
 
+// DELETE CART PRODUCT (DELETE PRODUCT(ID) UNITS FROM CART(ID))
 router.delete("/:cid/product/:pid/:units", async (req, res, next) => {
   try {
     let cartId = req.params.cid;
@@ -170,5 +174,14 @@ router.delete("/:cid/product/:pid/:units", async (req, res, next) => {
     next(error);
   }
 });
+
+// DELETE CART
+// router.delete("/:cid", async(req,res,next) => {
+//   try {
+
+//   } catch (error) {
+//     next(error)
+//   }
+// })
 
 export default router;

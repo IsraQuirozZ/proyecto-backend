@@ -20,15 +20,15 @@ class CartManager {
       }
 
       let stock = productFound.stock;
-
+      // Si el stock es mayor a las unidades a agregar, le resto esas unidades al stock, de lo contrario,
+      // unidades a agregar será igual a stock para que no se agregue más de lo máximo disponible
       stock >= data.units
         ? (stock -= data.units)
-        : ((data.units = stock), (stock = 0)); // Si el stock es mayor a las unidades a agregar, le resto las unidades, de lo contrario, le seteo stock a units para que no se agregue más de lo máximo disponible
+        : ((data.units = stock), (stock = 0));
 
       if (cartFound.products.length === 0) {
-        cartFound.products.push(data); // Solo se ejecutará cuando el array de productos esté vacío
+        cartFound.products.push(data);
       } else {
-        // Si ya existen productos en el carrito
         let productsId = [];
         cartFound.products.forEach((product) => {
           productsId.push(String(product.pid));
@@ -78,6 +78,8 @@ class CartManager {
 
       let stock = productFound.stock;
 
+      // Si las unidades a eliminar son menores a las unidades del carrito, se restan.
+      // De lo contrario, las unidades del carrito pasarían a ser 0 y se elimina el producto del carrito.
       productCart.units > data.units
         ? ((productCart.units -= data.units), (stock += data.units))
         : ((stock += productCart.units),
@@ -86,7 +88,7 @@ class CartManager {
             products: cartFound.products.filter(
               (prod) => String(prod.pid) !== data.pid
             ),
-          })); // Si las unidades a eliminar son menores a las unidades añadidas, se restan. De lo contrario, las unidades pasarían a ser 0, entonces se elimina el producto del carrito.
+          }));
 
       let cart = await Cart.findByIdAndUpdate(
         cartId,
