@@ -16,8 +16,13 @@ const validator = async (req, res, next) => {
 		});
 	}
 
-	let userExist = await User.findOne({email})
-	console.log(userExist)
+	let userExists = await User.findOne({email})
+	if (Boolean(userExists)) {
+		return res.status(409).json({
+			success: false,
+			response: 'User already authenticated'
+		})
+	}
 
 	next()
 
