@@ -1,4 +1,3 @@
-
 import { Router } from "express";
 import validator from "../../middlewares/validator.js";
 import password_validator from "../../middlewares/passwordValidator.js";
@@ -38,10 +37,6 @@ router.post("/login", password_validator, async (req, res, next) => {
     const { email, password } = req.body;
     const user = await User.findOne({ email });
     if (user) {
-      console.log(email);
-      console.log(user.email);
-      console.log(password);
-      console.log(user.password);
       if (password === user.password) {
         req.session.email = email;
         req.session.role = user.role;
