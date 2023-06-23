@@ -12,6 +12,13 @@ const server = express();
 
 // Middlewares
 server.use(
+  cors({
+    origin: "http://localhost:5173",
+    credentials: true,
+  })
+);
+
+server.use(
   session({
     secret: process.env.SECRET_SESSION,
     resave: true,
@@ -23,7 +30,6 @@ server.use(
     rolling: true,
   })
 );
-server.use(cors());
 server.use("/public", express.static("public"));
 server.use(express.urlencoded({ extended: true }));
 server.use(express.json());

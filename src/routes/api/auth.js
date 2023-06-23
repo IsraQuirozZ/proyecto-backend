@@ -36,26 +36,27 @@ router.post("/login", password_validator, async (req, res, next) => {
   try {
     const { email, password } = req.body;
     const user = await User.findOne({ email });
-    if (user) {
-      if (password === user.password) {
-        req.session.email = email;
-        req.session.role = user.role;
-        return res.status(200).json({
-          success: true,
-          message: "User login",
-          email: req.session.email,
-          role: req.session.role,
-        });
-      } else {
-        return res.status(404).json({
-          success: false,
-          message: "Incorrect password",
-        });
+    if (!req.session.email) {
+      if (user) {
+        if (password === user.password) {
+          req.session.email = email;
+          req.session.role = user.role;
+          return res.status(200).json({
+            success: true,
+            message: "User login",
+            email: req.session.email,
+            role: req.session.role,
+          });
+        }
       }
-    } else {
       return res.status(404).json({
         success: false,
-        message: "User not found",
+        message: "Invalid email or password",
+      });
+    } else {
+      return res.status(403).json({
+        success: false,
+        message: "You already have an open session",
       });
     }
   } catch (error) {
@@ -67,18 +68,17 @@ router.post("/login", password_validator, async (req, res, next) => {
 router.post("/logout", async (req, res, next) => {
   try {
     let user = await User.findOne({ email: req.session.email });
-    console.log(user);
     if (user) {
       req.session.destroy((err) => {
         if (err) {
           return res.status(500).json({
-            success: true,
+            success: false,
             message: "Error logging out",
           });
         } else {
           return res.status(200).json({
             success: true,
-            message: " ",
+            message: "User logged out",
           });
         }
       });
@@ -93,6 +93,12 @@ router.post("/logout", async (req, res, next) => {
   }
 });
 
-// router.get("");
+// GET SESSION
+router.get("/session", (req, res) => {
+  return res.json({
+    email: req.session.email,
+    role: req.session.role,
+  });
+});
 
 export default router;
