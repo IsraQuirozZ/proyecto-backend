@@ -41,19 +41,21 @@ router.post("/login", password_validator, async (req, res, next) => {
         req.session.email = email;
         req.session.role = user.role;
         return res.status(200).json({
-          succes: true,
-          response: "User login",
+          success: true,
+          message: "User login",
+          email: req.session.email,
+          role: req.session.role,
         });
       } else {
         return res.status(404).json({
           success: false,
-          response: "Incorrect password",
+          message: "Incorrect password",
         });
       }
     } else {
       return res.status(404).json({
         success: false,
-        response: "User not found",
+        message: "User not found",
       });
     }
   } catch (error) {
@@ -64,16 +66,33 @@ router.post("/login", password_validator, async (req, res, next) => {
 // LOGOUT
 router.post("/logout", async (req, res, next) => {
   try {
-    req.session.destroy();
-    return res.status(200).json({
-      success: true,
-      response: "Disconnected",
-    });
+    let user = await User.findOne({ email: req.session.email });
+    console.log(user);
+    if (user) {
+      req.session.destroy((err) => {
+        if (err) {
+          return res.status(500).json({
+            success: true,
+            message: "Error logging out",
+          });
+        } else {
+          return res.status(200).json({
+            success: true,
+            message: " ",
+          });
+        }
+      });
+    } else {
+      return res.status(200).json({
+        success: true,
+        message: "No session started",
+      });
+    }
   } catch (error) {
     next(error);
   }
 });
 
-router.get("");
+// router.get("");
 
 export default router;

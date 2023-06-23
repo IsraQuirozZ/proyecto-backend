@@ -6,12 +6,12 @@ const password_validator = (req, res, next) => {
   ) {
     return res.status(411).json({
       success: false,
-      response:
+      message:
         "Password must be at least 8 characters long, include at least one uppercase letter, one lowercase letter, one number, and one special character",
     });
   }
 
-  next();
+  return next();
 };
 
 export default password_validator;
