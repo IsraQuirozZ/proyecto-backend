@@ -10,8 +10,14 @@ import MongoStore from "connect-mongo";
 
 const server = express();
 
-server.use(cors());
 // Middlewares
+server.use(
+  cors({
+    origin: "http://localhost:5173",
+    credentials: true,
+  })
+);
+
 server.use(
   session({
     secret: process.env.SECRET_SESSION,
@@ -19,8 +25,9 @@ server.use(
     saveUninitialized: true,
     store: MongoStore.create({
       mongoUrl: process.env.MONGO_LINK,
-      ttl: 7 * 24 * 60 * 60,
+      ttl: 7 * 24 * 60 * 60 * 1000,
     }),
+    rolling: true,
   })
 );
 server.use("/public", express.static("public"));
