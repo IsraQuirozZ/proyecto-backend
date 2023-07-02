@@ -1,15 +1,17 @@
 import { Router } from "express";
 import Product from "../../dao/models/Product.js";
+import authenticateAdmin from "../../middlewares/authenticateAdmin.js";
 
 const router = Router();
 
-router.post("/", async (req, res, next) => {
+router.post("/", authenticateAdmin, async (req, res, next) => {
   try {
+    console.log(req.session.email);
     let productData = req.body;
     let newProduct = await Product.create(productData);
     return res.status(201).json({
       success: true,
-      response: `product "${newProduct._id}" created`,
+      message: `product "${newProduct._id}" created`,
     });
   } catch (error) {
     next(error);
