@@ -6,12 +6,12 @@ const validator = async (req, res, next) => {
   if (!name || !email || !password) {
     return res.status(400).json({
       success: false,
-      message: "All data required",
+      response: "All data required",
     });
   } else if (!email.match(/^[^\s@]+@[^\s@]+.[^\s@]+$/)) {
     return res.status(400).json({
       success: false,
-      message: "Invalid email",
+      response: "Invalid email",
     });
   }
 
@@ -19,7 +19,7 @@ const validator = async (req, res, next) => {
   if (Boolean(userExists)) {
     return res.status(409).json({
       success: false,
-      message: "User already authenticated",
+      response: "User already authenticated",
     });
   }
 

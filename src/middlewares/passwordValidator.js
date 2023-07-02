@@ -4,9 +4,9 @@ const password_validator = (req, res, next) => {
   if (
     !password.match(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*]).{8,}$/)
   ) {
-    return res.status(411).json({
+    return res.status(400).json({
       success: false,
-      message: "Password too weak", // must be at least 8 characters long, include at least one uppercase letter, one lowercase letter, one number, and one special character
+      response: "Password too weak", // must be at least 8 characters long, include at least one uppercase letter, one lowercase letter, one number, and one special character
     });
   }
 
