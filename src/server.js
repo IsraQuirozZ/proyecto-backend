@@ -1,6 +1,5 @@
 import server from "./app.js";
 import { Server } from "socket.io";
-import cartManager from "./dao/managers/Cart.js";
 import chatManager from "./dao/managers/Chat.js";
 import { connect } from "mongoose";
 
@@ -15,11 +14,6 @@ const ready = () => {
 let http_server = server.listen(port, ready);
 let socket_server = new Server(http_server);
 const chats = chatManager.getChats();
-const cart = await cartManager.getCartById(1);
-let quantity = 0;
-cart.products.forEach((prod) => {
-  quantity += prod.units;
-});
 
 socket_server.on("connection", (socket) => {
   // //  console.log(`client ${socket.client.id} connected`)

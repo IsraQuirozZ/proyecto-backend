@@ -2,6 +2,7 @@ import { Router } from "express";
 import validator from "../../middlewares/validator.js";
 import password_validator from "../../middlewares/passwordValidator.js";
 import User from "../../dao/models/User.js";
+import Cart from "../../dao/models/Cart.js";
 
 const router = Router();
 
@@ -12,7 +13,8 @@ router.post(
   password_validator,
   async (req, res, next) => {
     try {
-      let newUser = await User.create(req.body);
+      let cart =  await Cart.create({products: []})
+      let newUser = await User.create({...req.body, cid: cart._id});
 
       if (newUser) {
         return res.status(201).json({

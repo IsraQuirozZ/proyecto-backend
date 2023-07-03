@@ -103,17 +103,17 @@ router.get("/bills/:cid", async (req, res, next) => {
   }
 });
 
-// CREATE EMPTY CART
-router.post("/", async (req, res, next) => {
-  try {
-    let cart = await Cart.create({ products: [] });
-    return res
-      .status(201)
-      .json({ success: true, response: `cart created with ID ${cart._id}` });
-  } catch (error) {
-    next(error);
-  }
-});
+// // CREATE EMPTY CART
+// router.post("/", async (req, res, next) => {
+//   try {
+//     let cart = await Cart.create({ products: [] });
+//     return res
+//       .status(201)
+//       .json({ success: true, response: `cart created with ID ${cart._id}` });
+//   } catch (error) {
+//     next(error);
+//   }
+// });
 
 // UPDATE CART (ADD UNITS FROM PRODUCT(ID) TO CART(ID))
 router.put("/:cid/product/:pid/:units", async (req, res, next) => {

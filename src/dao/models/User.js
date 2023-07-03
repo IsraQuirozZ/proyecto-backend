@@ -1,4 +1,4 @@
-import { model, Schema } from "mongoose";
+import { model, Schema, Types } from "mongoose";
 
 let collection = "users";
 
@@ -13,6 +13,7 @@ let schema = new Schema({
   age: { type: Number },
   role: { type: Number, default: 0 },
   password: { type: String, required: true },
+  cid: { type: Types.ObjectId, ref: 'carts', unique: true }
 });
 
 let User = model(collection, schema);
