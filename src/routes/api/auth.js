@@ -37,7 +37,7 @@ router.get("/fail-register", (req, res) => {
 router.post(
   "/login",
   // passwordValidator,
-  passport.authenticate("login", { failureRedirect: "api/auth,fail-login" }),
+  passport.authenticate("login", { failureRedirect: "/api/auth/fail-login" }),
   isPasswordValid,
   async (req, res, next) => {
     try {
@@ -66,7 +66,7 @@ router.post(
 router.get("/fail-login", (req, res) => {
   return res.status(400).json({
     success: false,
-    response: "auth error",
+    response: "Check data",
   });
 });
 
