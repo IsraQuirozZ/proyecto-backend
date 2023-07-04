@@ -4,7 +4,6 @@ import passwordValidator from "../../middlewares/passwordValidator.js";
 import isPasswordValid from "../../middlewares/isPasswordValid.js";
 import createHash from "../../middlewares/createhash.js";
 import User from "../../dao/models/User.js";
-import Cart from "../../dao/models/Cart.js";
 import passport from "passport";
 
 const router = Router();
@@ -36,7 +35,6 @@ router.get("/fail-register", (req, res) => {
 // LOGIN
 router.post(
   "/login",
-  // passwordValidator,
   passport.authenticate("login", { failureRedirect: "/api/auth/fail-login" }),
   isPasswordValid,
   async (req, res, next) => {
@@ -49,8 +47,6 @@ router.post(
           success: true,
           message: "User login",
           user: { email: req.session.email, role: req.user.role },
-          // email: req.session.email,
-          // role: req.session.role,
         });
       } else {
         return res.status(403).json({
