@@ -1,8 +1,11 @@
 import { Router } from "express";
 import validator from "../../middlewares/validator.js";
-import password_validator from "../../middlewares/passwordValidator.js";
+import passwordValidator from "../../middlewares/passwordValidator.js";
+import isPasswordValid from "../../middlewares/isPasswordValid.js";
+import createHash from "../../middlewares/createhash.js";
 import User from "../../dao/models/User.js";
 import Cart from "../../dao/models/Cart.js";
+import passport from "passport";
 
 const router = Router();
 
@@ -10,60 +13,61 @@ const router = Router();
 router.post(
   "/register",
   validator,
-  password_validator,
+  passwordValidator,
+  createHash,
+  passport.authenticate("register", {
+    failureRedirect: "/api/auth/fail-register",
+  }),
+  (req, res) => {
+    return res.status(201).json({
+      success: true,
+      response: "User created",
+    });
+  }
+);
+
+router.get("/fail-register", (req, res) => {
+  return res.status(400).json({
+    success: false,
+    response: "auth error",
+  });
+});
+
+// LOGIN
+router.post(
+  "/login",
+  // passwordValidator,
+  passport.authenticate("login", { failureRedirect: "api/auth,fail-login" }),
+  isPasswordValid,
   async (req, res, next) => {
     try {
-      let cart =  await Cart.create({products: []})
-      let newUser = await User.create({...req.body, cid: cart._id});
-
-      if (newUser) {
-        return res.status(201).json({
+      const { email } = req.body;
+      if (!req.session.email) {
+        req.session.email = email;
+        req.session.role = req.user.role;
+        return res.status(200).json({
           success: true,
-          response: `User ${newUser._id} created`,
+          message: "User login",
+          email: req.session.email,
+          role: req.session.role,
+        });
+      } else {
+        return res.status(403).json({
+          success: false,
+          message: "You already have an open session",
         });
       }
-
-      return res.status(500).json({
-        success: true,
-        response: "User not created",
-      });
     } catch (error) {
       next(error);
     }
   }
 );
 
-// LOGIN
-router.post("/login", password_validator, async (req, res, next) => {
-  try {
-    const { email, password } = req.body;
-    const user = await User.findOne({ email });
-    if (!req.session.email) {
-      if (user) {
-        if (password === user.password) {
-          req.session.email = email;
-          req.session.role = user.role;
-          return res.status(200).json({
-            success: true,
-            message: "User login",
-            email: req.session.email,
-            role: req.session.role,
-          });
-        }
-      }
-      return res.status(404).json({
-        success: false,
-        message: "Invalid email or password",
-      });
-    } else {
-      return res.status(403).json({
-        success: false,
-        message: "You already have an open session",
-      });
-    }
-  } catch (error) {
-    next(error);
-  }
+router.get("/fail-login", (req, res) => {
+  return res.status(400).json({
+    success: false,
+    response: "auth error",
+  });
 });
 
 // LOGOUT
