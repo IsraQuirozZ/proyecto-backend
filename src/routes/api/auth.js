@@ -48,8 +48,9 @@ router.post(
         return res.status(200).json({
           success: true,
           message: "User login",
-          email: req.session.email,
-          role: req.session.role,
+          user: { email: req.session.email, role: req.user.role },
+          // email: req.session.email,
+          // role: req.session.role,
         });
       } else {
         return res.status(403).json({
@@ -66,7 +67,7 @@ router.post(
 router.get("/fail-login", (req, res) => {
   return res.status(400).json({
     success: false,
-    response: "Check data",
+    response: "Invalid email or password",
   });
 });
 
