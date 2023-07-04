@@ -1,8 +1,10 @@
 import { Router } from "express";
-import validator from "../../middlewares/validator.js";
+import registerValidator from "../../middlewares/registerValidator.js";
 import passwordValidator from "../../middlewares/passwordValidator.js";
 import isPasswordValid from "../../middlewares/isPasswordValid.js";
 import createHash from "../../middlewares/createhash.js";
+import generateToken from "../../middlewares/generateToken.js";
+import authenticateUser from "../../middlewares/authenticateUser.js";
 import User from "../../dao/models/User.js";
 import Cart from "../../dao/models/Cart.js";
 import passport from "passport";
@@ -12,9 +14,10 @@ const router = Router();
 // REGISTER
 router.post(
   "/register",
-  validator,
+  registerValidator,
   passwordValidator,
   createHash,
+  generateToken,
   passport.authenticate("register", {
     failureRedirect: "/api/auth/fail-register",
   }),
@@ -36,9 +39,10 @@ router.get("/fail-register", (req, res) => {
 // LOGIN
 router.post(
   "/login",
-  // passwordValidator,
-  passport.authenticate("login", { failureRedirect: "api/auth,fail-login" }),
+  authenticateUser,
   isPasswordValid,
+  passport.authenticate("login", { failureRedirect: "api/auth/fail-login" }),
+  generateToken,
   async (req, res, next) => {
     try {
       const { email } = req.body;
@@ -50,6 +54,8 @@ router.post(
           message: "User login",
           email: req.session.email,
           role: req.session.role,
+          user: req.user,
+          token: req.token
         });
       } else {
         return res.status(403).json({
@@ -79,25 +85,40 @@ router.post("/logout", async (req, res, next) => {
         if (err) {
           return res.status(500).json({
             success: false,
-            message: "Error logging out",
+            response: "Error logging out",
           });
         } else {
           return res.status(200).json({
             success: true,
-            message: "User logged out",
+            response: "User logged out",
           });
         }
       });
     } else {
       return res.status(200).json({
         success: true,
-        message: "No session started",
+        response: "No session started",
       });
     }
   } catch (error) {
     next(error);
   }
 });
+
+// GITHUB REGISTER
+
+router.get('/github', passport.authenticate('github', { scope: ['user: email'] }), (req, res) => { })
+
+router.get('/github/callback',
+  passport.authenticate(
+    'github',
+    { failureRedirect: '/fail-register-github' }),
+  (req, res) => res.status(200).redirect('/'))
+
+router.get('/fail-register-github', (req, res) => res.status(403).json({
+  success: false,
+  response: 'bad auth'
+}))
 
 // GET SESSION
 router.get("/session", (req, res) => {
