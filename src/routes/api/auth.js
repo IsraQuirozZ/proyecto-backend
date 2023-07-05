@@ -53,8 +53,8 @@ router.post(
           message: "User logged",
           email: req.session.email,
           role: req.session.role,
-          user: req.user,
           token: req.token
+          user: { email: req.session.email, role: req.user.role },
         });
       } else {
         return res.status(403).json({
