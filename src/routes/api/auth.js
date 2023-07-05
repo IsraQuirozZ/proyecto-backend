@@ -4,9 +4,8 @@ import passwordValidator from "../../middlewares/passwordValidator.js";
 import isPasswordValid from "../../middlewares/isPasswordValid.js";
 import createHash from "../../middlewares/createhash.js";
 import generateToken from "../../middlewares/generateToken.js";
-import authenticateUser from "../../middlewares/authenticateUser.js";
+// import authenticateUser from "../../middlewares/authenticateUser.js";
 import User from "../../dao/models/User.js";
-import Cart from "../../dao/models/Cart.js";
 import passport from "passport";
 
 const router = Router();
@@ -32,17 +31,17 @@ router.post(
 router.get("/fail-register", (req, res) => {
   return res.status(400).json({
     success: false,
-    response: "auth error",
+    response: "Auth error",
   });
 });
 
 // LOGIN
 router.post(
   "/login",
-  authenticateUser,
   isPasswordValid,
-  passport.authenticate("login", { failureRedirect: "api/auth/fail-login" }),
   generateToken,
+  // authenticateUser,
+  passport.authenticate("login", { failureRedirect: "api/auth/fail-login" }),
   async (req, res, next) => {
     try {
       const { email } = req.body;
@@ -51,7 +50,7 @@ router.post(
         req.session.role = req.user.role;
         return res.status(200).json({
           success: true,
-          message: "User login",
+          message: "User logged",
           email: req.session.email,
           role: req.session.role,
           user: req.user,
@@ -72,7 +71,7 @@ router.post(
 router.get("/fail-login", (req, res) => {
   return res.status(400).json({
     success: false,
-    response: "auth error",
+    response: "Auth error",
   });
 });
 
@@ -113,15 +112,15 @@ router.get('/github/callback',
   passport.authenticate(
     'github',
     { failureRedirect: '/fail-register-github' }),
-  (req, res) => res.status(200).redirect('/'))
+  (req, res) => res.status(200).redirect('http://localhost:8080/'))
 
 router.get('/fail-register-github', (req, res) => res.status(403).json({
   success: false,
-  response: 'bad auth'
+  response: 'Bad auth'
 }))
 
 // GET SESSION
-router.get("/session", (req, res) => {
+router.get("/session", async (req, res) => {
   return res.json({
     email: req.session.email,
     role: req.session.role,

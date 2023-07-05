@@ -63,11 +63,13 @@ const inicializePassport = () => {
 				let one = await User.findOne({ email: profile._json.login })
 				if (one) return done(null, one)
 				if (!one) {
+					const cart = await Cart.create({products: []})
 					let user = await User.create({
 						name: profile._json.login,
 						email: profile._json.login,
 						password: profile._json.id,
-						photo: profile._json.avatar_url
+						photo: profile._json.avatar_url,
+						cid: cart._id
 					})
 					return done(null, user)
 				}
