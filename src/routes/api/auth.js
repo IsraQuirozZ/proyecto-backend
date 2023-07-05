@@ -1,8 +1,10 @@
 import { Router } from "express";
-import validator from "../../middlewares/validator.js";
+import registerValidator from "../../middlewares/registerValidator.js";
 import passwordValidator from "../../middlewares/passwordValidator.js";
 import isPasswordValid from "../../middlewares/isPasswordValid.js";
 import createHash from "../../middlewares/createhash.js";
+import generateToken from "../../middlewares/generateToken.js";
+// import authenticateUser from "../../middlewares/authenticateUser.js";
 import User from "../../dao/models/User.js";
 import passport from "passport";
 
@@ -11,9 +13,10 @@ const router = Router();
 // REGISTER
 router.post(
   "/register",
-  validator,
+  registerValidator,
   passwordValidator,
   createHash,
+  generateToken,
   passport.authenticate("register", {
     failureRedirect: "/api/auth/fail-register",
   }),
@@ -28,15 +31,17 @@ router.post(
 router.get("/fail-register", (req, res) => {
   return res.status(400).json({
     success: false,
-    response: "auth error",
+    response: "Auth error",
   });
 });
 
 // LOGIN
 router.post(
   "/login",
-  passport.authenticate("login", { failureRedirect: "/api/auth/fail-login" }),
   isPasswordValid,
+  generateToken,
+  // authenticateUser,
+  passport.authenticate("login", { failureRedirect: "api/auth/fail-login" }),
   async (req, res, next) => {
     try {
       const { email } = req.body;
@@ -45,7 +50,10 @@ router.post(
         req.session.role = req.user.role;
         return res.status(200).json({
           success: true,
-          message: "User login",
+          message: "User logged",
+          email: req.session.email,
+          role: req.session.role,
+          token: req.token
           user: { email: req.session.email, role: req.user.role },
         });
       } else {
@@ -63,7 +71,7 @@ router.post(
 router.get("/fail-login", (req, res) => {
   return res.status(400).json({
     success: false,
-    response: "Invalid email or password",
+    response: "Auth error",
   });
 });
 
@@ -76,19 +84,19 @@ router.post("/logout", async (req, res, next) => {
         if (err) {
           return res.status(500).json({
             success: false,
-            message: "Error logging out",
+            response: "Error logging out",
           });
         } else {
           return res.status(200).json({
             success: true,
-            message: "User logged out",
+            response: "User logged out",
           });
         }
       });
     } else {
       return res.status(200).json({
         success: true,
-        message: "No session started",
+        response: "No session started",
       });
     }
   } catch (error) {
@@ -96,8 +104,23 @@ router.post("/logout", async (req, res, next) => {
   }
 });
 
+// GITHUB REGISTER
+
+router.get('/github', passport.authenticate('github', { scope: ['user: email'] }), (req, res) => { })
+
+router.get('/github/callback',
+  passport.authenticate(
+    'github',
+    { failureRedirect: '/fail-register-github' }),
+  (req, res) => res.status(200).redirect('http://localhost:8080/'))
+
+router.get('/fail-register-github', (req, res) => res.status(403).json({
+  success: false,
+  response: 'Bad auth'
+}))
+
 // GET SESSION
-router.get("/session", (req, res) => {
+router.get("/session", async (req, res) => {
   return res.json({
     email: req.session.email,
     role: req.session.role,
