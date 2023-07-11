@@ -1,6 +1,7 @@
 import passport from "passport";
 import { Strategy } from "passport-local";
 import GHStrategy from "passport-github2";
+import jwt from 'passport-jwt'
 import User from "../dao/models/User.js";
 import Cart from "../dao/models/Cart.js";
 
@@ -24,6 +25,7 @@ const inicializePassport = () => {
 					if (!one) {
 						let cart = await Cart.create({ products: [] });
 						let user = await User.create({ ...req.body, cid: cart._id });
+						delete user.password
 						return done(null, user);
 					}
 					return done(null, false); // Redirecciona
@@ -50,33 +52,61 @@ const inicializePassport = () => {
 				}
 			}
 		)
-	);
+	)
+
+	// JWT AUTH
+
+	passport.use(
+		'jwt',
+		new jwt.Strategy({
+			jwtFromRequest: jwt.ExtractJwt.fromExtractors([(req) => {
+				console.log(req.cookies)
+				req?.cookies['token']}]),
+			secretOrKey: process.env.SECRET
+		},
+			async (jwt_payload, done) => {
+				// token decryption = jwt_payload
+				try {
+					let one = User.findOne({ email: jwt_payload.email })
+					if (one) {
+						delete one.password
+						return done(null, one)
+					} else {
+						return done(null, false)
+					}
+				} catch (error) {
+					return done(error, false)
+				}
+			})
+	)
+
 	// SIGNIN GH
+
 	passport.use('github',
 		new GHStrategy({
 			clientID: GH_CLIENT_ID,
 			clientSecret: GH_CLIENT_SECRET,
 			callbackURL: callback
 		},
-		async (accessToken, refreshToken, profile, done) => {
-			try {
-				let one = await User.findOne({ email: profile._json.login })
-				if (one) return done(null, one)
-				if (!one) {
-					const cart = await Cart.create({products: []})
-					let user = await User.create({
-						name: profile._json.login,
-						email: profile._json.login,
-						password: profile._json.id,
-						photo: profile._json.avatar_url,
-						cid: cart._id
-					})
-					return done(null, user)
+			async (accessToken, refreshToken, profile, done) => {
+				try {
+					let one = await User.findOne({ email: profile._json.login })
+					if (one) return done(null, one)
+					if (!one) {
+						const cart = await Cart.create({ products: [] })
+						let user = await User.create({
+							name: profile._json.login,
+							email: profile._json.login,
+							password: profile._json.id,
+							photo: profile._json.avatar_url,
+							cid: cart._id
+						})
+						return done(null, user)
+					}
+				} catch (error) {
+					return done(error)
 				}
-			} catch (error) {
-				return done(error)
-			}
-		})
+			})
 	)
 };
 

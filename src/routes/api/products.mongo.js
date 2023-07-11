@@ -1,12 +1,13 @@
 import { Router } from "express";
 import Product from "../../dao/models/Product.js";
 import authenticateAdmin from "../../middlewares/authenticateAdmin.js";
+import passport from "passport";
+import passportCall from "../../middlewares/passportCall.js";
 
 const router = Router();
 
 router.post("/", authenticateAdmin, async (req, res, next) => {
   try {
-    console.log(req.session.email);
     let productData = req.body;
     let newProduct = await Product.create(productData);
     return res.status(201).json({
@@ -18,7 +19,7 @@ router.post("/", authenticateAdmin, async (req, res, next) => {
   }
 });
 
-router.get("/", async (req, res, next) => {
+router.get("/", passportCall('jwt'), async (req, res, next) => {
   try {
     let page = req.query.page ?? 1;
     let limit = req.query.limit ?? 6;
