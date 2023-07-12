@@ -1,12 +1,12 @@
-import { Router } from "express";
-import Product from "../../dao/models/Product.js";
-import authenticateAdmin from "../../middlewares/authenticateAdmin.js";
+import { Router } from 'express';
+import Product from '../../dao/models/Product.js';
+import authenticateAdmin from '../../middlewares/authenticateAdmin.js';
+import passportCall from '../../middlewares/passportCall.js';
 
 const router = Router();
 
-router.post("/", authenticateAdmin, async (req, res, next) => {
+router.post('/', authenticateAdmin, async (req, res, next) => {
   try {
-    console.log(req.session.email);
     let productData = req.body;
     let newProduct = await Product.create(productData);
     return res.status(201).json({
@@ -18,13 +18,13 @@ router.post("/", authenticateAdmin, async (req, res, next) => {
   }
 });
 
-router.get("/", async (req, res, next) => {
+router.get('/', passportCall('jwt'), async (req, res, next) => {
   try {
     let page = req.query.page ?? 1;
     let limit = req.query.limit ?? 6;
     let name = req.query.name
-      ? new RegExp(req.query.name, "i")
-      : new RegExp("");
+      ? new RegExp(req.query.name, 'i')
+      : new RegExp('');
     let products = await Product.paginate({ name }, { limit, page });
     if (products) {
       return res.status(200).json({
@@ -32,9 +32,9 @@ router.get("/", async (req, res, next) => {
         response: products,
       });
     } else {
-      return res.status(400).json({
+      return res.status(404).json({
         success: false,
-        response: "Not found",
+        response: 'Not found',
       });
     }
   } catch (error) {
@@ -42,7 +42,7 @@ router.get("/", async (req, res, next) => {
   }
 });
 
-router.get("/:id", async (req, res, next) => {
+router.get('/:id', async (req, res, next) => {
   let id = req.params.id;
   let product = await Product.findById(id);
   if (product) {
@@ -51,14 +51,14 @@ router.get("/:id", async (req, res, next) => {
       response: product,
     });
   } else {
-    return res.status(400).json({
+    return res.status(404).json({
       success: false,
-      response: "Not found",
+      response: 'Not found',
     });
   }
 });
 
-router.put("/:id", async (req, res, next) => {
+router.put('/:id', async (req, res, next) => {
   let id = req.params.id;
   let productData = req.body;
   let response;
@@ -69,9 +69,9 @@ router.put("/:id", async (req, res, next) => {
     if (product) {
       response = product;
     } else {
-      return res.status(400).json({
+      return res.status(404).json({
         success: false,
-        response: "Product not found",
+        response: 'Product not found',
       });
     }
   } else {
@@ -83,18 +83,18 @@ router.put("/:id", async (req, res, next) => {
   });
 });
 
-router.delete("/:id", async (req, res, next) => {
+router.delete('/:id', async (req, res, next) => {
   let id = req.params.id;
   let product = await Product.findByIdAndDelete(id);
   if (product) {
     return res.status(200).json({
       success: true,
-      response: `Product "${product._id}" deleted`,
+      response: `Product '${product._id}' deleted`,
     });
   } else {
-    return res.status(400).json({
+    return res.status(404).json({
       success: false,
-      response: "Product not found",
+      response: 'Product not found',
     });
   }
 });

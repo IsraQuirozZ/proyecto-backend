@@ -175,13 +175,4 @@ router.delete("/:cid/product/:pid/:units", async (req, res, next) => {
   }
 });
 
-// DELETE CART
-// router.delete("/:cid", async(req,res,next) => {
-//   try {
-
-//   } catch (error) {
-//     next(error)
-//   }
-// })
-
 export default router;

@@ -1,102 +1,160 @@
 import { Router } from "express";
-import validator from "../../middlewares/validator.js";
-import password_validator from "../../middlewares/passwordValidator.js";
+import registerValidator from "../../middlewares/registerValidator.js";
+import passwordValidator from "../../middlewares/passwordValidator.js";
+import isPasswordValid from "../../middlewares/isPasswordValid.js";
+import createHash from "../../middlewares/createhash.js";
+import generateToken from "../../middlewares/generateToken.js";
+// import authenticateUser from "../../middlewares/authenticateUser.js";
 import User from "../../dao/models/User.js";
-import Cart from "../../dao/models/Cart.js";
+import passport from "passport";
+import passportCall from "../../middlewares/passportCall.js";
 
 const router = Router();
 
 // REGISTER
 router.post(
   "/register",
-  validator,
-  password_validator,
+  createHash,
+  passport.authenticate("register", {
+    failureRedirect: "/api/auth/fail-register",
+  }),
+  (req, res) => {
+    return res.status(201).json({
+      success: true,
+      response: "User created",
+    });
+  },
+  registerValidator,
+  passwordValidator,
+  generateToken
+);
+
+router.get("/fail-register", (req, res) => {
+  return res.status(401).json({
+    success: false,
+    response: "Auth error",
+  });
+});
+
+// LOGIN
+router.post(
+  "/login",
+  // authenticateUser,
+  passport.authenticate("login", { failureRedirect: "api/auth/fail-login" }),
+  isPasswordValid,
+  generateToken,
   async (req, res, next) => {
     try {
-      let cart =  await Cart.create({products: []})
-      let newUser = await User.create({...req.body, cid: cart._id});
-
-      if (newUser) {
-        return res.status(201).json({
+      const { email } = req.body;
+      if (!req.session.email) {
+        req.session.email = email;
+        req.session.role = req.user.role;
+        return res.status(200)
+        .cookie('token', req.token, { maxAge: 60 * 60 * 1000, httpOnly: true })
+        .json({
           success: true,
-          response: `User ${newUser._id} created`,
+          message: "User logged",
+          user: req.user,
+          token: req.token
+        });
+      } else {
+        return res.status(403).json({
+          success: false,
+          message: "You already have an open session",
         });
       }
-
-      return res.status(500).json({
-        success: true,
-        response: "User not created",
-      });
     } catch (error) {
       next(error);
     }
-  }
+  },
 );
 
-// LOGIN
-router.post("/login", password_validator, async (req, res, next) => {
-  try {
-    const { email, password } = req.body;
-    const user = await User.findOne({ email });
-    if (!req.session.email) {
-      if (user) {
-        if (password === user.password) {
-          req.session.email = email;
-          req.session.role = user.role;
-          return res.status(200).json({
-            success: true,
-            message: "User login",
-            email: req.session.email,
-            role: req.session.role,
-          });
-        }
-      }
-      return res.status(404).json({
-        success: false,
-        message: "Invalid email or password",
-      });
-    } else {
-      return res.status(403).json({
-        success: false,
-        message: "You already have an open session",
-      });
-    }
-  } catch (error) {
-    next(error);
-  }
+router.get("/fail-login", (req, res) => {
+  return res.status(401).json({
+    success: false,
+    response: "Auth error",
+  });
 });
 
 // LOGOUT
-router.post("/logout", async (req, res, next) => {
-  try {
-    let user = await User.findOne({ email: req.session.email });
-    if (user) {
-      req.session.destroy((err) => {
-        if (err) {
-          return res.status(500).json({
-            success: false,
-            message: "Error logging out",
-          });
-        } else {
-          return res.status(200).json({
-            success: true,
-            message: "User logged out",
-          });
-        }
-      });
-    } else {
-      return res.status(200).json({
-        success: true,
-        message: "No session started",
-      });
+
+router.post('/logout',
+  passportCall('jwt'),
+  async (req, res, next) => {
+    try {
+      return res.status(200).clearCookie('token').json({
+        success: false,
+        response: 'User signed out'
+      })
+    } catch (error) {
+      next(error)
     }
-  } catch (error) {
-    next(error);
   }
-});
+)
+
+
+// router.post("/logout", async (req, res, next) => {
+//   try {
+//     let user = await User.findOne({ email: req.session.email });
+//     if (user) {
+//       req.session.destroy((err) => {
+//         if (err) {
+//           return res.status(500).json({
+//             success: false,
+//             response: "Error logging out",
+//           });
+//         } else {
+//           return res.status(200).json({
+//             success: true,
+//             response: "User logged out",
+//           });
+//         }
+//       });
+//     } else {
+//       return res.status(200).json({
+//         success: true,
+//         response: "No session started",
+//       });
+//     }
+//   } catch (error) {
+//     next(error);
+//   }
+// });
+
+// JWT LOGIN
+
+router.post('/login', /* validator, strategy, password, token, */
+  passport.authenticate('login', { failureRedirect: '/api/auth/fail-login' }),
+  isPasswordValid,
+  generateToken,
+  (req, res, next) => {
+    try {
+      return res.status(200).cookie('token', req.token, { maxAge: 60 * 60 * 1000 }).json({
+        success: true,
+        response: 'Logged in'
+      })
+    } catch (error) {
+      next(error)
+    }
+  })
+
+// GITHUB REGISTER
+
+router.get('/github', passport.authenticate('github', { scope: ['user: email'] }), (req, res) => { })
+
+router.get('/github/callback',
+  passport.authenticate(
+    'github',
+    { failureRedirect: '/api/auth/fail-register-github' }),
+  (req, res) => res.status(200).redirect('/'))
+
+router.get('/fail-register-github', (req, res) => res.status(403).json({
+  success: false,
+  response: 'Bad auth'
+}))
 
 // GET SESSION
-router.get("/session", (req, res) => {
+router.get("/session", async (req, res) => {
   return res.json({
     email: req.session.email,
     role: req.session.role,
