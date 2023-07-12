@@ -9,6 +9,7 @@ import session from "express-session";
 import MongoStore from "connect-mongo";
 import passport from "passport";
 import inicializePassport from "./config/passport.js";
+import cookieParser from "cookie-parser";
 
 const server = express();
 
@@ -20,6 +21,7 @@ server.use(
   })
 );
 
+server.use(cookieParser())
 server.use(
   session({
     secret: process.env.SECRET_SESSION,
