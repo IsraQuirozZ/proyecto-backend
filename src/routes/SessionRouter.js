@@ -11,6 +11,9 @@ class SessionRouter extends MainRouter {
 	init() {
 		this.post('/login', ['PUBLIC'], async (req, res) => {
 			try {
+				if (req.cookies.token) {
+					return res.sendUserError('You are already logged in')
+				}
 				let { email, role } = await User.findOne({ email: req.body.email })
 				let user = {email, role}
 				let token = jwt.sign(user, process.env.SECRET_JWT)
@@ -23,10 +26,12 @@ class SessionRouter extends MainRouter {
 				res.sendServerError(error)
 			}
 		})
+
 		this.post('/register', ['PUBLIC'],validator, password_validator, createhash, passportCall('register'), (req, res) => {
-			console.log(res.cookies)
-		} )
-		this.get('/logout', ['USER', 'ADMIN'], passportCall('jwt'), async (req, res) => {
+			return res.sendSuccess('User registred successfully')
+		})
+
+		this.get('/logout', ['USER', 'ADMIN'], passportCall('jwt'), (req, res) => {
 			try {
 				return res.status(200).clearCookie('token').sendSuccess('User signed out')
 			} catch (error) {

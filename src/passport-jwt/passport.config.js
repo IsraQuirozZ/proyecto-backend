@@ -1,8 +1,9 @@
 import passport from "passport";
-import { Strategy } from "passport-strategy";
+import { Strategy } from "passport-local";
 import passportJWT from 'passport-jwt';
 import GHStrategy from "passport-github2";
 import User from "../dao/models/User.js";
+import Cart from '../dao/models/Cart.js'
 
 const JWTStrategy = passportJWT.Strategy
 const ExtractJWT = passportJWT.ExtractJwt
@@ -40,7 +41,7 @@ const initializePassport = () => {
 	}))
 
 	// LOGIN
-	
+
 	passport.use(
 		"login",
 		new Strategy(
@@ -81,7 +82,7 @@ const initializePassport = () => {
 			}
 		)
 	);
-	
+
 	// SIGNIN GH
 
 	passport.use('github',
