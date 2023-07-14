@@ -12,9 +12,6 @@ const ready = () => {
 };
 
 let http_server = server.listen(port, ready);
-
-// SOCKET
-
 let socket_server = new Server(http_server);
 const chats = chatManager.getChats();
 
