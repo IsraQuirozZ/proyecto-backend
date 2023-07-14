@@ -5,9 +5,8 @@ import auth_router from './auth.js';
 
 const router = Router();
 
-// router.use('/products', products_router);
+router.use('/products', products_router);
 router.use('/cart', cart_router);
-// router.use('/auth', auth_router)
-
+router.use('/auth', auth_router)
 
 export default router;
