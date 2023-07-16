@@ -34,6 +34,7 @@ class SessionRouter extends MainRouter {
 			}
 		})
 
+
 		this.post('/register', ['PUBLIC'],validator, password_validator, createhash, passportCall('register'), (req, res) => {
 			return res.sendSuccess('User registred successfully')
 		})
