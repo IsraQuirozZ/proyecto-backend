@@ -25,9 +25,9 @@ class MainRouter {
 	}
 
 	generateCustomResponses = (req, res, next) => {
-		res.sendSuccess = payload => res.send({ status: 'success', payload })
-		res.sendServerError = error => res.send({ status: 'error', error })
-		res.sendUserError = error => res.send({ status: 'error', error })
+		res.sendSuccess = (code = 200, payload) => res.status(code).send({ status: 'success', payload })
+		res.sendServerError = (code = 500, error) => res.status(code).send({ status: 'error', error })
+		res.sendUserError = (code = 400, error) => res.status(code).send({ status: 'error', error })
 		next()
 	}
 

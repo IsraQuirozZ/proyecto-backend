@@ -12,18 +12,18 @@ class SessionRouter extends MainRouter {
 		this.post('/login', ['PUBLIC'], async (req, res) => {
 			try {
 				if (req.cookies.token) {
-					return res.sendUserError('You are already logged in')
+					return res.sendUserError(400, 'You are already logged in')
 				}
-				let { email, role } = await User.findOne({ email: req.body.email })
-				let user = {email, role}
-				let token = jwt.sign(user, process.env.SECRET_JWT)
+				let user = await User.findOne({ email: req.body.email })
+				if (!user) { return res.sendUserError(404, 'User not registred') }
+				let token = jwt.sign({ email: user.email, role: user.role }, process.env.SECRET_JWT)
 				res.cookie('token', token, {
 					maxAge: 60 * 60 * 24 * 7,
 					httpOnly: true
 				})
-				res.sendSuccess({ token })
+				res.sendSuccess(200, { user })
 			} catch (error) {
-				res.sendServerError(error)
+				res.sendServerError(500, error)
 			}
 		})
 
@@ -33,13 +33,13 @@ class SessionRouter extends MainRouter {
 
 		this.get('/logout', ['USER', 'ADMIN'], passportCall('jwt'), (req, res) => {
 			try {
-				return res.status(200).clearCookie('token').sendSuccess('User signed out')
+				return res.clearCookie('token').sendSuccess(200, 'User signed out')
 			} catch (error) {
 				res.sendServerError(error)
 			}
 		})
 		this.get('/current', ['PUBLIC'], passportCall('jwt'), authJwt('user'), (req, res) => {
-			res.sendSuccess(req.cookies.token)
+			res.sendSuccess(200, req.cookies.token)
 		})
 	}
 }
