@@ -14,7 +14,7 @@ class ProductsRouter extends MainRouter {
 				let products = await Product.paginate({ name }, { limit, page });
 
 				if (products) {
-					return res.sendSuccess({ response: products });
+					return res.sendSuccess(200, { products });
 				} else { return res.sendUserError({ error: 'Not found' }); }
 			} catch (error) {
 				res.sendServerError(error)
