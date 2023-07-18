@@ -36,18 +36,19 @@ class SessionRouter extends MainRouter {
 
 
 		this.post('/register', ['PUBLIC'],validator, password_validator, createhash, passportCall('register'), (req, res) => {
-			return res.sendSuccess('User registred successfully')
+			return res.sendSuccess(201, 'User registred successfully')
 		})
 
 		this.get('/logout', ['USER', 'ADMIN'], passportCall('jwt'), (req, res) => {
 			try {
 				return res.clearCookie('token').sendSuccess(200, 'User signed out')
 			} catch (error) {
-				res.sendServerError(error)
+				res.sendServerError(500, error)
 			}
 		})
 		this.get('/current', ['PUBLIC'], passportCall('jwt'), authJwt('user'), (req, res) => {
-			res.sendSuccess(200, req.cookies.token)
+			const { email, role } = req.user
+			res.sendSuccess(200, {user: { email, role }})
 		})
 	}
 }
