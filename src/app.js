@@ -2,7 +2,7 @@ import express from "express";
 import "dotenv/config.js";
 import errorHandler from "./middlewares/errorHandler.js";
 import notFoundHandler from "./middlewares/notFoundHandler.js";
-import { __dirname } from "./utils.js";
+import { __dirname } from "./utils/utils.js";
 import router from "./routes/index.js";
 import cors from "cors";
 import session from "express-session";
@@ -13,8 +13,10 @@ import cookieParser from "cookie-parser";
 import UserRouter from "./routes/UserRouter.js";
 import SessionRouter from "./routes/SessionRouter.js";
 import ProductsRouter from "./routes/ProductsRouter.js";
+import config from "./config/config.js";
 
 const server = express();
+config.connectDB()
 // Middlewares
 server.use(
   cors({
