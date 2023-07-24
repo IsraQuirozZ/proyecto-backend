@@ -1,20 +1,67 @@
 import passport from "passport";
 import { Strategy } from "passport-local";
+import passportJWT from 'passport-jwt';
 import GHStrategy from "passport-github2";
-import jwt from 'passport-jwt'
 import User from "../dao/models/User.js";
-import Cart from "../dao/models/Cart.js";
+import Cart from '../dao/models/Cart.js'
+
+const JWTStrategy = passportJWT.Strategy
+const ExtractJWT = passportJWT.ExtractJwt
+
+let cookieExtractor = req => {
+	let token = null
+	if (req?.cookies) { token = req.cookies.token }
+	return token
+}
+
+const configStrategy = {
+	jwtFromRequest: ExtractJWT.fromExtractors([cookieExtractor]),
+	secretOrKey: process.env.SECRET_JWT
+}
 
 const { GH_CLIENT_ID, GH_CLIENT_SECRET } = process.env
 const callback = 'http://localhost:8080/api/auth/github/callback'
 
-const inicializePassport = () => {
-	passport.serializeUser((user, done) => done(null, user._id));
-	passport.deserializeUser(async (id, done) => {
-		const user = await User.findById(id);
-		return done(null, user);
-	});
+const initializePassport = () => {
+
+	// JWT AUTH
+
+	passport.use('jwt', new JWTStrategy(configStrategy, async (jwt_payload, done) => {
+		try {
+			let one = await User.findOne({ email: jwt_payload.email })
+			if (one) {
+				delete one.password
+				return done(null, one)
+			} else {
+				return done(null, false)
+			}
+		} catch (error) {
+			return done(error, false)
+		}
+	}))
+
+	// LOGIN
+
+	passport.use(
+		"login",
+		new Strategy(
+			{ usernameField: "email" },
+			async (username, password, done) => {
+				try {
+					let user = await User.findOne({ email: username });
+					if (user) {
+						return done(null, user);
+					}
+					return done(null, false); // Redirecciona
+				} catch (error) {
+					done(error, false);
+				}
+			}
+		)
+	)
+
 	// REGISTER
+
 	passport.use(
 		"register",
 		new Strategy(
@@ -35,48 +82,6 @@ const inicializePassport = () => {
 			}
 		)
 	);
-	// LOGIN
-	passport.use(
-		"login",
-		new Strategy(
-			{ usernameField: "email" },
-			async (username, password, done) => {
-				try {
-					let user = await User.findOne({ email: username });
-					if (user) {
-						return done(null, user);
-					}
-					return done(null, false); // Redirecciona
-				} catch (error) {
-					done(error, false);
-				}
-			}
-		)
-	)
-
-	// JWT AUTH
-
-	passport.use(
-		'jwt',
-		new jwt.Strategy({
-			jwtFromRequest: jwt.ExtractJwt.fromExtractors([(req) => req?.cookies['token']]),
-			secretOrKey: process.env.SECRET
-		},
-			async (jwt_payload, done) => {
-				// token decryption = jwt_payload
-				try {
-					let one = User.findOne({ email: jwt_payload.email })
-					if (one) {
-						delete one.password
-						return done(null, one)
-					} else {
-						return done(null, false)
-					}
-				} catch (error) {
-					return done(error, false)
-				}
-			})
-	)
 
 	// SIGNIN GH
 
@@ -106,6 +111,6 @@ const inicializePassport = () => {
 				}
 			})
 	)
-};
+}
 
-export default inicializePassport;
+export default initializePassport
