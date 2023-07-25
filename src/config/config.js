@@ -1,6 +1,6 @@
-import { connect } from "mongoose"
 import dotenv from 'dotenv'
 import commander from "../utils/commander.js"
+import MongoSingleton from "./singletonMongoConnect.js"
 
 const { mode } = commander.opts()
 
@@ -10,14 +10,7 @@ dotenv.config({
 
 export default {
 	SECRET_JWT: process.env.SECRET_JWT || '',
-	PORT: process.env.PORT || 8000,
+	PORT: process.env.PORT || 8080,
 	MONGO_LINK: process.env.MONGO_LINK|| '',
-	connectDB: async () =>{
-		try {
-			await connect(process.env.MONGO_LINK)
-			console.log('Connected DB')
-		} catch (error) {
-			console.log('Connection error')
-		}
-	}
+	connectDB: async () => MongoSingleton.getInstance()
 }
