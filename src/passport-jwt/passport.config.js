@@ -2,8 +2,8 @@ import passport from "passport";
 import { Strategy } from "passport-local";
 import passportJWT from 'passport-jwt';
 import GHStrategy from "passport-github2";
-import User from "../dao/models/User.js";
-import Cart from '../dao/models/Cart.js'
+import Cart from '../dao/mongo/models/Cart.js'
+import User from "../dao/mongo/models/User.js";
 
 const JWTStrategy = passportJWT.Strategy
 const ExtractJWT = passportJWT.ExtractJwt

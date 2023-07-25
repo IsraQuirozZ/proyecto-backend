@@ -1,7 +1,7 @@
 import MainRouter from "./Router.js";
 import jwt from "jsonwebtoken";
 import passportCall from '../middlewares/passportCall.js'
-import User from "../dao/models/User.js";
+import User from "../dao/mongo/models/User.js";
 import authJwt from "../passport-jwt/authJwt.js";
 import password_validator from "../middlewares/passwordValidator.js";
 import validator from "../middlewares/registerValidator.js";
@@ -22,20 +22,19 @@ class SessionRouter extends MainRouter {
 				let verified = compareSync(req.body.password, password)
 
 				if (!verified) { return res.sendUserError(400, 'Invalid email or password')}
-
+        
 				let token = jwt.sign({ email: user.email, role: user.role }, process.env.SECRET_JWT)
 				res.cookie('token', token, {
 					maxAge: 60 * 60 * 24 * 7,
 					httpOnly: true
 				})
-				res.sendSuccess(200, { user })
+				return res.sendSuccess(200, { user })
 			} catch (error) {
-				res.sendServerError(500, error)
+				return res.sendServerError(500, error)
 			}
 		})
 
-
-		this.post('/register', ['PUBLIC'],validator, password_validator, createhash, passportCall('register'), (req, res) => {
+		this.post('/register', ['PUBLIC'], validator, password_validator, createhash, passportCall('register'), (req, res) => {
 			return res.sendSuccess(201, 'User registred successfully')
 		})
 
@@ -43,12 +42,13 @@ class SessionRouter extends MainRouter {
 			try {
 				return res.clearCookie('token').sendSuccess(200, 'User signed out')
 			} catch (error) {
-				res.sendServerError(500, error)
+				return res.sendServerError(500, error)
 			}
 		})
 		this.get('/current', ['PUBLIC'], passportCall('jwt'), authJwt('user'), (req, res) => {
 			const { email, role } = req.user
-			res.sendSuccess(200, {user: { email, role }})
+      
+			return res.sendSuccess(200, { user: { email, role } })
 		})
 	}
 }

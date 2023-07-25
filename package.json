@@ -5,8 +5,8 @@
   "main": "product-class.js",
   "type": "module",
   "scripts": {
-    "start": "node ./src/server.js",
-    "dev": "nodemon ./src/server.js"
+    "start": "node ./src/app.js --mode production",
+    "dev": "nodemon ./src/app.js --mode development"
   },
   "repository": {
     "type": "git",
@@ -20,6 +20,7 @@
   "homepage": "https://github.com/IsraQuirozZ/proyecto-backend#readme",
   "dependencies": {
     "bcrypt": "^5.1.0",
+    "commander": "^11.0.0",
     "connect-mongo": "^5.0.0",
     "cookie-parser": "^1.4.6",
     "dotenv": "^16.1.3",
