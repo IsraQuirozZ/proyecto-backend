@@ -21,8 +21,8 @@ class SessionRouter extends MainRouter {
 				const { password } = user
 				let verified = compareSync(req.body.password, password)
 
-				if (!verified) { return res.sendUserError(400, 'Invalid email or password') }
-
+				if (!verified) { return res.sendUserError(400, 'Invalid email or password')}
+        
 				let token = jwt.sign({ email: user.email, role: user.role }, process.env.SECRET_JWT)
 				res.cookie('token', token, {
 					maxAge: 60 * 60 * 24 * 7,
@@ -33,7 +33,6 @@ class SessionRouter extends MainRouter {
 				return res.sendServerError(500, error)
 			}
 		})
-
 
 		this.post('/register', ['PUBLIC'], validator, password_validator, createhash, passportCall('register'), (req, res) => {
 			return res.sendSuccess(201, 'User registred successfully')
@@ -48,6 +47,7 @@ class SessionRouter extends MainRouter {
 		})
 		this.get('/current', ['PUBLIC'], passportCall('jwt'), authJwt('user'), (req, res) => {
 			const { email, role } = req.user
+      
 			return res.sendSuccess(200, { user: { email, role } })
 		})
 	}
