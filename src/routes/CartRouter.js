@@ -5,9 +5,9 @@ const { getCart, addProducts, deleteProducts } = CartController
 
 class CartRouter extends MainRouter {
     init() {
-        this.get('/:cid', getCart)
-        this.put('/:cid/product/:pid/:units', addProducts)
-        this.put('/:cid/product/:pid/:units', deleteProducts)
+        this.get('/:cid', ['USER'], getCart)
+        this.put('/:cid/product/:pid/:units', ['USER'], addProducts)
+        this.put('/:cid/product/:pid/:units', ['USER'], deleteProducts)
     }
 }
 
