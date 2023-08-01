@@ -1,4 +1,4 @@
-import User from "../dao/models/User.js";
+import User from "../dao/mongo/models/User.js";
 
 const validator = async (req, res, next) => {
   let { name, email, password } = req.body;

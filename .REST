@@ -1,11 +1,21 @@
+### /
+GET http://localhost:8080/
+
+
 ### USERS
-GET http://localhost:8080/api/users
+GET http://localhost:8080/api/users/647
+
 
 ### PRODUCTS
-GET http://localhost:8080/api/products 
-
+GET http://localhost:8080/api/products
 ###
 GET http://localhost:8080/api/products/648756a3387dbab73002f32e
+
+
+### CART
+GET http://localhost:8080/api/cart
+###
+GET http://localhost:8080/api/cart/647f9a508af5814325d1e75a
 
 
 ### SESSION
@@ -30,6 +40,5 @@ Content-Type: application/json
     "password": "Hola123$",
     "age": 19
 }
-
 ###
 GET http://localhost:8080/api/session/logout
