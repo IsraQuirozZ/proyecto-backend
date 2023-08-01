@@ -1,3 +1,4 @@
+import UserDTO from "../../dto/User.dto.js";
 import User from "./models/User.js";
 
 class UserDao {
@@ -10,7 +11,8 @@ class UserDao {
   }
 
   createUser = async userData => {
-    return await this.userModel.create(userData)
+    const newUser = new UserDTO(userData)
+    return await this.userModel.create(newUser)
   }
 }
 
