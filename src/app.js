@@ -6,12 +6,13 @@ import { __dirname } from "./utils/utils.js";
 import router from "./routes/index.js";
 import cors from "cors";
 import passport from "passport";
-import inicializePassport from './passport-jwt/passport.config.js';
+import inicializePassport from "./passport-jwt/passport.config.js";
 import cookieParser from "cookie-parser";
 import config from "./config/config.js";
 
 const server = express();
-config.connectDB()
+config.connectDB();
+
 server.use(
   cors({
     origin: "http://localhost:5173",
@@ -19,7 +20,7 @@ server.use(
   })
 );
 
-server.use(cookieParser())
+server.use(cookieParser());
 // server.use(
 //   session({
 //     secret: process.env.SECRET_SESSION,
@@ -36,13 +37,15 @@ server.use("/public", express.static("public"));
 server.use(express.urlencoded({ extended: true }));
 server.use(express.json());
 
-server.listen(config.PORT, () => console.log('Server listening on port ' + config.PORT))
+server.listen(config.PORT, () =>
+  console.log("Server listening on port " + config.PORT)
+);
 
 inicializePassport();
 server.use(passport.initialize());
 // server.use(passport.session());
 
-server.use('/', router)
+server.use("/", router);
 
 server.use(errorHandler); // Manejador de errores
 server.use(notFoundHandler); // Manejador de rutas inexistentes
