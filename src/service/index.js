@@ -1,4 +1,4 @@
-import ProductDao from "../dao/mongo/Product.mongo.js";
+import { ProductDao } from "../dao/factory.js";
 import CartDao from "../dao/mongo/Cart.mongo.js";
 import UserDao from "../dao/mongo/User.mongo.js";
 import ProductRepository from "../repositories/Product.repository.js";

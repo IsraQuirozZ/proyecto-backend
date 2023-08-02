@@ -2,8 +2,8 @@ class ProductRepository {
     constructor(dao) {
         this.dao = dao;
     }
-    getProducts = async () => {
-        return await this.dao.getProducts();
+    getProducts = async (name, limit, page) => {
+        return await this.dao.getProducts(name, limit, page);
     }
 
 	getProduct = async id => {
