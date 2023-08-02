@@ -11,11 +11,11 @@ class MongoSingleton {
 
   static getInstance() {
     if (this.#instance) {
-      console.log("Already connected");
+      console.log("DB Already connected");
       return this.#instance;
     }
     this.#instance = new MongoSingleton();
-    console.log("Connected");
+    console.log(" DB Connected");
     return this.#instance;
   }
 }
