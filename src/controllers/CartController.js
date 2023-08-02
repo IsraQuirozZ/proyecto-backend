@@ -13,7 +13,7 @@ class CartController {
 		}
 	}
 
-	addProducts = async (req, res) => {
+	addProduct = async (req, res) => {
 		try {
 			let cartId = req.params.cid;
 			let productId = req.params.pid;
@@ -55,17 +55,16 @@ class CartController {
 				}
 			}
 
-			const cart = await cartService.addProducts(cartId, productId, stock, cartFound);
+			const cart = await cartService.addProduct(cartId, productId, stock, cartFound);
 
-			return res.sendSuccess({ cart }) // cart has been updated
+			return res.sendSuccess(200, cart) // cart has been updated
 		} catch (error) {
 			console.log(error);
-			return res.sendServerError(error); // error: updating cart
+			return res.sendServerError(500, error); // error: updating cart
 		}
 	}
 
-	//   deleteProducts = async (cartId, data) => {
-	deleteProducts = async (req, res) => {
+	deleteProduct = async (req, res) => {
 		try {
 			let cartId = req.params.cid;
 			let productId = req.params.pid;
@@ -105,6 +104,67 @@ class CartController {
 		} catch (error) {
 			console.log(error);
 			return res.sendServerError({ error });
+		}
+	}
+
+	deleteAllProducts = async (req, res) => {
+		try {
+			const cartId = req.params.cid;
+			const cart = await cartService.getCart(cartId);
+			if (!cart) {
+				return res.sendUserError(404, 'Not found')
+			}
+			cart.products = [];
+			await cart.save();
+			return res.sendSuccess(200, cart);
+		} catch (error) {
+			console.log(error);
+			return res.sendServerError(500, error);
+		}
+	}
+
+	purchase = async (req, res) => {
+		try {
+			const cartId = req.params.cid
+			const cart = await cartService.getCart(cartId)
+
+			if (!cart) {
+				return res.sendUserError(404, { error: 'Not found' })
+			}
+
+			if (cart.products.length < 1) {
+				return res.sendUserError(400, 'No products found')
+			}
+
+			let outOfStockProducts = []
+			let availableProducts = []
+			let amount = 0
+
+			for (const cartProduct of cart.products) {
+				const product = await productService.getProduct(cartProduct.pid)
+
+				if (cartProduct.units > product.stock) {
+					outOfStockProducts.push(cartProduct)
+				}
+
+				availableProducts.push(product)
+				amount += product.price + cartProduct.units
+
+				product.stock -= cartProduct.units
+				await product.save()
+			}
+
+			const ticket = await cartService.purchase(Date.now(), amount, req.user.email)
+
+			return res.sendSuccess(201, {
+				ticket,
+				availableProducts,
+				outOfStockProducts
+			})
+
+		} catch (error) {
+			console.log(error)
+			return res.sendServerError(500, error)
 		}
 	}
 }

@@ -7,6 +7,7 @@ import password_validator from "../middlewares/passwordValidator.js";
 import validator from "../middlewares/registerValidator.js";
 import createhash from "../middlewares/createhash.js";
 import { compareSync } from "bcrypt";
+import UserDTO from "../dto/User.dto.js";
 
 class SessionRouter extends MainRouter {
 	init() {
@@ -28,14 +29,15 @@ class SessionRouter extends MainRouter {
 					maxAge: 60 * 60 * 24 * 7,
 					httpOnly: true
 				})
-				return res.sendSuccess(200, { user })
+				return res.sendSuccess(200, { user: new UserDTO(user) })
 			} catch (error) {
 				return res.sendServerError(500, error)
 			}
 		})
 
 		this.post('/register', ['PUBLIC'], validator, password_validator, createhash, passportCall('register'), (req, res) => {
-			return res.sendSuccess(201, 'User registred successfully')
+			const user = new UserDTO(req.user)
+			return res.sendSuccess(201, user)
 		})
 
 		this.get('/logout', ['USER', 'ADMIN'], passportCall('jwt'), (req, res) => {
@@ -46,9 +48,7 @@ class SessionRouter extends MainRouter {
 			}
 		})
 		this.get('/current', ['PUBLIC'], passportCall('jwt'), authJwt('user'), (req, res) => {
-			const { email, role } = req.user
-      
-			return res.sendSuccess(200, { user: { email, role } })
+			return res.sendSuccess(200, { user: new UserDTO(req.user) })
 		})
 	}
 }

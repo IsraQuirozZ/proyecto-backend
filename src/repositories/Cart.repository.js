@@ -12,6 +12,9 @@ class CartRepository {
     deleteProduct = async (cid, pid, stock, modifiedCart) => {
         return await this.dao.deleteProduct(cid, pid, stock, modifiedCart);
     }
+    purchase = async (date, amount, purchaser) => {
+        return await this.dao.purchase(date, amount, purchaser);
+    }
 }
 
 export default CartRepository;
