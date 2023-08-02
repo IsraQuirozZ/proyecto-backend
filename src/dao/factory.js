@@ -1,4 +1,4 @@
-import { PERSISTENCE } from "../config/config";
+import config from "../config/config.js";
 
 import ProductDaoMongo from "./mongo/Product.mongo.js";
 import CartDaoMongo from "./mongo/Cart.mongo.js";
@@ -8,27 +8,22 @@ import CartDaoMemory from "./memory/Cart.js";
 
 let ProductDao, CartDao, UserDao;
 
-switch (PERSISTENCE) {
-    case 'MONGO':
+switch (config.PERSISTENCE) {
+  case "MONGO":
+    ProductDao = ProductDaoMongo;
+    CartDao = CartDaoMongo;
+    UserDao = UserDaoMongo;
 
-        ProductDao = ProductDaoMongo
-        CartDao = CartDaoMongo
-        UserDao = UserDaoMongo
+    break;
+  case "MEMORY":
+    CartDao = CartDaoMemory;
 
-        break;
-    case 'MEMORY':
+    break;
 
-        CartDao = CartDaoMemory
-        
-        break
-
-    case 'FILE':
-
-        break;
-    default:
-        break;
+  case "FILE":
+    break;
+  default:
+    break;
 }
 
-export default {
-
-}
+export { ProductDao, CartDao, UserDao };

@@ -3,29 +3,40 @@ import Product from "./models/Product.js";
 
 class CartDao {
   constructor() {
-    this.CartModel = Cart
+    this.CartModel = Cart;
   }
 
-  getCart = async cid => {
-    return await this.CartModel.findById(cid)
-  }
+  getCarts = async (array) => {
+    return this.CartModel.aggregate(array);
+  };
 
-  addProducts = async (cid, pid, stock, modifiedCart) => {
-    await Product.findByIdAndUpdate(pid, { stock });
+  getCart = async (id) => {
+    return await this.CartModel.findById(id);
+  };
 
-    return await this.CartModel.findByIdAndUpdate(
-      cid,
-      {
-        modifiedCart,
-      },
-      { new: true }
-    );
-  }
+  getCartBill = async (array) => {
+    return await this.CartModel.aggregate(array);
+  };
 
-  async deleteProducts(cid, pid, stock, modifiedCart) {
-    await Product.findByIdAndUpdate(pid, { stock });
-    return await this.CartModel.findByIdAndUpdate(cid, modifiedCart);
-  }
+  addProducts = async (id, modifiedCart) => {
+    // await Product.findByIdAndUpdate(pid, { stock });
+
+    return await this.CartModel.findByIdAndUpdate(id, modifiedCart, {
+      new: true,
+    });
+  };
+
+  deleteProduct = async (id, modifiedCart) => {
+    return await this.CartModel.findByIdAndUpdate(id, modifiedCart, {
+      new: true,
+    });
+  };
+
+  deleteCart = async (id, modifiedCart) => {
+    return await this.CartModel.findByIdAndUpdate(id, modifiedCart, {
+      new: true,
+    });
+  };
 }
 
 export default CartDao;
