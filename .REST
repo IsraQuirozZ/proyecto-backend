@@ -40,7 +40,6 @@ Content-Type: application/json
     "password": "Hola123$",
     "age": 19
 }
-
 ###
 GET http://localhost:8080/api/session/logout
 
