@@ -22,7 +22,6 @@ const configStrategy = {
 };
 
 const { GH_CLIENT_ID, GH_CLIENT_SECRET } = process.env;
-console.log(GH_CLIENT_ID, GH_CLIENT_SECRET);
 const callback = "http://localhost:8080/api/auth/github/callback";
 
 const initializePassport = () => {
@@ -89,6 +88,7 @@ const initializePassport = () => {
   );
 
   // SIGNIN GH
+
   passport.use(
     "github",
     new GHStrategy(

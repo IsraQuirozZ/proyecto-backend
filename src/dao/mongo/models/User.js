@@ -3,7 +3,8 @@ import { model, Schema, Types } from "mongoose";
 let collection = "users";
 
 let schema = new Schema({
-  name: { type: String, required: true },
+  first_name: { type: String, required: true },
+  last_name: { type: String, required: true },
   photo: {
     type: String,
     default:

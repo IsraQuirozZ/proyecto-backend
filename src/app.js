@@ -12,7 +12,6 @@ import config from "./config/config.js";
 
 const server = express();
 config.connectDB();
-
 server.use(
   cors({
     origin: "http://localhost:5173",
