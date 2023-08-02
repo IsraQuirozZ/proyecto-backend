@@ -31,7 +31,7 @@ class MainRouter {
 		next()
 	}
 
-	hanldePolicies = policies => (req, res, next) => {
+	handlePolicies = policies => (req, res, next) => {
 		if (policies[0] === 'PUBLIC') return next()
 		if (!req.cookies.token) {
 			return res.status(401).send({ status: 'error', error: 'Unauthenticated' })
@@ -45,19 +45,19 @@ class MainRouter {
 	}
 
 	get(path, policies, ...callbacks) {
-		this.router.get(path, this.hanldePolicies(policies), this.generateCustomResponses, this.applyCallbacks(callbacks))
+		this.router.get(path, this.handlePolicies(policies), this.generateCustomResponses, this.applyCallbacks(callbacks))
 	}
 
 	post(path, policies, ...callbacks) {
-		this.router.post(path, this.hanldePolicies(policies), this.generateCustomResponses, this.applyCallbacks(callbacks))
+		this.router.post(path, this.handlePolicies(policies), this.generateCustomResponses, this.applyCallbacks(callbacks))
 	}
 
 	put(path, policies, ...callbacks) {
-		this.router.put(path, this.hanldePolicies(policies), this.generateCustomResponses, this.applyCallbacks(callbacks))
+		this.router.put(path, this.handlePolicies(policies), this.generateCustomResponses, this.applyCallbacks(callbacks))
 	}
 
 	delete(path, policies, ...callbacks) {
-		this.router.delete(path, this.hanldePolicies(policies), this.generateCustomResponses, this.applyCallbacks(callbacks))
+		this.router.delete(path, this.handlePolicies(policies), this.generateCustomResponses, this.applyCallbacks(callbacks))
 	}
 
 }

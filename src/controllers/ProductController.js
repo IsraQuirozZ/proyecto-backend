@@ -8,7 +8,6 @@ class ProductController {
 			let name = req.query.name
 				? new RegExp(req.query.name, 'i')
 				: new RegExp('');
-
 			let products = await productService.getProducts(name, limit, page);
 
 			if (products) {
