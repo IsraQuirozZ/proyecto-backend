@@ -9,26 +9,37 @@ class CartDao {
     this.TicketModel = Ticket
   }
 
-  getCart = async cid => {
-    return await this.CartModel.findById(cid)
-  }
+  getCarts = async (array) => {
+    return this.CartModel.aggregate(array);
+  };
 
-  addProduct = async (cid, pid, stock, modifiedCart) => {
-    await this.ProductModel.findByIdAndUpdate(pid, { stock });
+  getCart = async (id) => {
+    return await this.CartModel.findById(id);
+  };
 
-    return await this.CartModel.findByIdAndUpdate(
-      cid,
-      {
-        modifiedCart,
-      },
-      { new: true }
-    );
-  }
+  getCartBill = async (array) => {
+    return await this.CartModel.aggregate(array);
+  };
 
-  async deleteProduct(cid, pid, stock, modifiedCart) {
-    await this.ProductModel.findByIdAndUpdate(pid, { stock });
-    return await this.CartModel.findByIdAndUpdate(cid, modifiedCart);
-  }
+  addProducts = async (id, modifiedCart) => {
+    // await Product.findByIdAndUpdate(pid, { stock });
+
+    return await this.CartModel.findByIdAndUpdate(id, modifiedCart, {
+      new: true,
+    });
+  };
+
+  deleteProduct = async (id, modifiedCart) => {
+    return await this.CartModel.findByIdAndUpdate(id, modifiedCart, {
+      new: true,
+    });
+  };
+
+  deleteCart = async (id, modifiedCart) => {
+    return await this.CartModel.findByIdAndUpdate(id, modifiedCart, {
+      new: true,
+    });
+  };
 
   purchase = async (date, amount, purchaser) => {
     return await this.TicketModel.create(date, amount, purchaser);

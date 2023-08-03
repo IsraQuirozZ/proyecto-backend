@@ -13,4 +13,4 @@ class CartRouter extends MainRouter {
     }
 }
 
-export default new CartRouter()
+export default new CartRouter();
