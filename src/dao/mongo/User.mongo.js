@@ -1,4 +1,3 @@
-import UserDTO from "../../dto/User.dto.js";
 import User from "./models/User.js";
 
 class UserDao {
@@ -6,14 +5,31 @@ class UserDao {
     this.userModel = User;
   }
 
-  getUser = async (uid) => {
-    return await this.userModel.findById(uid);
+  getUsers = async () => {
+    return await this.userModel.find();
   };
 
-  createUser = async userData => {
-    const newUser = new UserDTO(userData)
-    return await this.userModel.create(newUser)
-  }
+  getUser = async (id) => {
+    return await this.userModel.findById(id);
+  };
+
+  getUserByEmail = async (email) => {
+    return await this.userModel.findOne({ email: email });
+  };
+
+  createUser = async (userData) => {
+    return await this.userModel.create(userData);
+  };
+
+  updateUser = async (id, updatedData) => {
+    return await this.userModel.findByIdAndUpdate(id, updatedData, {
+      new: true,
+    });
+  };
+
+  deleteUser = async (id) => {
+    return await this.userModel.findByIdAndDelete(id);
+  };
 }
 
 export default UserDao;

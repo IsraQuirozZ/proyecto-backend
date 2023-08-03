@@ -1,6 +1,6 @@
 import MainRouter from "./Router.js";
-import jwt from "jsonwebtoken";
 import passportCall from "../middlewares/passportCall.js";
+import jwt from "jsonwebtoken";
 import User from "../dao/mongo/models/User.js";
 import authJwt from "../passport-jwt/authJwt.js";
 import password_validator from "../middlewares/passwordValidator.js";
@@ -61,6 +61,7 @@ class SessionRouter extends MainRouter {
         return res.sendServerError(500, error);
       }
     });
+    
     this.get(
       "/current",
       ["PUBLIC"],
