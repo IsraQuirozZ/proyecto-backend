@@ -6,13 +6,26 @@ class UserDao {
     this.userModel = User;
   }
 
-  getUser = async (uid) => {
-    return await this.userModel.findById(uid);
+  getUsers = async () => {
+    return await this.userModel.find();
+  };
+
+  getUser = async (id) => {
+    return await this.userModel.findById(id);
   };
 
   createUser = async (userData) => {
-    const newUser = new UserDTO(userData);
-    return await this.userModel.create(newUser);
+    return await this.userModel.create(userData);
+  };
+
+  updateUser = async (id, updatedData) => {
+    return await this.userModel.findByIdAndUpdate(id, updatedData, {
+      new: true,
+    });
+  };
+
+  deleteUser = async (id) => {
+    return await this.userModel.findByIdAndDelete(id);
   };
 }
 
