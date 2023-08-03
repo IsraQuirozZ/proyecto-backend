@@ -1,11 +1,11 @@
 import MainRouter from "./Router.js";
-import jwt from "jsonwebtoken";
 import passportCall from "../middlewares/passportCall.js";
-import User from "../dao/mongo/models/User.js";
-import authJwt from "../passport-jwt/authJwt.js";
 import password_validator from "../middlewares/passwordValidator.js";
 import validator from "../middlewares/registerValidator.js";
 import createhash from "../middlewares/createhash.js";
+import User from "../dao/mongo/models/User.js";
+import jwt from "jsonwebtoken";
+import authJwt from "../passport-jwt/authJwt.js";
 import { compareSync } from "bcrypt";
 
 class SessionRouter extends MainRouter {
@@ -60,6 +60,7 @@ class SessionRouter extends MainRouter {
         return res.sendServerError(500, error);
       }
     });
+
     this.get(
       "/current",
       ["PUBLIC"],

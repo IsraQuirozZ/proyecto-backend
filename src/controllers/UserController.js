@@ -1,5 +1,7 @@
 import UserDTO from "../dto/User.dto.js";
 import { cartService, userService } from "../service/index.js";
+// import { compareSync } from "bcrypt";
+// import jwt from "jsonwebtoken";
 
 class UserController {
   getUsers = async (req, res) => {
@@ -19,11 +21,65 @@ class UserController {
       let id = req.params.uid;
       let user = await userService.getUser(id);
 
-      user ? res.sendSuccess(200, user) : res.sendUserError(404, "Not found");
+      user
+        ? res.sendSuccess(200, user)
+        : res.sendUserError(404, "Not found user");
     } catch (error) {
       res.sendServerError(500, error);
     }
   };
+
+  getUserByEmail = async (req, res) => {
+    try {
+      let email = req.body.email;
+      let user = await userService.getUserByEmail(email);
+
+      user
+        ? res.sendSuccess(200, user)
+        : res.sendUserError(404, "Not found user");
+    } catch (error) {
+      res.sendServerError(500, error);
+    }
+  };
+
+  //   getLoginUser = async (req, res) => {
+  //     try {
+  //       if (req.cookies.token) {
+  //         return res.sendUserError(401, "You are already logged in");
+  //       }
+
+  //       let user = await userService.getUserByEmail(req.body.email);
+
+  //       if (!user) {
+  //         // return res.sendUserError(404, "User not registred");
+  //         return res.sendUserError(400, "Invalid email or password");
+  //       }
+
+  //       const { password } = user;
+  //       console.log(password);
+  //       let verified = compareSync(req.body.password, password);
+
+  //       if (!verified) {
+  //         return res.sendUserError(400, "Invalid email or password");
+  //       }
+
+  //       let token = jwt.sign(
+  //         { email: user.email, role: user.role },
+  //         process.env.SECRET_JWT
+  //       );
+  //       res.cookie("token", token, {
+  //         maxAge: 60 * 60 * 24 * 7,
+  //         httpOnly: true,
+  //       });
+  //       return res.sendSuccess(200, user);
+  //     } catch (error) {
+  //       return res.sendServerError(500, error);
+  //     }
+  //   };
+
+  //   registerUser = (req, res) => {
+  //     return res.sendSuccess(201, "User registred successfully");
+  //   };
 
   createUser = async (req, res) => {
     try {

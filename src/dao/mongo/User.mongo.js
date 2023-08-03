@@ -1,4 +1,4 @@
-import UserDTO from "../../dto/User.dto.js";
+// import UserDTO from "../../dto/User.dto.js";
 import User from "./models/User.js";
 
 class UserDao {
@@ -12,6 +12,10 @@ class UserDao {
 
   getUser = async (id) => {
     return await this.userModel.findById(id);
+  };
+
+  getUserByEmail = async (email) => {
+    return await this.userModel.findOne({ email: email });
   };
 
   createUser = async (userData) => {
