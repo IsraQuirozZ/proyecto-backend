@@ -14,8 +14,12 @@ class CartRepository {
     return this.dao.getCartBill(array);
   };
 
-  addProducts = async (id, modifiedCart) => {
-    return await this.dao.addProducts(id, modifiedCart);
+  createCart = async () => {
+    return this.dao.createCart();
+  };
+
+  addProduct = async (id, modifiedCart) => {
+    return await this.dao.addProduct(id, modifiedCart);
   };
 
   deleteProduct = async (id, modifiedCart) => {
@@ -25,9 +29,9 @@ class CartRepository {
   deleteCart = async (id, modifiedCart) => {
     return await this.dao.deleteCart(id, modifiedCart);
   };
-    purchase = async (date, amount, purchaser) => {
-        return await this.dao.purchase(date, amount, purchaser);
-    }
+  purchase = async (date, amount, purchaser) => {
+    return await this.dao.purchase(date, amount, purchaser);
+  }
 }
 
 export default CartRepository;

@@ -5,6 +5,7 @@ let collection = "users";
 let schema = new Schema({
   first_name: { type: String, required: true },
   last_name: { type: String, required: true },
+  full_name: { type: String, required: true },
   photo: {
     type: String,
     default:
@@ -12,14 +13,14 @@ let schema = new Schema({
   },
   email: { type: String, required: true, unique: true, index: true },
   age: { type: Number },
-  role: { type: String,
+  role: {
+    type: String,
     required: true,
-    enum: [
-      "user",
-      "admin"
-    ], default: 'user' },
+    enum: ["user", "admin"],
+    default: "user",
+  },
   password: { type: String, required: true },
-  cid: { type: Types.ObjectId, ref: 'carts', unique: true }
+  cid: { type: Types.ObjectId, ref: "carts", unique: true },
 });
 
 let User = model(collection, schema);

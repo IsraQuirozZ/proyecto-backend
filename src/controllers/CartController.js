@@ -100,11 +100,21 @@ class CartController {
     }
   };
 
-  addProducts = async (req, res) => {
+  createCart = async (req, res) => {
+    try {
+      let cart = await cartService.createCart();
+      return res.sendSuccess(200, cart);
+    } catch (error) {
+      console.log(error);
+      return res.sendServerError(500, error);
+    }
+  };
+
+  addProduct = async (req, res) => {
     try {
       let cartId = req.params.cid;
       let productId = req.params.pid;
-      let units = Number(req.params.units);
+      let units = Number(req.params.units) || 0;
 
       let cartFound = await cartService.getCart(cartId);
       let productFound = await productService.getProduct(productId);
@@ -119,28 +129,38 @@ class CartController {
       let stock = productFound.stock;
       stock >= units ? (stock -= units) : ((units = stock), (stock = 0));
 
-      //   if (cartFound.products.length === 0) {
-      //     cartFound.products.push({ pid: productId, units });
-      //   }
-      if (cartFound.products.length !== 0) {
-        /* Check if a product with the given `productId` already exists in the
-        `cartFound.products` array. */
+      let cart;
+      if (cartFound.products.length === 0 && units !== 0) {
+        cartFound.products.push({ pid: productId, units });
+      } else if (units === 0) {
+        cart = await cartService.addProduct(cartId, {
+          products: cartFound.products,
+        });
+      } else {
         let productsId = [];
         cartFound.products.forEach((product) => {
           productsId.push(String(product.pid));
         });
-        if (productsId.includes(productId)) {
+        /* Check if a product with the given `productId` already exists in the
+        `cartFound.products` array. */
+        if (!productsId.includes(productId) && units !== 0) {
+          cartFound.products.push({ pid: productId, units });
+        } else {
           /* Increases units of a existing product. */
           let productToAddUnits = cartFound.products.find(
             (product) => String(product.pid) === productId
           );
-          productToAddUnits.units = productToAddUnits.units + units;
-        } else if (stock !== 0) {
-          cartFound.products.push({ pid: productId, units });
+          if (productToAddUnits.units + units < productFound.stock) {
+            productToAddUnits.units = productToAddUnits.units + units;
+          } else if (productToAddUnits.units + units === productFound.stock) {
+            productToAddUnits.units = productFound.stock;
+          } else {
+            productToAddUnits.units = productFound.stock;
+          }
         }
       }
 
-      let cart = await cartService.addProducts(cartId, {
+      cart = await cartService.addProduct(cartId, {
         products: cartFound.products,
       });
       // Esto no se agrega ya que solo descontará las unidades cuando se realice la compra
@@ -218,7 +238,7 @@ class CartController {
       return res.sendServerError(500, error);
     }
   };
-
+  
 	purchase = async (req, res) => {
 		try {
 			const cartId = req.params.cid
