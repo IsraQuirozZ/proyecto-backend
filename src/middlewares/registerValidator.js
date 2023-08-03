@@ -1,9 +1,9 @@
 import User from "../dao/mongo/models/User.js";
 
 const validator = async (req, res, next) => {
-  let { name, email, password } = req.body;
+  let { first_name, last_name, email, password } = req.body;
 
-  if (!name || !email || !password) {
+  if (!first_name || !last_name || !email || !password) {
     return res.status(400).json({
       success: false,
       response: "All data required",

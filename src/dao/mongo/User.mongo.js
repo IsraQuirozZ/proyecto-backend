@@ -10,10 +10,10 @@ class UserDao {
     return await this.userModel.findById(uid);
   };
 
-  createUser = async (userData) => {
-    const newUser = new UserDTO(userData);
-    return await this.userModel.create(newUser);
-  };
+  createUser = async userData => {
+    const newUser = new UserDTO(userData)
+    return await this.userModel.create(newUser)
+  }
 }
 
 export default UserDao;

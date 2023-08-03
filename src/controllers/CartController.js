@@ -218,6 +218,51 @@ class CartController {
       return res.sendServerError(500, error);
     }
   };
+
+	purchase = async (req, res) => {
+		try {
+			const cartId = req.params.cid
+			const cart = await cartService.getCart(cartId)
+
+			if (!cart) {
+				return res.sendUserError(404, { error: 'Not found' })
+			}
+
+			if (cart.products.length < 1) {
+				return res.sendUserError(400, 'No products found')
+			}
+
+			let outOfStockProducts = []
+			let availableProducts = []
+			let amount = 0
+
+			for (const cartProduct of cart.products) {
+				const product = await productService.getProduct(cartProduct.pid)
+
+				if (cartProduct.units > product.stock) {
+					outOfStockProducts.push(cartProduct)
+				}
+
+				availableProducts.push(product)
+				amount += product.price + cartProduct.units
+
+				product.stock -= cartProduct.units
+				await product.save()
+			}
+
+			const ticket = await cartService.purchase(Date.now(), amount, req.user.email)
+
+			return res.sendSuccess(201, {
+				ticket,
+				availableProducts,
+				outOfStockProducts
+			})
+
+		} catch (error) {
+			console.log(error)
+			return res.sendServerError(500, error)
+		}
+	}
 }
 
 export default new CartController();

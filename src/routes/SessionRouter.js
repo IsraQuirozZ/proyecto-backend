@@ -7,6 +7,7 @@ import password_validator from "../middlewares/passwordValidator.js";
 import validator from "../middlewares/registerValidator.js";
 import createhash from "../middlewares/createhash.js";
 import { compareSync } from "bcrypt";
+import UserDTO from "../dto/User.dto.js";
 
 class SessionRouter extends MainRouter {
   init() {

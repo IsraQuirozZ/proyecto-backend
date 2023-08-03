@@ -2,14 +2,13 @@ import { productService } from "../service/index.js";
 
 class ProductController {
   getProducts = async (req, res) => {
-    try {
-      let page = req.query.page ?? 1;
-      let limit = req.query.limit ?? 6;
-      let name = req.query.name
-        ? new RegExp(req.query.name, "i")
-        : new RegExp("");
-
-      let products = await productService.getProducts(name, limit, page);
+		try {
+			let page = req.query.page ?? 1;
+			let limit = req.query.limit ?? 6;
+			let name = req.query.name
+				? new RegExp(req.query.name, 'i')
+				: new RegExp('');
+			let products = await productService.getProducts(name, limit, page);
 
       if (products) {
         return res.sendSuccess(200, { products });
