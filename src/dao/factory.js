@@ -1,5 +1,4 @@
 import config from "../config/config.js";
-
 let ProductDao, CartDao, UserDao;
 
 switch (config.PERSISTENCE) {
@@ -16,7 +15,9 @@ switch (config.PERSISTENCE) {
 
     break;
   case "MEMORY":
+
     const { default: CartDaoMemory } = await import("./memory/Cart.js");
+
     CartDao = CartDaoMemory;
 
     break;

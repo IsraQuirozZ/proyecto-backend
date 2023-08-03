@@ -1,4 +1,3 @@
-// import UserDTO from "../../dto/User.dto.js";
 import User from "./models/User.js";
 
 class UserDao {

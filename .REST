@@ -14,8 +14,14 @@ GET http://localhost:8080/api/products/648756a3387dbab73002f32e
 
 ### CART
 GET http://localhost:8080/api/cart
-###
-GET http://localhost:8080/api/cart/647f9a508af5814325d1e75a
+### getCart
+GET http://localhost:8080/api/cart/64ca5c45e82a548eec605769
+### addProducts
+PUT http://localhost:8080/api/cart/64ca5c45e82a548eec605769/product/648756a3387dbab73002f32e/5
+### purchase
+POST http://localhost:8080/api/cart/64ca5c45e82a548eec605769/purchase
+### clearCart
+DELETE http://localhost:8080/api/cart/64ca5c45e82a548eec605769/clear
 
 
 ### SESSION
@@ -35,12 +41,12 @@ POST http://localhost:8080/api/session/register HTTP/1.1
 Content-Type: application/json
 
 {
-    "name": "Isra",
-    "email": "isra@gmail.com",
+    "first_name": "Guada",
+    "last_name": "Piva",
+    "email": "guadita@gmail.com",
     "password": "Hola123$",
     "age": 19
 }
-
 ###
 GET http://localhost:8080/api/session/logout
 
