@@ -3,12 +3,12 @@ import User from "./models/User.js";
 
 class UserDao {
   constructor() {
-    this.userModel = User
+    this.userModel = User;
   }
 
-  getUser = async uid => {
-    return await this.userModel.findById(uid)
-  }
+  getUser = async (uid) => {
+    return await this.userModel.findById(uid);
+  };
 
   createUser = async userData => {
     const newUser = new UserDTO(userData)
@@ -16,4 +16,4 @@ class UserDao {
   }
 }
 
-export default UserDao
+export default UserDao;

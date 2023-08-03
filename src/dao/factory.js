@@ -9,28 +9,21 @@ import CartDaoMemory from "./memory/Cart.js";
 let ProductDao, CartDao, UserDao;
 
 switch (config.PERSISTENCE) {
-    case 'MONGO':
+  case "MONGO":
+    ProductDao = ProductDaoMongo;
+    CartDao = CartDaoMongo;
+    UserDao = UserDaoMongo;
 
-        ProductDao = ProductDaoMongo
-        CartDao = CartDaoMongo
-        UserDao = UserDaoMongo
+    break;
+  case "MEMORY":
+    CartDao = CartDaoMemory;
 
-        break;
-    case 'MEMORY':
+    break;
 
-        CartDao = CartDaoMemory
-        
-        break
-
-    case 'FILE':
-
-        break;
-    default:
-        break;
+  case "FILE":
+    break;
+  default:
+    break;
 }
 
-export {
-    ProductDao,
-    CartDao,
-    UserDao
-}
+export { ProductDao, CartDao, UserDao };

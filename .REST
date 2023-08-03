@@ -9,7 +9,7 @@ GET http://localhost:8080/api/users/647
 ### PRODUCTS
 GET http://localhost:8080/api/products
 ###
-GET http://localhost:8080/api/products/648756a3387dbab73002f32e
+GET http://localhost:8080/api/products/648756a3387dbab73002f32e 
 
 
 ### CART
@@ -32,7 +32,7 @@ POST http://localhost:8080/api/session/login HTTP/1.1
 Content-Type: application/json
 
 {
-    "email": "guadita@gmail.com",
+    "email": "isra@gmail.com",
     "password": "Hola123$"
 }
 

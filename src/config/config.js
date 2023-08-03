@@ -1,12 +1,12 @@
-import dotenv from 'dotenv'
-import commander from "../utils/commander.js"
-import MongoSingleton from "./singletonMongoConnect.js"
+import dotenv from "dotenv";
+import commander from "../utils/commander.js";
+import MongoSingleton from "./singletonMongoConnect.js";
 
-const { mode } = commander.opts()
+const { mode } = commander.opts();
 
 dotenv.config({
-	path: mode === 'development' ? './.env.development' : './.env.production'
-})
+  path: mode === "development" ? "./.env.development" : "./.env.production",
+});
 
 export default {
 	SECRET_JWT: process.env.SECRET_JWT || '',
