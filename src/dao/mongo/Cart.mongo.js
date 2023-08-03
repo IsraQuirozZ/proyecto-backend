@@ -1,5 +1,4 @@
 import Cart from "./models/Cart.js";
-import Product from "./models/Product.js";
 
 class CartDao {
   constructor() {
@@ -18,9 +17,11 @@ class CartDao {
     return await this.CartModel.aggregate(array);
   };
 
-  addProducts = async (id, modifiedCart) => {
-    // await Product.findByIdAndUpdate(pid, { stock });
+  createCart = async () => {
+    return await this.CartModel.create({ products: [] });
+  };
 
+  addProduct = async (id, modifiedCart) => {
     return await this.CartModel.findByIdAndUpdate(id, modifiedCart, {
       new: true,
     });
