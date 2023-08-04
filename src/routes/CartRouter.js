@@ -22,7 +22,7 @@ class CartRouter extends MainRouter {
     this.get("/:cid", ["USER"], getCart);
     this.post("/:cid/purchase", ["USER", "ADMIN"], purchase);
     this.put("/:cid/product/:pid/:units", ["USER"], addProduct);
-    this.put("/:cid/product/:pid/:units", ["USER"], deleteProduct);
+    this.delete("/:cid/product/:pid/:units", ["USER"], deleteProduct);
   }
 }
 
