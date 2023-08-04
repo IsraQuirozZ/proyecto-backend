@@ -37,14 +37,14 @@ class CartDao {
     });
   };
 
-  deleteCart = async (id, modifiedCart) => {
+  clearCart = async (id, modifiedCart) => {
     return await this.CartModel.findByIdAndUpdate(id, modifiedCart, {
       new: true,
     });
   };
 
-  purchase = async (date, amount, purchaser) => {
-    return await this.TicketModel.create(date, amount, purchaser);
+  purchase = async (purchase_date, amount, purchaser) => {
+    return await this.TicketModel.create({ purchase_date, amount, purchaser });
   };
 }
 

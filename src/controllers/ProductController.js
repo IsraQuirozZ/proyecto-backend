@@ -54,7 +54,7 @@ class ProductController {
       if (Object.entries(productData).length !== 0) {
         let product = await productService.updateProduct(id, productData);
         if (product) {
-          response = product;
+          response = { product };
         } else {
           return res.sendUserError(404, { response: "Product not found" });
         }
@@ -72,11 +72,9 @@ class ProductController {
       let id = req.params.id;
       let product = await productService.deleteProduct(id);
       if (product) {
-        return res.sendSuccess(200, {
-          response: `Product '${product._id}' deleted`,
-        });
+        return res.sendSuccess(200, `Product '${product._id}' deleted`);
       } else {
-        return res.sendUserError(404, { response: "Product not found" });
+        return res.sendUserError(404, "Product not found");
       }
     } catch (error) {
       res.sendServerError(error);

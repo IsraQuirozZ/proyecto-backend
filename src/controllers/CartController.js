@@ -58,7 +58,7 @@ class CartController {
       let id = req.params.cid;
       let cart = await cartService.getCart(id);
       if (cart) {
-        return res.sendSuccess(200, cart);
+        return res.sendSuccess(200, { cart });
       }
       return res.sendUserError(404, "Not found cart");
     } catch (error) {
@@ -103,7 +103,7 @@ class CartController {
   createCart = async (req, res) => {
     try {
       let cart = await cartService.createCart();
-      return res.sendSuccess(200, cart);
+      return res.sendSuccess(200, { cart });
     } catch (error) {
       console.log(error);
       return res.sendServerError(500, error);
@@ -165,7 +165,7 @@ class CartController {
       });
       // Esto no se agrega ya que solo descontará las unidades cuando se realice la compra
       //   await this.productService.updateProduct(productId, { stock });
-      return res.sendSuccess(200, cart);
+      return res.sendSuccess(200, { cart });
     } catch (error) {
       return res.sendServerError(500, error); // error: updating cart
     }
@@ -214,14 +214,14 @@ class CartController {
       });
       // Esto no se agrega ya que el stock no se modifica a menos que  se realice la compra
       //   await productService.updateProduct(productId, { stock });
-      return res.sendSuccess(200, cart);
+      return res.sendSuccess(200, { cart });
     } catch (error) {
       console.log(error);
       return res.sendServerError(500, error);
     }
   };
 
-  deleteCart = async (req, res) => {
+  clearCart = async (req, res) => {
     try {
       let cartId = req.params.cid;
       let cartFound = await cartService.getCart(cartId);
@@ -230,9 +230,9 @@ class CartController {
         return res.sendUserError(404, "Not found cart");
       }
 
-      let cart = await cartService.deleteCart(cartId, { products: [] });
+      let cart = await cartService.clearCart(cartId, { products: [] });
 
-      return res.sendSuccess(200, cart);
+      return res.sendSuccess(200, { cart });
     } catch (error) {
       console.log(error);
       return res.sendServerError(500, error);
@@ -245,7 +245,7 @@ class CartController {
       const cart = await cartService.getCart(cartId);
 
       if (!cart) {
-        return res.sendUserError(404, { error: "Not found" });
+        return res.sendUserError(404, { error: "Cart not found" });
       }
 
       if (cart.products.length < 1) {
@@ -261,24 +261,35 @@ class CartController {
 
         if (cartProduct.units > product.stock) {
           outOfStockProducts.push(cartProduct);
+        } else {
+          availableProducts.push(product);
+          amount += product.price * cartProduct.units;
+
+          product.stock -= cartProduct.units;
+          await product.save();
+
+          cart.products = cart.products.filter(
+            (product) => product.pid !== cartProduct.pid
+          );
+          await cart.save();
         }
-
-        availableProducts.push(product);
-        amount += product.price + cartProduct.units;
-
-        product.stock -= cartProduct.units;
-        await product.save();
       }
 
+      const date = new Date();
+      const day = date.getDate().toString().padStart(2, "0");
+      const month = (date.getMonth() + 1).toString().padStart(2, "0");
+      const year = date.getFullYear();
+      const formattedDate = `${day}/${month}/${year}`;
+
       const ticket = await cartService.purchase(
-        Date.now(),
+        formattedDate,
         amount,
         req.user.email
       );
 
       return res.sendSuccess(201, {
         ticket,
-        availableProducts,
+        purchasedItems: availableProducts,
         outOfStockProducts,
       });
     } catch (error) {

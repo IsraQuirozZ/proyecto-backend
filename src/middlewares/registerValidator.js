@@ -1,4 +1,4 @@
-import User from "../dao/mongo/models/User.js";
+import { userService } from "../service/index.js";
 
 const validator = async (req, res, next) => {
   let { first_name, last_name, email, password } = req.body;
@@ -15,7 +15,7 @@ const validator = async (req, res, next) => {
     });
   }
 
-  let userExists = await User.findOne({ email });
+  let userExists = await userService.getUserByEmail(email);
   if (Boolean(userExists)) {
     return res.status(409).json({
       success: false,
