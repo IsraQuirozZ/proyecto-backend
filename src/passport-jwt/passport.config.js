@@ -4,6 +4,7 @@ import passportJWT from "passport-jwt";
 import GHStrategy from "passport-github2";
 import Cart from "../dao/mongo/models/Cart.js";
 import User from "../dao/mongo/models/User.js";
+import UserDTO from "../dto/User.dto.js";
 
 const JWTStrategy = passportJWT.Strategy;
 const ExtractJWT = passportJWT.ExtractJwt;
@@ -33,8 +34,7 @@ const initializePassport = () => {
       try {
         let one = await User.findOne({ email: jwt_payload.email });
         if (one) {
-          delete one.password;
-          return done(null, one);
+          return done(null, new UserDTO(one));
         } else {
           return done(null, false);
         }

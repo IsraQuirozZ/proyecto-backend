@@ -9,7 +9,7 @@ class UserController {
       let users = await userService.getUsers();
 
       users
-        ? res.sendSuccess(200, users)
+        ? res.sendSuccess(200, { users })
         : res.sendUserError(404, "Not found users");
     } catch (error) {
       return res.sendServerError(500, error);
@@ -22,7 +22,7 @@ class UserController {
       let user = await userService.getUser(id);
 
       user
-        ? res.sendSuccess(200, user)
+        ? res.sendSuccess(200, { user })
         : res.sendUserError(404, "Not found user");
     } catch (error) {
       res.sendServerError(500, error);
@@ -35,7 +35,7 @@ class UserController {
       let user = await userService.getUserByEmail(email);
 
       user
-        ? res.sendSuccess(200, user)
+        ? res.sendSuccess(200, { user })
         : res.sendUserError(404, "Not found user");
     } catch (error) {
       res.sendServerError(500, error);
@@ -69,7 +69,7 @@ class UserController {
         maxAge: 60 * 60 * 24 * 7,
         httpOnly: true,
       });
-      return res.sendSuccess(200, new UserDTO(user));
+      return res.sendSuccess(200, { user: new UserDTO(user) });
     } catch (error) {
       return res.sendServerError(500, error);
     }
@@ -122,7 +122,7 @@ class UserController {
         !("role" in userData)
       ) {
         let user = await userService.updateUser(id, userData);
-        return res.sendSuccess(200, new UserDTO(user));
+        return res.sendSuccess(200, { user: new UserDTO(user) });
       }
 
       return res.sendUserError(400, "There's nothing to update");

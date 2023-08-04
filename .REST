@@ -15,9 +15,9 @@ GET http://localhost:8080/api/products/648756a3387dbab73002f32e
 ### CART
 GET http://localhost:8080/api/cart
 ### getCart
-GET http://localhost:8080/api/cart/64ca5c45e82a548eec605769
+GET http://localhost:8080/api/cart/64cc3d666d318b64ea92b221
 ### addProducts
-PUT http://localhost:8080/api/cart/64ca5c45e82a548eec605769/product/648756a3387dbab73002f32e/5
+PUT http://localhost:8080/api/cart/64cc3d666d318b64ea92b221/product/648756a3387dbab73002f32e/5
 ### purchase
 POST http://localhost:8080/api/cart/64ca5c45e82a548eec605769/purchase
 ### clearCart
@@ -26,7 +26,6 @@ DELETE http://localhost:8080/api/cart/64ca5c45e82a548eec605769
 
 ### SESSION
 GET http://localhost:8080/api/session/current
-
 ###
 POST http://localhost:8080/api/session/login HTTP/1.1
 Content-Type: application/json

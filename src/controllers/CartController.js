@@ -58,7 +58,7 @@ class CartController {
       let id = req.params.cid;
       let cart = await cartService.getCart(id);
       if (cart) {
-        return res.sendSuccess(200, cart);
+        return res.sendSuccess(200, { cart });
       }
       return res.sendUserError(404, "Not found cart");
     } catch (error) {
@@ -103,7 +103,7 @@ class CartController {
   createCart = async (req, res) => {
     try {
       let cart = await cartService.createCart();
-      return res.sendSuccess(200, cart);
+      return res.sendSuccess(200, { cart });
     } catch (error) {
       console.log(error);
       return res.sendServerError(500, error);
@@ -165,7 +165,7 @@ class CartController {
       });
       // Esto no se agrega ya que solo descontará las unidades cuando se realice la compra
       //   await this.productService.updateProduct(productId, { stock });
-      return res.sendSuccess(200, cart);
+      return res.sendSuccess(200, { cart });
     } catch (error) {
       return res.sendServerError(500, error); // error: updating cart
     }
@@ -214,7 +214,7 @@ class CartController {
       });
       // Esto no se agrega ya que el stock no se modifica a menos que  se realice la compra
       //   await productService.updateProduct(productId, { stock });
-      return res.sendSuccess(200, cart);
+      return res.sendSuccess(200, { cart });
     } catch (error) {
       console.log(error);
       return res.sendServerError(500, error);
@@ -232,7 +232,7 @@ class CartController {
 
       let cart = await cartService.clearCart(cartId, { products: [] });
 
-      return res.sendSuccess(200, cart);
+      return res.sendSuccess(200, { cart });
     } catch (error) {
       console.log(error);
       return res.sendServerError(500, error);
