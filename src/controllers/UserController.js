@@ -1,7 +1,7 @@
 import UserDTO from "../dto/User.dto.js";
 import { cartService, userService } from "../service/index.js";
-// import { compareSync } from "bcrypt";
-// import jwt from "jsonwebtoken";
+import { compareSync } from "bcrypt";
+import jwt from "jsonwebtoken";
 
 class UserController {
   getUsers = async (req, res) => {
@@ -42,69 +42,69 @@ class UserController {
     }
   };
 
-  //   getLoginUser = async (req, res) => {
-  //     try {
-  //       if (req.cookies.token) {
-  //         return res.sendUserError(401, "You are already logged in");
-  //       }
-
-  //       let user = await userService.getUserByEmail(req.body.email);
-
-  //       if (!user) {
-  //         // return res.sendUserError(404, "User not registred");
-  //         return res.sendUserError(400, "Invalid email or password");
-  //       }
-
-  //       const { password } = user;
-  //       console.log(password);
-  //       let verified = compareSync(req.body.password, password);
-
-  //       if (!verified) {
-  //         return res.sendUserError(400, "Invalid email or password");
-  //       }
-
-  //       let token = jwt.sign(
-  //         { email: user.email, role: user.role },
-  //         process.env.SECRET_JWT
-  //       );
-  //       res.cookie("token", token, {
-  //         maxAge: 60 * 60 * 24 * 7,
-  //         httpOnly: true,
-  //       });
-  //       return res.sendSuccess(200, user);
-  //     } catch (error) {
-  //       return res.sendServerError(500, error);
-  //     }
-  //   };
-
-  //   registerUser = (req, res) => {
-  //     return res.sendSuccess(201, "User registred successfully");
-  //   };
-
-  createUser = async (req, res) => {
+  login = async (req, res) => {
     try {
-      let { first_name, last_name, email, password, photo, age, role } =
-        req.body;
-      if (!first_name || !last_name || !email || !password) {
-        return res.sendUserError(400, "Data is required");
+      if (req.cookies.token) {
+        return res.sendUserError(401, "You are already logged in");
       }
-      let cart = await cartService.createCart();
-      let newUser = new UserDTO({
-        first_name,
-        last_name,
-        email,
-        password,
-        photo,
-        age,
-        role,
-      });
-      let user = await userService.createUser({ ...newUser, cid: cart._id });
 
-      return res.sendSuccess(201, user);
+      let user = await userService.getUserByEmail(req.body.email);
+
+      if (!user) {
+        return res.sendUserError(400, "Invalid email or password");
+      }
+
+      const { password } = user;
+      let verified = compareSync(req.body.password, password);
+
+      if (!verified) {
+        return res.sendUserError(400, "Invalid email or password");
+      }
+
+      let token = jwt.sign(
+        { email: user.email, role: user.role },
+        process.env.SECRET_JWT
+      );
+      res.cookie("token", token, {
+        maxAge: 60 * 60 * 24 * 7,
+        httpOnly: true,
+      });
+      return res.sendSuccess(200, new UserDTO(user));
     } catch (error) {
       return res.sendServerError(500, error);
     }
   };
+
+  register = (req, res) => {
+    return res.sendSuccess(201, "User registred successfully");
+  };
+
+  logout = async (req, res) => {
+    try {
+      return res.clearCookie("token").sendSuccess(200, "User signed out");
+    } catch (error) {
+      return res.sendServerError(500, error);
+    }
+  }
+
+  current = (req, res) => {
+    return res.sendSuccess(200, { user: new UserDTO(req.user) });
+  }
+
+  // createUser = async (req, res) => {
+  //   try {
+  //     let { first_name, last_name, email, password } = req.body;
+  //     if (!first_name || !last_name || !email || !password) {
+  //       return res.sendUserError(400, "Data is required");
+  //     }
+  //     let cart = await cartService.createCart();
+  //     let user = await userService.createUser({ ...req.body, cid: cart._id });
+
+  //     return res.sendSuccess(201, new UserDTO(user));
+  //   } catch (error) {
+  //     return res.sendServerError(500, error);
+  //   }
+  // };
 
   updateUser = async (req, res) => {
     try {
@@ -122,7 +122,7 @@ class UserController {
         !("role" in userData)
       ) {
         let user = await userService.updateUser(id, userData);
-        return res.sendSuccess(200, user);
+        return res.sendSuccess(200, new UserDTO(user));
       }
 
       return res.sendUserError(400, "There's nothing to update");

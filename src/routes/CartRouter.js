@@ -8,7 +8,7 @@ const {
   addProduct,
   // createCart,
   deleteProduct,
-  deleteCart,
+  clearCart,
   purchase
 } = CartController;
 
@@ -18,7 +18,7 @@ class CartRouter extends MainRouter {
     this.get("/bill/:cid", ["USER", 'ADMIN'], getCartBill);
     // El post (create de carrito) se tendrá que hacer al crear un usuario.
     // this.post("/", ["PUBLIC"], createCart);
-    this.delete("/:cid", ["PUBLIC"], deleteCart); // USER
+    this.delete("/:cid", ["PUBLIC"], clearCart); // USER
     this.get('/:cid', ['USER'], getCart)
     this.post('/:cid/purchase', ['USER', 'ADMIN'], purchase)
     this.put('/:cid/product/:pid/:units', ['USER'], addProduct)

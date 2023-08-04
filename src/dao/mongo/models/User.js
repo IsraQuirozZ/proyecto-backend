@@ -5,7 +5,6 @@ let collection = "users";
 let schema = new Schema({
   first_name: { type: String, required: true },
   last_name: { type: String, required: true },
-  full_name: { type: String, required: true },
   photo: {
     type: String,
     default:
