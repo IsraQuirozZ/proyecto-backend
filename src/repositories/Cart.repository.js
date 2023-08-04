@@ -26,8 +26,8 @@ class CartRepository {
     return await this.dao.deleteProduct(id, modifiedCart);
   };
 
-  deleteCart = async (id, modifiedCart) => {
-    return await this.dao.deleteCart(id, modifiedCart);
+  clearCart = async (id, modifiedCart) => {
+    return await this.dao.clearCart(id, modifiedCart);
   };
   purchase = async (date, amount, purchaser) => {
     return await this.dao.purchase(date, amount, purchaser);

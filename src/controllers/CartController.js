@@ -221,7 +221,7 @@ class CartController {
     }
   };
 
-  deleteCart = async (req, res) => {
+  clearCart = async (req, res) => {
     try {
       let cartId = req.params.cid;
       let cartFound = await cartService.getCart(cartId);
@@ -230,7 +230,7 @@ class CartController {
         return res.sendUserError(404, "Not found cart");
       }
 
-      let cart = await cartService.deleteCart(cartId, { products: [] });
+      let cart = await cartService.clearCart(cartId, { products: [] });
 
       return res.sendSuccess(200, cart);
     } catch (error) {
@@ -238,51 +238,63 @@ class CartController {
       return res.sendServerError(500, error);
     }
   };
+
+  purchase = async (req, res) => {
+    try {
+      const cartId = req.params.cid
+      const cart = await cartService.getCart(cartId)
+
+      if (!cart) {
+        return res.sendUserError(404, { error: 'Cart not found' })
+      }
+
+      if (cart.products.length < 1) {
+        return res.sendUserError(400, 'No products found')
+      }
+
+      let outOfStockProducts = []
+      let availableProducts = []
+      let amount = 0
+
+      for (const cartProduct of cart.products) {
+
+        const product = await productService.getProduct(cartProduct.pid)
+
+        if (cartProduct.units > product.stock) {
+          outOfStockProducts.push(cartProduct)
+        } else {
+          availableProducts.push(product)
+          amount += product.price * cartProduct.units
   
-	purchase = async (req, res) => {
-		try {
-			const cartId = req.params.cid
-			const cart = await cartService.getCart(cartId)
+          product.stock -= cartProduct.units
+          await product.save()
+  
+          cart.products = cart.products.filter(product => 
+            product.pid !== cartProduct.pid
+          )
+          await cart.save()
+        }
+      }
 
-			if (!cart) {
-				return res.sendUserError(404, { error: 'Not found' })
-			}
+      const date = new Date();
+      const day = date.getDate().toString().padStart(2, '0');
+      const month = (date.getMonth() + 1).toString().padStart(2, '0');
+      const year = date.getFullYear();
+      const formattedDate = `${day}/${month}/${year}`;
 
-			if (cart.products.length < 1) {
-				return res.sendUserError(400, 'No products found')
-			}
+      const ticket = await cartService.purchase(formattedDate, amount, req.user.email)
 
-			let outOfStockProducts = []
-			let availableProducts = []
-			let amount = 0
+      return res.sendSuccess(201, {
+        ticket,
+        purchasedItems: availableProducts,
+        outOfStockProducts
+      })
 
-			for (const cartProduct of cart.products) {
-				const product = await productService.getProduct(cartProduct.pid)
-
-				if (cartProduct.units > product.stock) {
-					outOfStockProducts.push(cartProduct)
-				}
-
-				availableProducts.push(product)
-				amount += product.price + cartProduct.units
-
-				product.stock -= cartProduct.units
-				await product.save()
-			}
-
-			const ticket = await cartService.purchase(Date.now(), amount, req.user.email)
-
-			return res.sendSuccess(201, {
-				ticket,
-				availableProducts,
-				outOfStockProducts
-			})
-
-		} catch (error) {
-			console.log(error)
-			return res.sendServerError(500, error)
-		}
-	}
+    } catch (error) {
+      console.log(error)
+      return res.sendServerError(500, error)
+    }
+  }
 }
 
 export default new CartController();

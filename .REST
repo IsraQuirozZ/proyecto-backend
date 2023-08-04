@@ -21,7 +21,7 @@ PUT http://localhost:8080/api/cart/64ca5c45e82a548eec605769/product/648756a3387d
 ### purchase
 POST http://localhost:8080/api/cart/64ca5c45e82a548eec605769/purchase
 ### clearCart
-DELETE http://localhost:8080/api/cart/64ca5c45e82a548eec605769/clear
+DELETE http://localhost:8080/api/cart/64ca5c45e82a548eec605769
 
 
 ### SESSION
@@ -32,7 +32,7 @@ POST http://localhost:8080/api/session/login HTTP/1.1
 Content-Type: application/json
 
 {
-    "email": "isra@gmail.com",
+    "email": "guadita@gmail.com",
     "password": "Hola123$"
 }
 
@@ -43,7 +43,7 @@ Content-Type: application/json
 {
     "first_name": "Guada",
     "last_name": "Piva",
-    "email": "guadita@gmail.com",
+    "email": "guaditaa@gmail.com",
     "password": "Hola123$",
     "age": 19
 }
