@@ -18,23 +18,20 @@ class CartRouter extends MainRouter {
   init() {
     this.get("/", ["ADMIN"], getCarts);
     this.get(
+      "/:cid",
+      ["USER", "ADMIN"],
+      passportCall("jwt"),
+      validateCart,
+      getCart
+    );
+    this.get(
       "/bill/:cid",
       ["USER", "ADMIN"],
       passportCall("jwt"),
       validateCart,
       getCartBill
     );
-    // El post (create de carrito) se tendrá que hacer al crear un usuario.
-    // this.post("/", ["PUBLIC"], createCart);
-    this.delete("/:cid", ["PUBLIC"], clearCart); // USER
-    this.get("/:cid", ["USER"], passportCall("jwt"), validateCart, getCart);
-    this.post(
-      "/:cid/purchase",
-      ["USER", "ADMIN"],
-      passportCall("jwt"),
-      validateCart,
-      purchase
-    );
+    // this.post("/", ["PUBLIC"], createCart); // No se usa ya que en el register (passport strategy) se crea el usuario y carrito
     this.put(
       "/:cid/product/:pid/:units",
       ["USER"],
@@ -48,6 +45,14 @@ class CartRouter extends MainRouter {
       passportCall("jwt"),
       validateCart,
       deleteProduct
+    );
+    this.delete("/:cid", ["PUBLIC"], clearCart); // USER
+    this.post(
+      "/:cid/purchase",
+      ["USER", "ADMIN"],
+      passportCall("jwt"),
+      validateCart,
+      purchase
     );
   }
 }

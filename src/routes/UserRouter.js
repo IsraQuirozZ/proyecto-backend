@@ -14,14 +14,15 @@ const {
 
 class UserRouter extends MainRouter {
   init() {
-    this.get("/", ["PUBLIC"], getUsers); // ADMIN
-    this.get("/:uid", ["PUBLIC"], getUser); // USER && ADMIN
-    this.post("/", ["PUBLIC"], getUserByEmail); // USER && ADMIN
-    // this.post("/register", ["PUBLIC"], passportCall("register"));
+    this.get("/", ["ADMIN"], getUsers);
+    this.get("/:uid", ["ADMIN"], getUser);
+    this.post("/", ["ADMIN"], getUserByEmail);
+    // this.post("/", ["PUBLIC"], createUser); // No se usa ya que usamos una strategy "register" de passport
+    // this.post("/register", ["PUBLIC"], passportCall("register"),register);
     // this.post("/login", ["PUBLIC"], getLoginUser);
-    this.post("/", ["PUBLIC"], createUser); // PUBLIC (tiene que usarse en el register, tiene que tener middlewares)
-    this.put("/:uid", ["PUBLIC"], updateUser); // USER (Esto no se utilizará en nuestra aplicación)
-    this.delete("/:uid", ["PUBLIC"], deleteUser);
+    // this.post("/logout", ["USER", "ADMIN"], passportCall("jwt"), logout)
+    this.put("/:uid", ["USER", "ADMIN"], updateUser); // Más adelante poder cambiar contraseña...
+    this.delete("/:uid", ["ADMIN"], deleteUser);
   }
 }
 

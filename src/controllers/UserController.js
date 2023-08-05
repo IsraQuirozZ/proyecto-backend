@@ -85,11 +85,11 @@ class UserController {
     } catch (error) {
       return res.sendServerError(500, error);
     }
-  }
+  };
 
   current = (req, res) => {
     return res.sendSuccess(200, { user: new UserDTO(req.user) });
-  }
+  };
 
   // createUser = async (req, res) => {
   //   try {
@@ -117,14 +117,20 @@ class UserController {
 
       let userData = req.body;
       if (
-        Object.entries(userData).length !== 0 &&
-        !("cid" in userData) &&
-        !("role" in userData)
+        // De momento que no se pueda cambiar ni el rol ni la contraseña
+        Object.entries(userData).length !== 0
       ) {
-        let user = await userService.updateUser(id, userData);
-        return res.sendSuccess(200, { user: new UserDTO(user) });
+        if (
+          !("cid" in userData) &&
+          !("role" in userData) &&
+          !("password" in userData)
+        ) {
+          let user = await userService.updateUser(id, userData);
+          return res.sendSuccess(200, { user: new UserDTO(user) });
+        } else {
+          return res.sendUserError(400, "There's data you can`t change");
+        }
       }
-
       return res.sendUserError(400, "There's nothing to update");
     } catch (error) {
       return res.sendServerError(500, error);

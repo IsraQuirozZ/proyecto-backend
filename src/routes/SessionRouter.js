@@ -26,7 +26,7 @@ class SessionRouter extends MainRouter {
 
     this.get(
       "/current",
-      ["PUBLIC"],
+      ["USER", "ADMIN"],
       passportCall("jwt"),
       authJwt("user"),
       current

@@ -1,15 +1,16 @@
 const validateCart = async (req, res, next) => {
-	const requestedCart = req.params.cid
-	const userCart = req.user?.cid?.toString()
+  const requestedCart = req.params.cid;
 
-	console.log(requestedCart, userCart)
-
-	if (requestedCart !== userCart) {
-    return res.status(400).json({
-      message: 'Carts do not match'
-    })
+  if (req.user.role.toUpperCase() !== "ADMIN") {
+    const userCart = req.user?.cid?.toString();
+    console.log(requestedCart, userCart);
+    if (requestedCart !== userCart) {
+      return res.status(400).json({
+        message: "Carts do not match",
+      });
+    }
   }
-	return next()
-}
+  return next();
+};
 
-export default validateCart
+export default validateCart;
