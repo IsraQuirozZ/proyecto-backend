@@ -9,11 +9,11 @@ dotenv.config({
 });
 
 export default {
-	SECRET_JWT: process.env.SECRET_JWT || '',
-	PORT: process.env.PORT || 8080,
-	MONGO_LINK: process.env.MONGO_LINK|| '',
-	PERSISTENCE: process.env.PERSISTENCE || 'MONGO',
-	GMAIL_USER_APP: process.env.GMAIL_USER_APP || '',
-	GMAIL_PASS_APP: process.env.GMAIL_PASS_APP || '',
-	connectDB: async () => MongoSingleton.getInstance()
-}
+  SECRET_JWT: process.env.SECRET_JWT || "",
+  PORT: process.env.PORT || 8080,
+  MONGO_LINK: process.env.MONGO_LINK || "",
+  PERSISTENCE: process.env.PERSISTENCE || "MONGO",
+  GMAIL_USER_APP: process.env.GMAIL_USER_APP || "",
+  GMAIL_PASS_APP: process.env.GMAIL_PASS_APP || "",
+  connectDB: async () => MongoSingleton.getInstance(),
+};

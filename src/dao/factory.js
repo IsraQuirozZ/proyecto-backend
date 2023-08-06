@@ -15,7 +15,6 @@ switch (config.PERSISTENCE) {
 
     break;
   case "MEMORY":
-
     const { default: CartDaoMemory } = await import("./memory/Cart.js");
 
     CartDao = CartDaoMemory;

@@ -4,9 +4,9 @@ import Ticket from "./models/Ticket.js";
 
 class CartDao {
   constructor() {
-    this.CartModel = Cart
-    this.ProductModel = Product
-    this.TicketModel = Ticket
+    this.CartModel = Cart;
+    this.ProductModel = Product;
+    this.TicketModel = Ticket;
   }
 
   getCarts = async (array) => {
@@ -43,9 +43,9 @@ class CartDao {
     });
   };
 
-  purchase = async (purchase_date, amount, purchaser) => {
-    return await this.TicketModel.create({purchase_date, amount, purchaser});
-  }
+  purchase = async (ticket) => {
+    return await this.TicketModel.create(ticket);
+  };
 }
 
 export default CartDao;

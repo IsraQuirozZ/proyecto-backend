@@ -8,23 +8,51 @@ const {
   getCart,
   getCartBill,
   addProduct,
-  // createCart,
   deleteProduct,
   clearCart,
-  purchase
+  purchase,
+  deleteCart,
 } = CartController;
 
 class CartRouter extends MainRouter {
   init() {
     this.get("/", ["ADMIN"], getCarts);
-    this.get("/bill/:cid", ["USER", 'ADMIN'], passportCall('jwt'), validateCart, getCartBill);
-    // El post (create de carrito) se tendrá que hacer al crear un usuario.
-    // this.post("/", ["PUBLIC"], createCart);
-    this.delete("/:cid", ["PUBLIC"], clearCart); // USER
-    this.get('/:cid', ['USER'], passportCall('jwt'), validateCart, getCart)
-    this.post('/:cid/purchase', ['USER', 'ADMIN'], passportCall('jwt'), validateCart, purchase)
-    this.put('/:cid/product/:pid/:units', ['USER'], passportCall('jwt'), validateCart, addProduct)
-    this.put('/:cid/product/:pid/:units', ['USER'], passportCall('jwt'), validateCart, deleteProduct)
+    this.get(
+      "/:cid",
+      ["USER", "ADMIN"],
+      passportCall("jwt"),
+      validateCart,
+      getCart
+    );
+    this.get(
+      "/bill/:cid",
+      ["USER", "ADMIN"],
+      passportCall("jwt"),
+      validateCart,
+      getCartBill
+    );
+    this.put(
+      "/:cid/product/:pid/:units",
+      ["USER"],
+      passportCall("jwt"),
+      validateCart,
+      addProduct
+    );
+    this.delete(
+      "/:cid/product/:pid/:units",
+      ["USER"],
+      passportCall("jwt"),
+      validateCart,
+      deleteProduct
+    );
+    this.delete("/:cid", ["USER"], clearCart);
+    this.post(
+      "/:cid/purchase",
+      ["USER"],
+      passportCall("jwt"),
+      validateCart,
+      purchase
+    );
   }
 }
 

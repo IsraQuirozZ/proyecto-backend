@@ -19,7 +19,7 @@ const validator = async (req, res, next) => {
   if (Boolean(userExists)) {
     return res.status(409).json({
       success: false,
-      response: "User already authenticated",
+      response: "User already registered",
     });
   }
 
