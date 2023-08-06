@@ -5,6 +5,7 @@ import GHStrategy from "passport-github2";
 import Cart from "../dao/mongo/models/Cart.js";
 import User from "../dao/mongo/models/User.js";
 import UserDTO from "../dto/User.dto.js";
+import { cartService, userService } from "../service/index.js";
 
 const JWTStrategy = passportJWT.Strategy;
 const ExtractJWT = passportJWT.ExtractJwt;
@@ -32,9 +33,9 @@ const initializePassport = () => {
     "jwt",
     new JWTStrategy(configStrategy, async (jwt_payload, done) => {
       try {
-        let one = await User.findOne({ email: jwt_payload.email });
-        if (one) {
-          return done(null, new UserDTO(one));
+        let user = await userService.getUserByEmail(jwt_payload.email);
+        if (user) {
+          return done(null, new UserDTO(user));
         } else {
           return done(null, false);
         }
@@ -52,7 +53,7 @@ const initializePassport = () => {
       { usernameField: "email" },
       async (username, password, done) => {
         try {
-          let user = await User.findOne({ email: username });
+          let user = await userService.getUserByEmail(username);
           if (user) {
             return done(null, user);
           }
@@ -72,10 +73,13 @@ const initializePassport = () => {
       { passReqToCallback: true, usernameField: "email" },
       async (req, username, password, done) => {
         try {
-          let one = await User.findOne({ email: username });
-          if (!one) {
-            let cart = await Cart.create({ products: [] });
-            let user = await User.create({ ...req.body, cid: cart._id });
+          let user = await userService.getUserByEmail(username);
+          if (!user) {
+            let cart = await cartService.createCart();
+            let user = await userService.createUser({
+              ...req.body,
+              cid: cart._id,
+            });
             delete user.password;
             return done(null, user);
           }
@@ -88,7 +92,6 @@ const initializePassport = () => {
   );
 
   // SIGNIN GH
-
   passport.use(
     "github",
     new GHStrategy(

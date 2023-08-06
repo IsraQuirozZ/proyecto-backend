@@ -1,16 +1,21 @@
 import UserDTO from "../dto/User.dto.js";
-import { cartService, userService } from "../service/index.js";
+import { userService } from "../service/index.js";
 import { compareSync } from "bcrypt";
 import jwt from "jsonwebtoken";
 
 class UserController {
   getUsers = async (req, res) => {
     try {
-      let users = await userService.getUsers();
+      let foundUsers = await userService.getUsers();
+      let users = [];
 
-      users
-        ? res.sendSuccess(200, { users })
-        : res.sendUserError(404, "Not found users");
+      if (foundUsers) {
+        foundUsers.forEach((user) => {
+          users.push(new UserDTO(user));
+        });
+        return res.sendSuccess(200, { users });
+      }
+      return res.sendUserError(404, "Not found users");
     } catch (error) {
       return res.sendServerError(500, error);
     }
@@ -22,7 +27,7 @@ class UserController {
       let user = await userService.getUser(id);
 
       user
-        ? res.sendSuccess(200, { user })
+        ? res.sendSuccess(200, { user: new UserDTO(user) })
         : res.sendUserError(404, "Not found user");
     } catch (error) {
       res.sendServerError(500, error);
@@ -35,7 +40,7 @@ class UserController {
       let user = await userService.getUserByEmail(email);
 
       user
-        ? res.sendSuccess(200, { user })
+        ? res.sendSuccess(200, { user: new UserDTO(user) })
         : res.sendUserError(404, "Not found user");
     } catch (error) {
       res.sendServerError(500, error);

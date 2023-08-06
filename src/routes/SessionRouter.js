@@ -2,7 +2,7 @@ import MainRouter from "./Router.js";
 import passportCall from "../middlewares/passportCall.js";
 import authJwt from "../passport-jwt/authJwt.js";
 import password_validator from "../middlewares/passwordValidator.js";
-import validator from "../middlewares/registerValidator.js";
+import registerValidator from "../middlewares/registerValidator.js";
 import createhash from "../middlewares/createhash.js";
 import UserController from "../controllers/UserController.js";
 
@@ -15,7 +15,7 @@ class SessionRouter extends MainRouter {
     this.post(
       "/register",
       ["PUBLIC"],
-      validator,
+      registerValidator,
       password_validator,
       createhash,
       passportCall("register"),

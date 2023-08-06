@@ -22,7 +22,7 @@ class ProductController {
 
   getProduct = async (req, res) => {
     try {
-      let id = req.params.id;
+      let id = req.params.pid;
       let product = await productService.getProduct(id);
       if (product) {
         return res.sendSuccess(200, { product });
@@ -48,7 +48,7 @@ class ProductController {
 
   updateProduct = async (req, res) => {
     try {
-      let id = req.params.id;
+      let id = req.params.pid;
       let productData = req.body;
       let response;
       if (Object.entries(productData).length !== 0) {
@@ -69,7 +69,7 @@ class ProductController {
 
   deleteProduct = async (req, res) => {
     try {
-      let id = req.params.id;
+      let id = req.params.pid;
       let product = await productService.deleteProduct(id);
       if (product) {
         return res.sendSuccess(200, `Product '${product._id}' deleted`);

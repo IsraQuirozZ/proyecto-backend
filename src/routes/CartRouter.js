@@ -8,10 +8,10 @@ const {
   getCart,
   getCartBill,
   addProduct,
-  // createCart,
   deleteProduct,
   clearCart,
   purchase,
+  deleteCart,
 } = CartController;
 
 class CartRouter extends MainRouter {
@@ -31,7 +31,6 @@ class CartRouter extends MainRouter {
       validateCart,
       getCartBill
     );
-    // this.post("/", ["PUBLIC"], createCart); // No se usa ya que en el register (passport strategy) se crea el usuario y carrito
     this.put(
       "/:cid/product/:pid/:units",
       ["USER"],
@@ -39,17 +38,17 @@ class CartRouter extends MainRouter {
       validateCart,
       addProduct
     );
-    this.put(
+    this.delete(
       "/:cid/product/:pid/:units",
       ["USER"],
       passportCall("jwt"),
       validateCart,
       deleteProduct
     );
-    this.delete("/:cid", ["PUBLIC"], clearCart); // USER
+    this.delete("/:cid", ["USER"], clearCart);
     this.post(
       "/:cid/purchase",
-      ["USER", "ADMIN"],
+      ["USER"],
       passportCall("jwt"),
       validateCart,
       purchase
