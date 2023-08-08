@@ -16,5 +16,5 @@ router.use("/api/gmail", async (req, res) => {
   await sendMail();
   res.send("Email sended successfully");
 });
-// router.use("/api", api_router);
+
 export default router;

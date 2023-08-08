@@ -44,7 +44,7 @@ inicializePassport();
 server.use(passport.initialize());
 // server.use(passport.session());
 
-server.use("/", router);
+server.use('/', router)
 
 server.use(errorHandler); // Manejador de errores
 server.use(notFoundHandler); // Manejador de rutas inexistentes

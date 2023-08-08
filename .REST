@@ -24,6 +24,12 @@ POST http://localhost:8080/api/cart/64cabdbf0627c82829900268/purchase
 DELETE http://localhost:8080/api/cart/64ca5c45e82a548eec605769
 
 
+### CART
+GET http://localhost:8080/api/cart
+###
+GET http://localhost:8080/api/cart/647f9a508af5814325d1e75a
+
+
 ### SESSION
 GET http://localhost:8080/api/session/current
 ###
