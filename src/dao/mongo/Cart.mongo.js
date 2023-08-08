@@ -46,5 +46,6 @@ class CartDao {
   purchase = async (ticket) => {
     return await this.TicketModel.create(ticket);
   };
+}
 
 export default CartDao;
