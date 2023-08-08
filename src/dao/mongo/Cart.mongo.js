@@ -1,31 +1,50 @@
 import Cart from "./models/Cart.js";
 import Product from "./models/Product.js";
+import Ticket from "./models/Ticket.js";
 
 class CartDao {
   constructor() {
-    this.CartModel = Cart
+    this.CartModel = Cart;
+    this.ProductModel = Product;
+    this.TicketModel = Ticket;
   }
 
-  getCart = async cid => {
-    return await this.CartModel.findById(cid)
-  }
+  getCarts = async (array) => {
+    return this.CartModel.aggregate(array);
+  };
 
-  addProducts = async (cid, pid, stock, modifiedCart) => {
-    await Product.findByIdAndUpdate(pid, { stock });
+  getCart = async (id) => {
+    return await this.CartModel.findById(id);
+  };
 
-    return await this.CartModel.findByIdAndUpdate(
-      cid,
-      {
-        modifiedCart,
-      },
-      { new: true }
-    );
-  }
+  getCartBill = async (array) => {
+    return await this.CartModel.aggregate(array);
+  };
 
-  async deleteProducts(cid, pid, stock, modifiedCart) {
-    await Product.findByIdAndUpdate(pid, { stock });
-    return await this.CartModel.findByIdAndUpdate(cid, modifiedCart);
-  }
-}
+  createCart = async () => {
+    return await this.CartModel.create({ products: [] });
+  };
+
+  addProduct = async (id, modifiedCart) => {
+    return await this.CartModel.findByIdAndUpdate(id, modifiedCart, {
+      new: true,
+    });
+  };
+
+  deleteProduct = async (id, modifiedCart) => {
+    return await this.CartModel.findByIdAndUpdate(id, modifiedCart, {
+      new: true,
+    });
+  };
+
+  clearCart = async (id, modifiedCart) => {
+    return await this.CartModel.findByIdAndUpdate(id, modifiedCart, {
+      new: true,
+    });
+  };
+
+  purchase = async (ticket) => {
+    return await this.TicketModel.create(ticket);
+  };
 
 export default CartDao;
