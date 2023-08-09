@@ -1,6 +1,6 @@
 import express from "express";
 import "dotenv/config.js";
-import errorHandler from "./middlewares/errorHandler.js";
+import errorHandler from "./middlewares/error/errorHandler.js";
 import notFoundHandler from "./middlewares/notFoundHandler.js";
 import { __dirname } from "./utils/utils.js";
 import router from "./routes/index.js";
