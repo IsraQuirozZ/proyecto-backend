@@ -23,5 +23,9 @@ router.use("/api/gmail", async (req, res) => {
   await sendMail();
   res.send("Email sended successfully");
 });
+// router.use('/api/logger', async (req, res) => {
+//   req.logger.error('error - ' + Date().toLocaleString());
+//   res.send('logger registred');
+// })
 
 export default router;
