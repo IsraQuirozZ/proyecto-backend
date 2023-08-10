@@ -1,3 +1,6 @@
+import CustomError from "../middlewares/error/CustomError.js";
+import EErrors from "../middlewares/error/enum.js";
+import { non_existentProductErrorInfo } from "../middlewares/error/generateProductInfo.js";
 import { cartService, productService } from "../service/index.js";
 import { Types } from "mongoose";
 
@@ -100,7 +103,7 @@ class CartController {
     }
   };
 
-  addProduct = async (req, res) => {
+  addProduct = async (req, res, next) => {
     try {
       let cartId = req.params.cid;
       let productId = req.params.pid;
@@ -109,9 +112,13 @@ class CartController {
       let cartFound = await cartService.getCart(cartId);
       let productFound = await productService.getProduct(productId);
 
-      if (!cartFound || !productFound) {
-        let response = cartFound ? "Product not found" : "Cart not found";
-        return res.sendUserError(404, response);
+      if (!productFound) {
+        CustomError.createError({
+          name: `Product search error`,
+          cause: non_existentProductErrorInfo(productId),
+          message: "Error trying to add products to cart",
+          code: EErrors.DATABASE_ERROR,
+        });
       }
 
       /* Check if the stock of a product is greater than or equal to the units to be added to the cart 
@@ -145,11 +152,12 @@ class CartController {
 
       return res.sendSuccess(200, cart);
     } catch (error) {
-      return res.sendServerError(500, error); // error: updating cart
+      // return res.sendServerError(500, error); // error: updating cart
+      next(error);
     }
   };
 
-  deleteProduct = async (req, res) => {
+  deleteProduct = async (req, res, next) => {
     try {
       let cartId = req.params.cid;
       let productId = req.params.pid;
@@ -158,9 +166,13 @@ class CartController {
       let cartFound = await cartService.getCart(cartId);
       let productFound = await productService.getProduct(productId);
 
-      if (!cartFound || !productFound) {
-        let response = cartFound ? "Product not found" : "Cart not found";
-        return res.sendUserError(400, response);
+      if (!productFound) {
+        CustomError.createError({
+          name: `Product search error`,
+          cause: non_existentProductErrorInfo(productId),
+          message: "Error trying to add products to cart",
+          code: EErrors.DATABASE_ERROR,
+        });
       }
 
       let productInCart = cartFound.products.find(
@@ -186,10 +198,9 @@ class CartController {
         products: cartFound.products,
       });
 
-      return res.sendSuccess(200, { cart });
+      return res.sendSuccess(200, cart);
     } catch (error) {
-      console.log(error);
-      return res.sendServerError(500, error);
+      next(error);
     }
   };
 
@@ -198,7 +209,7 @@ class CartController {
       let cartId = req.params.cid;
       let cartFound = await cartService.getCart(cartId);
 
-      if (!cartFound) res.sendUserError(404, "Cart not found");
+      // if (!cartFound) res.sendUserError(404, "Cart not found");
 
       let cart = await cartService.clearCart(cartId, { products: [] });
 
@@ -214,9 +225,10 @@ class CartController {
       const cartId = req.params.cid;
       const cart = await cartService.getCart(cartId);
 
-      if (!cart) {
-        return res.sendUserError(404, "Cart not found");
-      }
+      // NO NECESITA ESTO POR QUE SE MANEJA CON LOS MIDDLEWARES (BORRAR CUANDO LO VEAS JEJE)
+      // if (!cart) {
+      //   return res.sendUserError(404, "Cart not found");
+      // }
 
       if (cart.products.length === 0) {
         return res.sendUserError(400, "No products in cart");
