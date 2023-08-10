@@ -45,7 +45,13 @@ class CartRouter extends MainRouter {
       validateCart,
       deleteProduct
     );
-    this.delete("/:cid", ["USER"], clearCart);
+    this.delete(
+      "/:cid",
+      ["USER"],
+      passportCall("jwt"),
+      validateCart,
+      clearCart
+    );
     this.post(
       "/:cid/purchase",
       ["USER"],

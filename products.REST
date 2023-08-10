@@ -3,3 +3,11 @@ GET http://localhost:8080/api/products
 
 ###
 GET http://localhost:8080/api/products/648756a3387dbab73002f32e 
+
+###
+POST http://localhost:8080/api/products
+{
+    name: "Producto",
+    description: "Prueba",
+    category: "Art",
+}

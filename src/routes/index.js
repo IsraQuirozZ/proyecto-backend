@@ -12,10 +12,10 @@ router.use("/api/session", SessionRouter.getRouter());
 router.use("/api/users", UserRouter.getRouter());
 router.use("/api/products", ProductsRouter.getRouter());
 router.use("/api/cart", CartRouter.getRouter());
-router.use("/api/mockingProducts", async (req, res) => {
-  let products = []
+router.use("/api/mockingproducts", async (req, res) => {
+  let products = [];
   for (let i = 0; i < 100; i++) {
-    products.push(generateProduct()); 
+    products.push(generateProduct());
   }
   res.send(products);
 });
