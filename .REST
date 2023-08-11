@@ -6,3 +6,10 @@ GET http://localhost:8080/api/gmail
 
 ### PRODUCT MOCK
 GET http://localhost:8080/api/mockingproducts/
+
+###
+GET http://localhost:8080/api/logger
+###
+GET http://localhost:8080/api/simple
+###
+GET http://localhost:8080/api/compleja
