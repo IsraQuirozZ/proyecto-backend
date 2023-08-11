@@ -13,6 +13,8 @@ export default {
   PORT: process.env.PORT || 8080,
   MONGO_LINK: process.env.MONGO_LINK || "",
   PERSISTENCE: process.env.PERSISTENCE || "MONGO",
+  GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID || "",
+  GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET || "",
   GMAIL_USER_APP: process.env.GMAIL_USER_APP || "",
   GMAIL_PASS_APP: process.env.GMAIL_PASS_APP || "",
   connectDB: async () => MongoSingleton.getInstance(),

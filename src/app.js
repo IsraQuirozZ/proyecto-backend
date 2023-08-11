@@ -42,7 +42,6 @@ server.listen(config.PORT, () =>
 
 inicializePassport();
 server.use(passport.initialize());
-// server.use(passport.session());
 
 server.use('/', router)
 
