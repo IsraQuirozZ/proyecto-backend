@@ -39,10 +39,17 @@ class SessionRouter extends MainRouter {
     { scope: ['email', 'profile'] })
     )
 
-    this.get('/google/callback', ['PUBLIC'], passport.authenticate('google', {
-      successRedirect: '/google/success', 
-      failureRedirect: '/google/failure'
-    }))
+    this.get('/google/callback', ['PUBLIC'],
+      passport.authenticate('google', {
+        successRedirect: '/google/success', 
+        failureRedirect: '/google/failure'
+      }
+    ))
+    
+    this.get('/google/logout', ['PUBLIC'], (req, res) => {
+      req.session.destroy()
+      res.send('success')
+    })
   }
 }
 

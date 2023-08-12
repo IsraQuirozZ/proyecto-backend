@@ -135,16 +135,6 @@ const initializePassport = () => {
           let one = await userService.getUserByEmail(profile.emails[0].value)
           if (one) {
             req.user = one;
-            // let token = jwt.sign(
-            //   {...new UserDTO(one)},
-            //   process.env.SECRET_JWT,
-            //   { expiresIn: 60 * 60 * 24 * 7 }
-            // )
-            // res.cookie('token', token, {
-            //   maxAge: 60 * 60 * 24 * 7,
-            //   httpOnly: true,
-            // })
-            // console.log(token)
             return done(one)
           }
           if (!one) {

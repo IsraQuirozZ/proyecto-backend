@@ -10,6 +10,7 @@ dotenv.config({
 
 export default {
   SECRET_JWT: process.env.SECRET_JWT || "",
+  SECRET_SESSION: process.env.SECRET_SESSION || "",
   PORT: process.env.PORT || 8080,
   MONGO_LINK: process.env.MONGO_LINK || "",
   PERSISTENCE: process.env.PERSISTENCE || "MONGO",
