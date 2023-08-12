@@ -6,6 +6,7 @@ import registerValidator from "../middlewares/registerValidator.js";
 import createhash from "../middlewares/createhash.js";
 import UserController from "../controllers/UserController.js";
 import passport from "passport";
+import generateToken from "../middlewares/generateToken.js";
 
 const { register, login, logout, current } = UserController;
 
@@ -35,10 +36,13 @@ class SessionRouter extends MainRouter {
 
     this.get('/google', ['PUBLIC'],
     passport.authenticate('google', 
-    { scope: ['email', 'profile'], failureRedirect: 'http://localhost:5173/login' })
+    { scope: ['email', 'profile'] })
     )
 
-    this.get('/google/callback', ['PUBLIC'], (req, res) => res.redirect('http://localhost:5173/'))
+    this.get('/google/callback', ['PUBLIC'], passport.authenticate('google', {
+      successRedirect: '/google/success', 
+      failureRedirect: '/google/failure'
+    }))
   }
 }
 

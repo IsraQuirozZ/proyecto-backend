@@ -112,7 +112,7 @@ class UserController {
       }
 
       let token = jwt.sign(
-        new UserDTO(user),
+        {...new UserDTO(user)},
         process.env.SECRET_JWT
       );
       res.cookie("token", token, {

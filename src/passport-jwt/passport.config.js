@@ -6,6 +6,7 @@ import UserDTO from "../dto/User.dto.js";
 import { cartService, userService } from "../service/index.js";
 import config from "../config/config.js";
 import jwt from "jsonwebtoken";
+import { logger } from "../config/logger.js";
 
 const JWTStrategy = passportJWT.Strategy;
 const ExtractJWT = passportJWT.ExtractJwt;
@@ -22,11 +23,8 @@ let cookieExtractor = (req) => {
 
 const configStrategy = {
   jwtFromRequest: ExtractJWT.fromExtractors([cookieExtractor]),
-  secretOrKey: process.env.SECRET_JWT,
+  secretOrKey: config.SECRET_JWT,
 };
-
-// const { GH_CLIENT_ID, GH_CLIENT_SECRET } = process.env;
-// const callback = "http://localhost:8080/api/auth/github/callback";
 
 const initializePassport = () => {
   // JWT AUTH
@@ -132,50 +130,61 @@ const initializePassport = () => {
       callbackURL: 'http://localhost:8080/api/session/google/callback',
       passReqToCallback: true
     },
-    async (req, accessToken, refreshToken, profile, done) => {
-      try {
-        console.log('first')
-        let one = await userService.getUserByEmail(profile.emails[0].value)
-        if (one) {
-          const token = jwt.sign(
-            new UserDTO(one),
-            process.env.SECRET_JWT,
-            { expiresIn: 60 * 60 * 24 * 7 }
-          )
-          res.cookie('token', token, {
-            maxAge: 60 * 60 * 24 * 7,
-            httpOnly: true,
-          })
-          console.log(token)
-          return done(one)}
-        if (!one) {
-          const cart = await cartService.createCart()
-          let user = await userService.createUser({
-            first_name: profile.name.givenName,
-            last_name: profile.name.familyName,
-            password: profile.id,
-            email: profile.emails[0].value,
-            photo: profile.photos[0].value,
-            cid: cart._id
-          })
-          const token = jwt.sign(
-            new UserDTO(user),
-            process.env.SECRET_JWT,
-            { expiresIn: 60 * 60 * 24 * 7 }
-          )
-          res.cookie('token', token, {
-            maxAge: 60 * 60 * 24 * 7,
-            httpOnly: true,
-          })
-          console.log(token)
-          return done(null, user)
+      async (req, accessToken, refreshToken, profile, done) => {
+        try {
+          let one = await userService.getUserByEmail(profile.emails[0].value)
+          if (one) {
+            req.user = one;
+            // let token = jwt.sign(
+            //   {...new UserDTO(one)},
+            //   process.env.SECRET_JWT,
+            //   { expiresIn: 60 * 60 * 24 * 7 }
+            // )
+            // res.cookie('token', token, {
+            //   maxAge: 60 * 60 * 24 * 7,
+            //   httpOnly: true,
+            // })
+            // console.log(token)
+            return done(one)
+          }
+          if (!one) {
+            const cart = await cartService.createCart()
+            let user = await userService.createUser({
+              first_name: profile.name.givenName,
+              last_name: profile.name.familyName,
+              password: profile.id,
+              email: profile.emails[0].value,
+              photo: profile.photos[0].value,
+              cid: cart._id
+            })
+            req.user = user
+            // const token = jwt.sign(
+            //   {...new UserDTO(user)},
+            //   config.SECRET_JWT,
+            //   { expiresIn: 60 * 60 * 24 * 7 }
+            // )
+            // logger.debug(token)
+            // res.cookie('token', token, {
+            //   maxAge: 60 * 60 * 24 * 7,
+            //   httpOnly: true,
+            // })
+            return done(null, user)
+          }
+        } catch (error) {
+          logger.error(error.message)
+          return done(error, null);
         }
-      } catch (error) {
-        return done(error, null);
       }
-    } 
     )
   )
+
+  passport.serializeUser((user, done) => {
+    done(null, user);
+  });
+
+  passport.deserializeUser((user, done) => {
+    done(null, user);
+  });
 };
 
 export default initializePassport;
