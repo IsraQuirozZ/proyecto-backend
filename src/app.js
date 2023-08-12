@@ -9,6 +9,7 @@ import passport from "passport";
 import inicializePassport from "./passport-jwt/passport.config.js";
 import cookieParser from "cookie-parser";
 import config from "./config/config.js";
+import { addLogger, logger } from "./config/logger.js";
 
 const server = express();
 config.connectDB();
@@ -36,13 +37,15 @@ server.use("/public", express.static("public"));
 server.use(express.urlencoded({ extended: true }));
 server.use(express.json());
 
-server.listen(config.PORT, () =>
-  console.log("Server listening on port " + config.PORT)
-);
+server.listen(config.PORT, error => {
+  if (error) logger.error(error.message)
+  logger.info("Server listening on port " + config.PORT)
+});
 
 inicializePassport();
 server.use(passport.initialize());
 // server.use(passport.session());
+server.use(addLogger)
 
 server.use('/', router)
 

@@ -5,6 +5,8 @@ import password_validator from "../middlewares/passwordValidator.js";
 import registerValidator from "../middlewares/registerValidator.js";
 import createhash from "../middlewares/createhash.js";
 import UserController from "../controllers/UserController.js";
+import passport from "passport";
+import generateToken from "../middlewares/generateToken.js";
 
 const { register, login, logout, current } = UserController;
 
@@ -31,6 +33,16 @@ class SessionRouter extends MainRouter {
       authJwt("user"),
       current
     );
+
+    this.get('/google', ['PUBLIC'],
+    passport.authenticate('google', 
+    { scope: ['email', 'profile'] })
+    )
+
+    this.get('/google/callback', ['PUBLIC'], passport.authenticate('google', {
+      successRedirect: '/google/success', 
+      failureRedirect: '/google/failure'
+    }))
   }
 }
 

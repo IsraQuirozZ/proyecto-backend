@@ -47,70 +47,6 @@ class UserController {
     }
   };
 
-  login = async (req, res) => {
-    try {
-      if (req.cookies.token) {
-        return res.sendUserError(401, "You are already logged in");
-      }
-
-      let user = await userService.getUserByEmail(req.body.email);
-
-      if (!user) {
-        return res.sendUserError(400, "Invalid email or password");
-      }
-
-      const { password } = user;
-      let verified = compareSync(req.body.password, password);
-
-      if (!verified) {
-        return res.sendUserError(400, "Invalid email or password");
-      }
-
-      let token = jwt.sign(
-        { email: user.email, role: user.role },
-        process.env.SECRET_JWT
-      );
-      res.cookie("token", token, {
-        maxAge: 60 * 60 * 24 * 7,
-        httpOnly: true,
-      });
-      return res.sendSuccess(200, { user: new UserDTO(user) });
-    } catch (error) {
-      return res.sendServerError(500, error);
-    }
-  };
-
-  register = (req, res) => {
-    return res.sendSuccess(201, "User registred successfully");
-  };
-
-  logout = async (req, res) => {
-    try {
-      return res.clearCookie("token").sendSuccess(200, "User signed out");
-    } catch (error) {
-      return res.sendServerError(500, error);
-    }
-  };
-
-  current = (req, res) => {
-    return res.sendSuccess(200, { user: new UserDTO(req.user) });
-  };
-
-  // createUser = async (req, res) => {
-  //   try {
-  //     let { first_name, last_name, email, password } = req.body;
-  //     if (!first_name || !last_name || !email || !password) {
-  //       return res.sendUserError(400, "Data is required");
-  //     }
-  //     let cart = await cartService.createCart();
-  //     let user = await userService.createUser({ ...req.body, cid: cart._id });
-
-  //     return res.sendSuccess(201, new UserDTO(user));
-  //   } catch (error) {
-  //     return res.sendServerError(500, error);
-  //   }
-  // };
-
   updateUser = async (req, res) => {
     try {
       let id = req.params.uid;
@@ -154,6 +90,55 @@ class UserController {
     } catch (error) {
       return res.sendServerError(500, error);
     }
+  };
+
+  login = async (req, res) => {
+    try {
+      if (req.cookies.token) {
+        return res.sendUserError(401, "You are already logged in");
+      }
+
+      let user = await userService.getUserByEmail(req.body.email);
+
+      if (!user) {
+        return res.sendUserError(400, "Invalid email or password");
+      }
+
+      const { password } = user;
+      let verified = compareSync(req.body.password, password);
+
+      if (!verified) {
+        return res.sendUserError(400, "Invalid email or password");
+      }
+
+      let token = jwt.sign(
+        {...new UserDTO(user)},
+        process.env.SECRET_JWT
+      );
+      res.cookie("token", token, {
+        maxAge: 60 * 60 * 24 * 7,
+        httpOnly: true,
+      });
+      return res.sendSuccess(200, { user: new UserDTO(user) });
+    } catch (error) {
+      return res.sendServerError(500, error);
+    }
+  };
+
+  register = (req, res) => {
+    return res.sendSuccess(201, "User registred successfully");
+  };
+
+  logout = async (req, res) => {
+    try {
+      return res.clearCookie("token").sendSuccess(200, "User signed out");
+    } catch (error) {
+      return res.sendServerError(500, error);
+    }
+  };
+
+  current = (req, res) => {
+    return res.sendSuccess(200, { user: new UserDTO(req.user) });
   };
 }
 
