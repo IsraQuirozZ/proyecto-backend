@@ -10,6 +10,7 @@ import inicializePassport from "./passport-jwt/passport.config.js";
 import cookieParser from "cookie-parser";
 import config from "./config/config.js";
 import { addLogger, logger } from "./config/logger.js";
+import session from "express-session";
 
 const server = express();
 config.connectDB();
@@ -44,7 +45,14 @@ server.listen(config.PORT, error => {
 
 inicializePassport();
 server.use(passport.initialize());
-// server.use(passport.session());
+
+server.use(session({
+  secret: config.SECRET_SESSION,
+  resave: false,
+  saveUninitialized: true,
+  cookie: { secure: true }
+}));
+
 server.use(addLogger)
 
 server.use('/', router)
