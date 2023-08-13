@@ -1,5 +1,0 @@
-{"level":"warn","message":"alert"}
-{"level":"error","message":"error"}
-error: error - Thu Aug 10 2023 19:53:46 GMT-0300 (Uruguay Standard Time)
-error: UserDTO is not iterable (cannot read property Symbol(Symbol.iterator))
-error: res is not defined
