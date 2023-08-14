@@ -22,18 +22,6 @@ server.use(
 );
 
 server.use(cookieParser());
-// server.use(
-//   session({
-//     secret: process.env.SECRET_SESSION,
-//     resave: true,
-//     saveUninitialized: true,
-//     store: MongoStore.create({
-//       mongoUrl: process.env.MONGO_LINK,
-//       ttl: 7 * 24 * 60 * 60 * 1000,
-//     }),
-//     rolling: true,
-//   })
-// );
 server.use("/public", express.static("public"));
 server.use(express.urlencoded({ extended: true }));
 server.use(express.json());

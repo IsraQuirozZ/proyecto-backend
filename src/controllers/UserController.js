@@ -1,5 +1,5 @@
 import UserDTO from "../dto/User.dto.js";
-import { userService } from "../service/index.js";
+import { cartService, userService } from "../service/index.js";
 import { compareSync } from "bcrypt";
 import jwt from "jsonwebtoken";
 
@@ -80,13 +80,19 @@ class UserController {
 
   deleteUser = async (req, res) => {
     try {
-      let id = req.params.uid;
-      let user = await userService.deleteUser(id);
+      const uid = req.params.uid;
+      let user = await userService.getUser(uid);
+      const cid = user.cid;
 
-      if (user) {
+      if (!user) {
+        return res.sendUserError(404, "Not found user");
+      }
+      let deleteUser = await userService.deleteUser(uid)
+      let deleteCart = await cartService.deleteCart(cid)
+
+      if (deleteUser && deleteCart) {
         return res.sendSuccess(200, `User ${user._id} deleted`);
       }
-      return res.sendUserError(404, "Not found user");
     } catch (error) {
       return res.sendServerError(500, error);
     }
@@ -112,7 +118,7 @@ class UserController {
       }
 
       let token = jwt.sign(
-        {...new UserDTO(user)},
+        { ...new UserDTO(user) },
         process.env.SECRET_JWT
       );
       res.cookie("token", token, {
