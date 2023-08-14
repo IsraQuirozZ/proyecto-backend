@@ -135,7 +135,7 @@ const initializePassport = () => {
           let one = await userService.getUserByEmail(profile.emails[0].value)
           if (one) {
             req.user = one;
-            return done(one)
+            return done(null, one)
           }
           if (!one) {
             const cart = await cartService.createCart()
@@ -148,16 +148,6 @@ const initializePassport = () => {
               cid: cart._id
             })
             req.user = user
-            // const token = jwt.sign(
-            //   {...new UserDTO(user)},
-            //   config.SECRET_JWT,
-            //   { expiresIn: 60 * 60 * 24 * 7 }
-            // )
-            // logger.debug(token)
-            // res.cookie('token', token, {
-            //   maxAge: 60 * 60 * 24 * 7,
-            //   httpOnly: true,
-            // })
             return done(null, user)
           }
         } catch (error) {

@@ -43,6 +43,10 @@ class CartDao {
     });
   };
 
+  deleteCart = async id => {
+    return await this.CartModel.findByIdAndDelete(id)
+  }
+
   purchase = async (ticket) => {
     return await this.TicketModel.create(ticket);
   };
