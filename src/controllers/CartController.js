@@ -1,3 +1,4 @@
+import { logger } from "../config/logger.js";
 import CustomError from "../middlewares/error/CustomError.js";
 import EErrors from "../middlewares/error/enum.js";
 import { non_existentProductErrorInfo } from "../middlewares/error/generateProductInfo.js";
@@ -52,6 +53,7 @@ class CartController {
 
       return res.sendUserError(404, "Cart not found");
     } catch (error) {
+      logger.error(error);
       return res.sendServerError(500, error);
     }
   };
@@ -65,6 +67,7 @@ class CartController {
       }
       return res.sendUserError(404, "Cart not found");
     } catch (error) {
+      logger.error(error);
       return res.sendServerError(500, error);
     }
   };
@@ -99,6 +102,7 @@ class CartController {
       }
       return res.sendUserError(404, "Cart not found");
     } catch (error) {
+      logger.error(error);
       return res.sendServerError(500, error);
     }
   };
@@ -152,6 +156,7 @@ class CartController {
 
       return res.sendSuccess(200, cart);
     } catch (error) {
+      logger.error(error);
       // return res.sendServerError(500, error); // error: updating cart
       next(error);
     }
@@ -200,6 +205,7 @@ class CartController {
 
       return res.sendSuccess(200, cart);
     } catch (error) {
+      logger.error(error);
       next(error);
     }
   };
@@ -215,7 +221,7 @@ class CartController {
 
       return res.sendSuccess(200, cart);
     } catch (error) {
-      console.log(error);
+      logger.error(error);
       return res.sendServerError(500, error);
     }
   };
@@ -296,6 +302,7 @@ class CartController {
         outOfStockProducts,
       });
     } catch (error) {
+      logger.error(error);
       return res.sendServerError(500, error);
     }
   };

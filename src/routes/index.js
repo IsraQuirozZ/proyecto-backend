@@ -21,6 +21,7 @@ router.use("/loggertest", (req, res) => {
   logger.warning("warning");
   logger.error("error");
   logger.fatal("fatal");
+  res.send("Complete test");
 });
 router.use("/api/gmail", async (req, res) => {
   await sendMail();
