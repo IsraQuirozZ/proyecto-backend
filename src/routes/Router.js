@@ -18,7 +18,7 @@ class MainRouter {
       try {
         await cb.apply(this, params);
       } catch (error) {
-        console.error(error);
+        logger.error(error);
         params[1].status(500).send(error);
       }
     });
