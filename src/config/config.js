@@ -9,6 +9,7 @@ dotenv.config({
 });
 
 export default {
+  LOGGER: process.env.LOGGER || "info",
   SECRET_JWT: process.env.SECRET_JWT || "",
   SECRET_SESSION: process.env.SECRET_SESSION || "",
   PORT: process.env.PORT || 8080,
