@@ -1,5 +1,7 @@
+import { logger } from "../config/logger.js";
+
 const not_found_handler = (req, res, next) => {
-  console.log(`not found ${req.method} ${req.url}`);
+  logger.info(`not found ${req.method} ${req.url}`);
   return res.json({
     status: 404,
     method: req.method,

@@ -1,6 +1,6 @@
 import express from "express";
 import "dotenv/config.js";
-import errorHandler from "./middlewares/errorHandler.js";
+import errorHandler from "./middlewares/error/errorHandler.js";
 import notFoundHandler from "./middlewares/notFoundHandler.js";
 import { __dirname } from "./utils/utils.js";
 import router from "./routes/index.js";
@@ -9,6 +9,8 @@ import passport from "passport";
 import inicializePassport from "./passport-jwt/passport.config.js";
 import cookieParser from "cookie-parser";
 import config from "./config/config.js";
+import { addLogger, logger } from "./config/logger.js";
+import session from "express-session";
 
 const server = express();
 config.connectDB();
@@ -36,13 +38,22 @@ server.use("/public", express.static("public"));
 server.use(express.urlencoded({ extended: true }));
 server.use(express.json());
 
-server.listen(config.PORT, () =>
-  console.log("Server listening on port " + config.PORT)
-);
+server.listen(config.PORT, error => {
+  if (error) logger.error(error.message)
+  logger.info("Server listening on port " + config.PORT)
+});
 
 inicializePassport();
 server.use(passport.initialize());
-// server.use(passport.session());
+
+server.use(session({
+  secret: config.SECRET_SESSION,
+  resave: false,
+  saveUninitialized: true,
+  cookie: { secure: true }
+}));
+
+server.use(addLogger)
 
 server.use('/', router)
 
