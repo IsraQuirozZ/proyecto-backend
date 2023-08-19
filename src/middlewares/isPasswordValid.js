@@ -13,6 +13,7 @@ export default (req, res, next) => {
       response: "Invalid email or password",
     });
   } catch (error) {
-    next(error)
+    logger.error(error);
+    next(error);
   }
 };

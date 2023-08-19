@@ -17,6 +17,7 @@ class UserController {
       }
       return res.sendUserError(404, "Not found users");
     } catch (error) {
+      logger.error(error);
       return res.sendServerError(500, error);
     }
   };
@@ -30,6 +31,7 @@ class UserController {
         ? res.sendSuccess(200, { user: new UserDTO(user) })
         : res.sendUserError(404, "Not found user");
     } catch (error) {
+      logger.error(error);
       res.sendServerError(500, error);
     }
   };
@@ -43,6 +45,7 @@ class UserController {
         ? res.sendSuccess(200, { user: new UserDTO(user) })
         : res.sendUserError(404, "Not found user");
     } catch (error) {
+      logger.error(error);
       res.sendServerError(500, error);
     }
   };
@@ -74,6 +77,7 @@ class UserController {
       }
       return res.sendUserError(400, "There's nothing to update");
     } catch (error) {
+      logger.error(error);
       return res.sendServerError(500, error);
     }
   };
@@ -87,13 +91,19 @@ class UserController {
       if (!user) {
         return res.sendUserError(404, "Not found user");
       }
+<<<<<<< HEAD
       let deleteUser = await userService.deleteUser(uid)
       let deleteCart = await cartService.deleteCart(cid)
+=======
+      let deleteUser = await userService.deleteUser(uid);
+      let deleteCart = await cartService.deleteCart(cid);
+>>>>>>> 7f7402063f0cf923b3fc789fb461d1be6d902d69
 
       if (deleteUser && deleteCart) {
         return res.sendSuccess(200, `User ${user._id} deleted`);
       }
     } catch (error) {
+      logger.error(error);
       return res.sendServerError(500, error);
     }
   };
@@ -117,16 +127,21 @@ class UserController {
         return res.sendUserError(400, "Invalid email or password");
       }
 
+<<<<<<< HEAD
       let token = jwt.sign(
         { ...new UserDTO(user) },
         process.env.SECRET_JWT
       );
+=======
+      let token = jwt.sign({ ...new UserDTO(user) }, process.env.SECRET_JWT);
+>>>>>>> 7f7402063f0cf923b3fc789fb461d1be6d902d69
       res.cookie("token", token, {
         maxAge: 60 * 60 * 24 * 7,
         httpOnly: true,
       });
       return res.sendSuccess(200, { user: new UserDTO(user) });
     } catch (error) {
+      logger.error(error);
       return res.sendServerError(500, error);
     }
   };
@@ -139,6 +154,7 @@ class UserController {
     try {
       return res.clearCookie("token").sendSuccess(200, "User signed out");
     } catch (error) {
+      logger.error(error);
       return res.sendServerError(500, error);
     }
   };

@@ -5,13 +5,12 @@ import { Strategy as GoogleStrategy } from "passport-google-oauth2";
 import UserDTO from "../dto/User.dto.js";
 import { cartService, userService } from "../service/index.js";
 import config from "../config/config.js";
-import jwt from "jsonwebtoken";
 import { logger } from "../config/logger.js";
 
 const JWTStrategy = passportJWT.Strategy;
 const ExtractJWT = passportJWT.ExtractJwt;
 
-const { GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET } = config
+const { GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET } = config;
 
 let cookieExtractor = (req) => {
   let token = null;
@@ -40,6 +39,7 @@ const initializePassport = () => {
           return done(null, false);
         }
       } catch (error) {
+        logger.error(error);
         return done(error, false);
       }
     })
@@ -59,6 +59,7 @@ const initializePassport = () => {
           }
           return done(null, false); // Redirecciona
         } catch (error) {
+          logger.error(error);
           done(error, false);
         }
       }
@@ -85,6 +86,7 @@ const initializePassport = () => {
           }
           return done(null, false); // Redirecciona
         } catch (error) {
+          logger.error(error);
           return done(error, false);
         }
       }
@@ -123,40 +125,42 @@ const initializePassport = () => {
   // );
 
   // GOOGLE
-  passport.use('google',
-    new GoogleStrategy({
-      clientID: GOOGLE_CLIENT_ID,
-      clientSecret: GOOGLE_CLIENT_SECRET,
-      callbackURL: 'http://localhost:8080/api/session/google/callback',
-      passReqToCallback: true
-    },
+  passport.use(
+    "google",
+    new GoogleStrategy(
+      {
+        clientID: GOOGLE_CLIENT_ID,
+        clientSecret: GOOGLE_CLIENT_SECRET,
+        callbackURL: "http://localhost:8080/api/session/google/callback",
+        passReqToCallback: true,
+      },
       async (req, accessToken, refreshToken, profile, done) => {
         try {
-          let one = await userService.getUserByEmail(profile.emails[0].value)
+          let one = await userService.getUserByEmail(profile.emails[0].value);
           if (one) {
             req.user = one;
-            return done(null, one)
+            return done(null, one);
           }
           if (!one) {
-            const cart = await cartService.createCart()
+            const cart = await cartService.createCart();
             let user = await userService.createUser({
               first_name: profile.name.givenName,
               last_name: profile.name.familyName,
               password: profile.id,
               email: profile.emails[0].value,
               photo: profile.photos[0].value,
-              cid: cart._id
-            })
-            req.user = user
-            return done(null, user)
+              cid: cart._id,
+            });
+            req.user = user;
+            return done(null, user);
           }
         } catch (error) {
-          logger.error(error.message)
+          logger.error(error.message);
           return done(error, null);
         }
       }
     )
-  )
+  );
 
   passport.serializeUser((user, done) => {
     done(null, user);
