@@ -14,7 +14,7 @@ router.use("/api/users", UserRouter.getRouter());
 router.use("/api/products", ProductsRouter.getRouter());
 router.use("/api/cart", CartRouter.getRouter());
 router.use("/api/mocking", MockingRouter.getRouter());
-router.use('/loggertest', (req, res) => {
+router.use('/loggertest', () => {
   logger.debug('debug')
   logger.http('http')
   logger.info('info')
@@ -26,10 +26,5 @@ router.use("/api/gmail", async (req, res) => {
   await sendMail();
   res.send("Email sended successfully");
 });
-
-// router.use('/api/logger', async (req, res) => {
-//   req.logger.error('error - ' + Date().toLocaleString());
-//   res.send('logger registred');
-// })
 
 export default router;
