@@ -3,10 +3,9 @@ import passportCall from "../middlewares/passportCall.js";
 import authJwt from "../passport-jwt/authJwt.js";
 import password_validator from "../middlewares/passwordValidator.js";
 import registerValidator from "../middlewares/registerValidator.js";
-import createhash from "../middlewares/createhash.js";
+import createhash from "../middlewares/createHash.js";
 import UserController from "../controllers/UserController.js";
 import passport from "passport";
-import generateToken from "../middlewares/generateToken.js";
 
 const { register, login, logout, current } = UserController;
 

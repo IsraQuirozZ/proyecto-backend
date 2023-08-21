@@ -91,13 +91,8 @@ class UserController {
       if (!user) {
         return res.sendUserError(404, "Not found user");
       }
-<<<<<<< HEAD
-      let deleteUser = await userService.deleteUser(uid)
-      let deleteCart = await cartService.deleteCart(cid)
-=======
       let deleteUser = await userService.deleteUser(uid);
       let deleteCart = await cartService.deleteCart(cid);
->>>>>>> 7f7402063f0cf923b3fc789fb461d1be6d902d69
 
       if (deleteUser && deleteCart) {
         return res.sendSuccess(200, `User ${user._id} deleted`);
@@ -127,14 +122,7 @@ class UserController {
         return res.sendUserError(400, "Invalid email or password");
       }
 
-<<<<<<< HEAD
-      let token = jwt.sign(
-        { ...new UserDTO(user) },
-        process.env.SECRET_JWT
-      );
-=======
       let token = jwt.sign({ ...new UserDTO(user) }, process.env.SECRET_JWT);
->>>>>>> 7f7402063f0cf923b3fc789fb461d1be6d902d69
       res.cookie("token", token, {
         maxAge: 60 * 60 * 24 * 7,
         httpOnly: true,
