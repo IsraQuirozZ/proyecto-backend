@@ -5,7 +5,9 @@ import { Strategy as GoogleStrategy } from "passport-google-oauth2";
 import UserDTO from "../dto/User.dto.js";
 import { cartService, userService } from "../service/index.js";
 import config from "../config/config.js";
-import { logger } from "../config/logger.js";
+import { logger } from "../utils/logger.js";
+import { compareSync } from "bcrypt";
+import jwt from "jsonwebtoken";
 
 const JWTStrategy = passportJWT.Strategy;
 const ExtractJWT = passportJWT.ExtractJwt;
@@ -50,16 +52,29 @@ const initializePassport = () => {
   passport.use(
     "login",
     new Strategy(
-      { usernameField: "email" },
-      async (username, password, done) => {
+      { passReqToCallback: true, usernameField: "email" },
+      async (req, username, password, done) => {
         try {
-          let user = await userService.getUserByEmail(username);
-          if (user) {
-            return done(null, user);
+          if (req.cookies.token) {
+            return done('You are already logged in', false)
           }
-          return done(null, false); // Redirecciona
+
+          let user = await userService.getUserByEmail(username);
+          if (!user) {
+            return done('Invalid email or password', false);
+          }
+
+          const { password } = user
+          let verified = compareSync(req.body.password, password)
+          if (!verified) {
+            return done('Invalid password', false);
+          }
+
+          req.user = new UserDTO(user)
+
+          return done(null, { user: new UserDTO(user) }); // Redirecciona
         } catch (error) {
-          logger.error(error);
+          logger.error(error.message);
           done(error, false);
         }
       }
@@ -92,37 +107,6 @@ const initializePassport = () => {
       }
     )
   );
-
-  // SIGNIN GH
-  // passport.use(
-  //   "github",
-  //   new GHStrategy(
-  //     {
-  //       clientID: GH_CLIENT_ID,
-  //       clientSecret: GH_CLIENT_SECRET,
-  //       callbackURL: callback,
-  //     },
-  //     async (accessToken, refreshToken, profile, done) => {
-  //       try {
-  //         let one = await User.findOne({ email: profile._json.login });
-  //         if (one) return done(null, one);
-  //         if (!one) {
-  //           const cart = await Cart.create({ products: [] });
-  //           let user = await User.create({
-  //             name: profile._json.login,
-  //             email: profile._json.login,
-  //             password: profile._json.id,
-  //             photo: profile._json.avatar_url,
-  //             cid: cart._id,
-  //           });
-  //           return done(null, user);
-  //         }
-  //       } catch (error) {
-  //         return done(error);
-  //       }
-  //     }
-  //   )
-  // );
 
   // GOOGLE
   passport.use(

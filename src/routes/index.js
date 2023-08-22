@@ -5,7 +5,7 @@ import ProductsRouter from "./ProductsRouter.js";
 import CartRouter from "./CartRouter.js";
 import sendMail from "../utils/sendMail.js";
 import MockingRouter from "./MockingRouter.js";
-import { logger } from "../config/logger.js";
+import { logger } from "../utils/logger.js";
 
 const router = Router();
 

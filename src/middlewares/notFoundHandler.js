@@ -1,4 +1,4 @@
-import { logger } from "../config/logger.js";
+import { logger } from "../utils/logger.js";
 
 const not_found_handler = (req, res, next) => {
   logger.info(`not found ${req.method} ${req.url}`);

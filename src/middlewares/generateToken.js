@@ -1,11 +1,9 @@
 import jwt from 'jsonwebtoken'
 import config from '../config/config.js'
-import UserDTO from '../dto/User.dto.js'
 
 export default (req, res, next) => {
-	console.log('token')
 	const token = jwt.sign(
-		{ ...new UserDTO(req.body.user) },
+		{ ...req.user },
 		config.SECRET_JWT
 	)
 	res.cookie('token', token, {

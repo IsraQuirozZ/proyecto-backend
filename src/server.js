@@ -36,7 +36,7 @@ import passport from "passport";
 import inicializePassport from "./passport-jwt/passport.config.js";
 import cookieParser from "cookie-parser";
 import config from "./config/config.js";
-import { addLogger, logger } from "./config/logger.js";
+import { addLogger, logger } from "./utils/logger.js";
 import session from "express-session";
 
 const server = express();

@@ -6,12 +6,15 @@ import registerValidator from "../middlewares/registerValidator.js";
 import createhash from "../middlewares/createHash.js";
 import UserController from "../controllers/UserController.js";
 import passport from "passport";
+import isLoggedIn from "../middlewares/isLoggedIn.js";
+import generateToken from "../middlewares/generateToken.js";
 
 const { register, login, logout, current } = UserController;
 
 class SessionRouter extends MainRouter {
   init() {
-    this.post("/login", ["PUBLIC"], login);
+    // this.post("/login", ["PUBLIC"], login);
+    this.post("/login", ["PUBLIC"], isLoggedIn, passportCall('login'), generateToken, login);
 
     this.post(
       "/register",
@@ -40,15 +43,17 @@ class SessionRouter extends MainRouter {
 
     this.get('/google/callback', ['PUBLIC'],
       passport.authenticate('google', {
-        successRedirect: '/google/success', 
         failureRedirect: '/google/failure'
       }
-    ))
-    
-    this.get('/google/logout', ['PUBLIC'], (req, res) => {
-      req.session.destroy()
-      res.send('success')
+    ), (req, res) => {
+      console.log(req.user)
+      return res.redirect('/google/success')
     })
+    
+    // this.get('/google/logout', ['PUBLIC'], (req, res) => {
+    //   req.session.destroy()
+    //   res.send('success')
+    // })
   }
 }
 
