@@ -1,4 +1,5 @@
 import EErrors from "./enum.js";
+import { logger } from "../../utils/logger.js";
 
 const errorHandler = (error, req, res, next) => {
   logger.error(error.cause);
