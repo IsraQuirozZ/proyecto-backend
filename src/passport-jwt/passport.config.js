@@ -7,7 +7,6 @@ import { cartService, userService } from "../service/index.js";
 import config from "../config/config.js";
 import { logger } from "../utils/logger.js";
 import { compareSync } from "bcrypt";
-import jwt from "jsonwebtoken";
 
 const JWTStrategy = passportJWT.Strategy;
 const ExtractJWT = passportJWT.ExtractJwt;
@@ -36,12 +35,12 @@ const initializePassport = () => {
       try {
         let user = await userService.getUserByEmail(jwt_payload.email);
         if (user) {
-          return done(null, new UserDTO(user));
+          return done(null, { ...new UserDTO(user) });
         } else {
-          return done(null, false);
+          return done(null, false, 'Not logged');
         }
       } catch (error) {
-        logger.error(error);
+        logger.error(error.message);
         return done(error, false);
       }
     })
@@ -61,18 +60,18 @@ const initializePassport = () => {
 
           let user = await userService.getUserByEmail(username);
           if (!user) {
-            return done('Invalid email or password', false);
+            return done(null, false, 'Invalid email or password');
           }
 
           const { password } = user
           let verified = compareSync(req.body.password, password)
           if (!verified) {
-            return done('Invalid password', false);
+            return done(null, false, 'Invalid password');
           }
 
           req.user = new UserDTO(user)
 
-          return done(null, { user: new UserDTO(user) }); // Redirecciona
+          return done(null, { ...new UserDTO(user) });
         } catch (error) {
           logger.error(error.message);
           done(error, false);

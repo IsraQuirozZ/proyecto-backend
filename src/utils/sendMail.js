@@ -10,11 +10,12 @@ const transporter = nodemailer.createTransport({
     }
 })
 
-export default async () => {
+export default async (title, message) => {
     return await transporter.sendMail({
-        from: 'test <pivaguadalupe1504@gmail.com>',
-        to: 'pivaguadalupe1504@gmail.com',
-        subject: 'Prueba',
-        html: '<h1>Correo de prueba</h1>'
+        from: '<DecorateMe>',
+        to: config.GMAIL_USER_APP,
+        subject: 'DecorateMe message',
+        html: `<h1>${title}</h1>
+        <p>${message}</p>`
     })
 }

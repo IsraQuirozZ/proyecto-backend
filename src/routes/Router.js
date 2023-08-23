@@ -18,7 +18,7 @@ class MainRouter {
       try {
         await cb.apply(this, params);
       } catch (error) {
-        logger.error(error);
+        logger.error(error.message);
         params[1].status(500).send(error);
       }
     });
@@ -42,7 +42,7 @@ class MainRouter {
         .send({ status: "error", error: "Unauthenticated" });
     }
     let user = jwt.verify(req.cookies.token, process.env.SECRET_JWT);
-    if (!policies.includes(user.role.toUpperCase())) {
+    if (!policies.includes(user.role?.toUpperCase())) {
       return res.status(403).send({ status: "error", error: "Unauthorized" });
     }
     req.user = user;

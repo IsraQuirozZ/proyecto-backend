@@ -1,7 +1,5 @@
 import UserDTO from "../dto/User.dto.js";
 import { cartService, userService } from "../service/index.js";
-import { compareSync } from "bcrypt";
-import jwt from "jsonwebtoken";
 
 class UserController {
   getUsers = async (req, res) => {
