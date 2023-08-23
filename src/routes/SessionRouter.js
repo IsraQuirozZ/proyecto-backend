@@ -3,7 +3,7 @@ import passportCall from "../middlewares/passportCall.js";
 import authJwt from "../passport-jwt/authJwt.js";
 import password_validator from "../middlewares/passwordValidator.js";
 import registerValidator from "../middlewares/registerValidator.js";
-import createhash from "../middlewares/createHash.js";
+import createHash from "../middlewares/createHash.js";
 import UserController from "../controllers/UserController.js";
 import passport from "passport";
 import isLoggedIn from "../middlewares/isLoggedIn.js";
@@ -13,15 +13,15 @@ const { register, login, logout, current } = UserController;
 
 class SessionRouter extends MainRouter {
   init() {
-    // this.post("/login", ["PUBLIC"], login);
     this.post("/login", ["PUBLIC"], isLoggedIn, passportCall('login'), generateToken, login);
 
     this.post(
       "/register",
       ["PUBLIC"],
+      isLoggedIn,
       registerValidator,
       password_validator,
-      createhash,
+      createHash,
       passportCall("register"),
       register
     );
