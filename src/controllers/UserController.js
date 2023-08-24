@@ -1,5 +1,5 @@
 import UserDTO from "../dto/User.dto.js";
-import { userService } from "../service/index.js";
+import { cartService, userService } from "../service/index.js";
 import { compareSync } from "bcrypt";
 import jwt from "jsonwebtoken";
 
@@ -17,6 +17,7 @@ class UserController {
       }
       return res.sendUserError(404, "Not found users");
     } catch (error) {
+      logger.error(error);
       return res.sendServerError(500, error);
     }
   };
@@ -30,6 +31,7 @@ class UserController {
         ? res.sendSuccess(200, { user: new UserDTO(user) })
         : res.sendUserError(404, "Not found user");
     } catch (error) {
+      logger.error(error);
       res.sendServerError(500, error);
     }
   };
@@ -43,6 +45,7 @@ class UserController {
         ? res.sendSuccess(200, { user: new UserDTO(user) })
         : res.sendUserError(404, "Not found user");
     } catch (error) {
+      logger.error(error);
       res.sendServerError(500, error);
     }
   };
@@ -74,20 +77,28 @@ class UserController {
       }
       return res.sendUserError(400, "There's nothing to update");
     } catch (error) {
+      logger.error(error);
       return res.sendServerError(500, error);
     }
   };
 
   deleteUser = async (req, res) => {
     try {
-      let id = req.params.uid;
-      let user = await userService.deleteUser(id);
+      const uid = req.params.uid;
+      let user = await userService.getUser(uid);
+      const cid = user.cid;
 
-      if (user) {
+      if (!user) {
+        return res.sendUserError(404, "Not found user");
+      }
+      let deleteUser = await userService.deleteUser(uid);
+      let deleteCart = await cartService.deleteCart(cid);
+
+      if (deleteUser && deleteCart) {
         return res.sendSuccess(200, `User ${user._id} deleted`);
       }
-      return res.sendUserError(404, "Not found user");
     } catch (error) {
+      logger.error(error);
       return res.sendServerError(500, error);
     }
   };
@@ -111,16 +122,14 @@ class UserController {
         return res.sendUserError(400, "Invalid email or password");
       }
 
-      let token = jwt.sign(
-        {...new UserDTO(user)},
-        process.env.SECRET_JWT
-      );
+      let token = jwt.sign({ ...new UserDTO(user) }, process.env.SECRET_JWT);
       res.cookie("token", token, {
         maxAge: 60 * 60 * 24 * 7,
         httpOnly: true,
       });
       return res.sendSuccess(200, { user: new UserDTO(user) });
     } catch (error) {
+      logger.error(error);
       return res.sendServerError(500, error);
     }
   };
@@ -133,6 +142,7 @@ class UserController {
     try {
       return res.clearCookie("token").sendSuccess(200, "User signed out");
     } catch (error) {
+      logger.error(error);
       return res.sendServerError(500, error);
     }
   };

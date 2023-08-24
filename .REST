@@ -1,15 +1,5 @@
-### USERS
-GET http://localhost:8080/api/users/647
-
 ### GMAIL
 GET http://localhost:8080/api/gmail
 
-### PRODUCT MOCK
-GET http://localhost:8080/api/mockingproducts/
-
-###
-GET http://localhost:8080/api/logger
-###
-GET http://localhost:8080/api/simple
-###
-GET http://localhost:8080/api/compleja
+### LOGGER
+GET http://localhost:8080/loggertest

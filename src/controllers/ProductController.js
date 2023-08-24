@@ -22,6 +22,7 @@ class ProductController {
       }
       return res.sendUserError(404, { error: "Not found products" });
     } catch (error) {
+      logger.error(error);
       res.sendServerError(error);
     }
   };
@@ -36,6 +37,7 @@ class ProductController {
         return res.sendUserError(404, { error: "Not found" });
       }
     } catch (error) {
+      logger.error(error);
       res.sendServerError(500, error);
     }
   };
@@ -71,6 +73,7 @@ class ProductController {
         response: newProduct,
       });
     } catch (error) {
+      logger.error(error);
       next(error);
     }
   };
@@ -97,6 +100,7 @@ class ProductController {
       }
       return res.sendSuccess(200, response);
     } catch (error) {
+      logger.error(error);
       next(error);
     }
   };
@@ -117,6 +121,7 @@ class ProductController {
         });
       }
     } catch (error) {
+      logger.error(error);
       next(error);
       // res.sendServerError(500, error);
     }

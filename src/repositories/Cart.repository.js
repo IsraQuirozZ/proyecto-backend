@@ -30,6 +30,10 @@ class CartRepository {
     return await this.dao.clearCart(id, modifiedCart);
   };
 
+  deleteCart = async id => {
+    return await this.dao.deleteCart(id);
+  }
+
   purchase = async (ticket) => {
     return await this.dao.purchase(ticket);
   };
