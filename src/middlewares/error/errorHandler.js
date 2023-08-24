@@ -1,5 +1,6 @@
 import EErrors from "./enum.js";
 
+
 const errorHandler = (error, req, res, next) => {
   logger.error(error.cause);
   switch (error.code) {
