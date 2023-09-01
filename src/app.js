@@ -16,7 +16,8 @@ const server = express();
 config.connectDB();
 server.use(
   cors({
-    origin: "http://localhost:5173",
+    // origin: "http://localhost:5173",
+    origin: "http://127.0.0.1:5173",
     credentials: true,
   })
 );
@@ -26,20 +27,22 @@ server.use("/public", express.static("public"));
 server.use(express.urlencoded({ extended: true }));
 server.use(express.json());
 
-server.listen(config.PORT, error => {
-  if (error) logger.error(error.message)
-  logger.info("Server listening on port " + config.PORT)
+server.listen(config.PORT, (error) => {
+  if (error) logger.error(error.message);
+  logger.info("Server listening on port " + config.PORT);
 });
 
 inicializePassport();
 server.use(passport.initialize());
 
-server.use(session({
-  secret: config.SECRET_SESSION,
-  resave: false,
-  saveUninitialized: true,
-  cookie: { secure: true }
-}));
+server.use(
+  session({
+    secret: config.SECRET_SESSION,
+    resave: false,
+    saveUninitialized: true,
+    cookie: { secure: true },
+  })
+);
 
 server.use(addLogger);
 

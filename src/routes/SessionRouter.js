@@ -34,22 +34,25 @@ class SessionRouter extends MainRouter {
       current
     );
 
-    this.get('/google', ['PUBLIC'],
-    passport.authenticate('google', 
-    { scope: ['email', 'profile'] })
-    )
+    this.get(
+      "/google",
+      ["PUBLIC"],
+      passport.authenticate("google", { scope: ["email", "profile"] })
+    );
 
-    this.get('/google/callback', ['PUBLIC'],
-      passport.authenticate('google', {
-        successRedirect: '/google/success', 
-        failureRedirect: '/google/failure'
-      }
-    ))
-    
-    this.get('/google/logout', ['PUBLIC'], (req, res) => {
-      req.session.destroy()
-      res.send('success')
-    })
+    this.get(
+      "/google/callback",
+      ["PUBLIC"],
+      passport.authenticate("google", {
+        successRedirect: "/google/success",
+        failureRedirect: "/google/failure",
+      })
+    );
+
+    this.get("/google/logout", ["PUBLIC"], (req, res) => {
+      req.session.destroy();
+      res.send("success");
+    });
   }
 }
 
