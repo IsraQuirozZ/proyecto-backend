@@ -1,7 +1,5 @@
 import UserDTO from "../dto/User.dto.js";
 import { cartService, userService } from "../service/index.js";
-import { compareSync } from "bcrypt";
-import jwt from "jsonwebtoken";
 
 class UserController {
   getUsers = async (req, res) => {
@@ -105,29 +103,7 @@ class UserController {
 
   login = async (req, res) => {
     try {
-      if (req.cookies.token) {
-        return res.sendUserError(401, "You are already logged in");
-      }
-
-      let user = await userService.getUserByEmail(req.body.email);
-
-      if (!user) {
-        return res.sendUserError(400, "Invalid email or password");
-      }
-
-      const { password } = user;
-      let verified = compareSync(req.body.password, password);
-
-      if (!verified) {
-        return res.sendUserError(400, "Invalid email or password");
-      }
-
-      let token = jwt.sign({ ...new UserDTO(user) }, process.env.SECRET_JWT);
-      res.cookie("token", token, {
-        maxAge: 60 * 60 * 24 * 7,
-        httpOnly: true,
-      });
-      return res.sendSuccess(200, { user: new UserDTO(user) });
+      return res.sendSuccess(200, { user: req.body });
     } catch (error) {
       logger.error(error);
       return res.sendServerError(500, error);
