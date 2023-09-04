@@ -14,7 +14,7 @@ class UserDao {
   };
 
   getUserByEmail = async (email) => {
-    return await this.userModel.findOne({ email: email });
+    return await this.userModel.findOne({ email: email.toLowerCase() });
   };
 
   createUser = async (userData) => {

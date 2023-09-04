@@ -14,7 +14,7 @@ router.use("/api/products", ProductsRouter.getRouter());
 router.use("/api/cart", CartRouter.getRouter());
 router.use("/api/mocking", MockingRouter.getRouter());
 router.use("/api/gmail", async (req, res) => {
-  await sendMail("Test", "hi");
+  await sendMail("israquirozzmail@gmail.com", "Test", "<h1>Hi<h1>");
   res.send("Email sended successfully");
 });
 // router.use('/api/logger', async (req, res) => {

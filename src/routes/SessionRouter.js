@@ -7,13 +7,21 @@ import createHash from "../middlewares/createHash.js";
 import UserController from "../controllers/UserController.js";
 import passport from "passport";
 import isLoggedIn from "../middlewares/isLoggedIn.js";
-import generateToken from "../middlewares/generateToken.js";
+import isPasswordValid from "../middlewares/isPasswordValid.js";
 
-const { register, login, logout, current } = UserController;
+const {
+  register,
+  login,
+  logout,
+  current,
+  forgotPassword,
+  resetPassword,
+  confirmPassword,
+} = UserController;
 
 class SessionRouter extends MainRouter {
   init() {
-    this.post("/login", ["PUBLIC"], isLoggedIn, passportCall('login'), generateToken, login);
+    this.post("/login", ["PUBLIC"], isLoggedIn, login);
 
     this.post(
       "/register",
@@ -26,9 +34,9 @@ class SessionRouter extends MainRouter {
       register
     );
 
-    this.get("/logout", ["USER", "ADMIN"], passportCall("jwt"), logout);
+    this.post("/logout", ["USER", "ADMIN"], passportCall("jwt"), logout);
 
-    this.get(
+    this.post(
       "/current",
       ["USER", "ADMIN"],
       passportCall("jwt"),
@@ -36,24 +44,40 @@ class SessionRouter extends MainRouter {
       current
     );
 
-    this.get('/google', ['PUBLIC'],
-    passport.authenticate('google', 
-    { scope: ['email', 'profile'] })
-    )
+    this.get(
+      "/google",
+      ["PUBLIC"],
+      passport.authenticate("google", { scope: ["email", "profile"] })
+    );
 
-    this.get('/google/callback', ['PUBLIC'],
-      passport.authenticate('google', {
-        failureRedirect: '/google/failure'
+    this.get(
+      "/google/callback",
+      ["PUBLIC"],
+      passport.authenticate("google", {
+        failureRedirect: "/google/failure",
+      }),
+      (req, res) => {
+        console.log(req.user);
+        return res.redirect("/google/success");
       }
-    ), (req, res) => {
-      console.log(req.user)
-      return res.redirect('/google/success')
-    })
-    
+    );
+
     // this.get('/google/logout', ['PUBLIC'], (req, res) => {
     //   req.session.destroy()
     //   res.send('success')
     // })
+
+    this.post("/forgot-password", ["PUBLIC"], isLoggedIn, forgotPassword);
+
+    this.get("/reset-password", ["PUBLIC"], isLoggedIn, resetPassword);
+
+    this.post(
+      "/confirm-password",
+      ["PUBLIC"],
+      isLoggedIn,
+      password_validator,
+      confirmPassword
+    );
   }
 }
 

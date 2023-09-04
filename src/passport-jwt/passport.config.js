@@ -33,6 +33,7 @@ const initializePassport = () => {
     "jwt",
     new JWTStrategy(configStrategy, async (jwt_payload, done) => {
       try {
+        console.log("estamos en la strategy");
         let user = await userService.getUserByEmail(jwt_payload.email);
         if (user) {
           return done(null, { ...new UserDTO(user) });
@@ -44,40 +45,6 @@ const initializePassport = () => {
         return done(error, false);
       }
     })
-  );
-
-  // LOGIN
-
-  passport.use(
-    "login",
-    new Strategy(
-      { passReqToCallback: true, usernameField: "email" },
-      async (req, username, password, done) => {
-        try {
-          if (req.cookies.token) {
-            return done("You are already logged in", false);
-          }
-
-          let user = await userService.getUserByEmail(username);
-          if (!user) {
-            return done(null, false, "Invalid email or password");
-          }
-
-          const { password } = user;
-          let verified = compareSync(req.body.password, password);
-          if (!verified) {
-            return done(null, false, "Invalid password");
-          }
-
-          req.user = new UserDTO(user);
-
-          return done(null, { ...new UserDTO(user) });
-        } catch (error) {
-          logger.error(error.message);
-          done(error, false);
-        }
-      }
-    )
   );
 
   // REGISTER

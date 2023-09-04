@@ -6,25 +6,25 @@ POST http://localhost:8080/api/session/login HTTP/1.1
 Content-Type: application/json
 
 {
-    "email": "isra@admin.com",
+    "email": "israquirozzmail@gmail.com",
     "password": "Hola123$"
 }
+
+###
+POST http://localhost:8080/api/session/logout
 
 ###
 POST http://localhost:8080/api/session/register HTTP/1.1
 Content-Type: application/json
 
 {
-    "first_name": "Israel",
-    "last_name": "Quiroz",
-    "email": "israquirozzmail@gmail.com",
+    "first_name": "Prueba",
+    "last_name": "Prueba 2",
+    "email": "prueba2@prueba.com",
     "password": "Hola123$",
     "age": 22,
-    "role": "admin"
+    "role": "user"
 }
-
-###
-GET http://localhost:8080/api/session/logout
 
 ### GOOGLE
 GET http://localhost:8080/api/session/google/callback
