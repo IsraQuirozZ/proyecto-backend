@@ -1,6 +1,6 @@
-import { logger } from "./utils/logger.js";
+// import { logger } from "./utils/logger.js";
 import { httpServer } from "./server.js";
-import cluster from "node:cluster";
+// import cluster from "node:cluster";
 import { cpus } from "node:os";
 
 const processors = cpus().length;

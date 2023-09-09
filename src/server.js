@@ -38,6 +38,8 @@ import cookieParser from "cookie-parser";
 import config from "./config/config.js";
 import { addLogger, logger } from "./utils/logger.js";
 import session from "express-session";
+import swaggerJsDoc from "swagger-jsdoc";
+import swaggerUiExpress from "swagger-ui-express";
 
 const server = express();
 config.connectDB();
@@ -52,6 +54,20 @@ server.use(cookieParser());
 server.use("/public", express.static("public"));
 server.use(express.urlencoded({ extended: true }));
 server.use(express.json());
+
+const swaggerOptions = {
+  definition: {
+    openapi: "3.0.1", // Conjunto de reglas
+    info: {
+      title: "Documentación de app de DecorateMe",
+      description: "Api pensada para venta de decoración para el hogar",
+    },
+  },
+  apis: [`${__dirname}/docs/**/*.yaml`],
+};
+
+const specs = swaggerJsDoc(swaggerOptions);
+server.use("/docs", swaggerUiExpress.serve, swaggerUiExpress.setup(specs));
 
 server.use(addLogger);
 
