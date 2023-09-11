@@ -1,6 +1,6 @@
 import dotenv from "dotenv";
 import commander from "../utils/commander.js";
-import MongoSingleton from "./singletonMongoConnect.js";
+import MongoSingleton from "../utils/singletonMongoConnect.js";
 
 const { mode } = commander.opts();
 

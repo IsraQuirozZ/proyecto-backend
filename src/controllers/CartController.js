@@ -1,4 +1,4 @@
-import { logger } from "../config/logger.js";
+import { logger } from "../utils/logger.js";
 import CustomError from "../middlewares/error/CustomError.js";
 import EErrors from "../middlewares/error/enum.js";
 import { non_existentProductErrorInfo } from "../middlewares/error/generateProductInfo.js";

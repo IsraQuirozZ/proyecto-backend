@@ -1,3 +1,6 @@
 export default (req, res, next) => {
-    req.user ? next() : res.status(401)
-}
+  req.cookies.token
+    ? // ? res.status(401).json({ error: "You are already logged in" })
+      res.sendUserError(401, "You are already logged in")
+    : next();
+};

@@ -5,7 +5,6 @@ import ProductsRouter from "./ProductsRouter.js";
 import CartRouter from "./CartRouter.js";
 import sendMail from "../utils/sendMail.js";
 import MockingRouter from "./MockingRouter.js";
-import { logger } from "../config/logger.js";
 
 const router = Router();
 
@@ -14,9 +13,8 @@ router.use("/api/users", UserRouter.getRouter());
 router.use("/api/products", ProductsRouter.getRouter());
 router.use("/api/cart", CartRouter.getRouter());
 router.use("/api/mocking", MockingRouter.getRouter());
-});
 router.use("/api/gmail", async (req, res) => {
-  await sendMail();
+  await sendMail("israquirozzmail@gmail.com", "Test", "<h1>Hi<h1>");
   res.send("Email sended successfully");
 });
 // router.use('/api/logger', async (req, res) => {

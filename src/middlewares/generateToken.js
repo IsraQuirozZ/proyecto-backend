@@ -1,16 +1,12 @@
-import jwt from 'jsonwebtoken'
-import config from '../config/config.js'
-import UserDTO from '../dto/User.dto.js'
+import jwt from "jsonwebtoken";
+import config from "../config/config.js";
 
-export default (req, res, next) => {
-	console.log('token')
-	const token = jwt.sign(
-		{ ...new UserDTO(req.body.user) },
-		config.SECRET_JWT
-	)
-	res.cookie('token', token, {
-		maxAge: 60 * 60 * 24 * 7,
-		httpOnly: true
-	})
-	return next()
-}
+const generateToken = (user, expiration) => {
+  if (expiration) {
+    return jwt.sign({ user }, config.SECRET_JWT, { expiresIn: expiration });
+  } else {
+    return jwt.sign({ user }, config.SECRET_JWT);
+  }
+};
+
+export default generateToken;
