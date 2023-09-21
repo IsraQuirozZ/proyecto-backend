@@ -5,6 +5,7 @@ import {
   non_existentProductErrorInfo,
 } from "../middlewares/error/generateProductInfo.js";
 import EError from "../middlewares/error/enum.js";
+import { logger } from "../utils/logger.js";
 
 class ProductController {
   getProducts = async (req, res) => {
