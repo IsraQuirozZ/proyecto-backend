@@ -16,7 +16,7 @@ const {
 
 class CartRouter extends MainRouter {
   init() {
-    this.get("/", ["PUBLIC"], getCarts);
+    this.get("/", ["ADMIN"], getCarts);
     this.get(
       "/:cid",
       ["USER", "ADMIN"],

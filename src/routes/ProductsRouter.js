@@ -8,7 +8,7 @@ class ProductsRouter extends MainRouter {
   init() {
     this.get("/", ["PUBLIC"], getProducts);
     this.get("/:pid", ["PUBLIC"], getProduct);
-    this.post("/", ["PUBLIC"], createProduct);
+    this.post("/", ["ADMIN"], createProduct); // PREMIUM
     this.put("/:pid", ["ADMIN"], updateProduct);
     this.delete("/:pid", ["ADMIN"], deleteProduct);
   }

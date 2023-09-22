@@ -13,7 +13,7 @@ class UserController {
       let foundUsers = await userService.getUsers();
       let users = [];
 
-      if (foundUsers) {
+      if (foundUsers.length > 0) {
         foundUsers.forEach((user) => {
           users.push(new UserDTO(user));
         });
@@ -117,6 +117,11 @@ class UserController {
   login = async (req, res) => {
     try {
       let user = await userService.getUserByEmail(req.body.email);
+      let last_connection = new Date().toLocaleString(undefined, {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
+      });
 
       if (!user) {
         return res.sendUserError(400, "Invalid email or password");
@@ -128,7 +133,7 @@ class UserController {
       if (!verified) {
         return res.sendUserError(400, "Invalid email or password");
       }
-
+      user = await userService.updateUser(user._id, { last_connection });
       user = new UserDTO(user);
 
       let token = jwt.sign({ user }, process.env.SECRET_JWT);
@@ -138,7 +143,7 @@ class UserController {
           maxAge: 60 * 60 * 24 * 7,
           httpOnly: true,
         })
-        .sendSuccess(200, { user, cookies: req.cookies.token });
+        .sendSuccess(200, { user });
     } catch (error) {
       logger.error(error);
       return res.sendServerError(500, error);
@@ -235,6 +240,11 @@ class UserController {
       return res.sendServerError(500, "Interval server error");
     }
   };
+
+  // UPLOAD DOCUMENTS
+  //req.files
+
+  // CHANGE USER ROL
 }
 
 export default new UserController();

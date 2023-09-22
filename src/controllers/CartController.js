@@ -154,6 +154,10 @@ class CartController {
         products: cartFound.products,
       });
 
+      await productService.updateProduct(productId, {
+        stock: productFound.stock - units,
+      });
+
       return res.sendSuccess(200, cart);
     } catch (error) {
       logger.error(error);
@@ -190,14 +194,22 @@ class CartController {
 
       /* Check if the stock of a product is greater than or equal to the units to be added to the cart 
       and subtracted to the product stock. */
-      productInCart.units > units
-        ? (productInCart.units -= units)
-        : (cartFound = {
-            ...cartFound,
-            products: cartFound.products.filter(
-              (product) => String(product.pid) !== productId
-            ),
-          });
+      if (productInCart.units > units) {
+        productInCart.units -= units;
+        await productService.updateProduct(productId, {
+          stock: productFound.stock + units,
+        });
+      } else {
+        cartFound = {
+          ...cartFound,
+          products: cartFound.products.filter(
+            (product) => String(product.pid) !== productId
+          ),
+        };
+        await productService.updateProduct(productId, {
+          stock: productFound.stock + productInCart.units,
+        });
+      }
 
       let cart = await cartService.deleteProduct(cartId, {
         products: cartFound.products,

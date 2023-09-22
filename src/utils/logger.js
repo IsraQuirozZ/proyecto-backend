@@ -61,7 +61,9 @@ if (config.MODE === "development") {
 const addLogger = (req, res, next) => {
   req.logger = logger;
   req.logger.info(
-    `${req.method} in ${req.url} - ${new Date().toLocaleString()}`
+    `${req.method} in route: ${
+      req.url
+    } - at time: ${new Date().toLocaleString()}`
   );
   next();
 };
