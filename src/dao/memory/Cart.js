@@ -22,7 +22,6 @@ class CartManager {
     return this.carts;
   }
 
-
   getCart(cartId) {
     return this.carts.find((cart) => cart.id === cartId);
   }

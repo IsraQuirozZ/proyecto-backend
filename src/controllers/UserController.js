@@ -65,10 +65,7 @@ class UserController {
       }
 
       let userData = req.body;
-      if (
-        // De momento que no se pueda cambiar ni el rol ni la contraseña
-        Object.entries(userData).length !== 0
-      ) {
+      if (Object.entries(userData).length !== 0) {
         if (
           !("cid" in userData) &&
           !("role" in userData) &&
@@ -168,12 +165,13 @@ class UserController {
       user = new UserDTO(user);
 
       let token = jwt.sign({ user }, config.SECRET_JWT);
-      res.cookie("token", token, {
-        maxAge: 60 * 60 * 60 * 24 * 7,
-        httpOnly: true,
-      });
 
-      return res.sendSuccess(200, { user });
+      return res
+        .cookie("token", token, {
+          maxAge: 60 * 60 * 60 * 24 * 7,
+          httpOnly: true,
+        })
+        .sendSuccess(200, { user });
     } catch (error) {
       logger.error(error);
       return res.sendServerError(500, error);
@@ -245,7 +243,7 @@ class UserController {
   confirmPassword = async (req, res) => {
     try {
       let { password, confirmPassword, token } = req.body;
-      // Ya se aplica el middleware donde indica que la contraseña debe tener ciertos caracteres
+
       if (password !== confirmPassword) {
         return res.sendUserError(400, "Passwords do not match");
       }
@@ -270,11 +268,6 @@ class UserController {
       return res.sendServerError(500, "Interval server error");
     }
   };
-
-  // UPLOAD DOCUMENTS
-  //req.files
-
-  // CHANGE USER ROL
 }
 
 export default new UserController();

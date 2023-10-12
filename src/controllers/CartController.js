@@ -229,7 +229,6 @@ class CartController {
 
       for (const product of cartProducts) {
         let productId = product.pid;
-        console.log(productId);
         let productInCart = await productService.getProduct(productId);
         await productService.updateProduct(productId, {
           stock: productInCart.stock + product.units,

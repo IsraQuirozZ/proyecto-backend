@@ -1,13 +1,11 @@
 import MainRouter from "./Router.js";
 import passportCall from "../middlewares/passportCall.js";
-import authJwt from "../passport-jwt/authJwt.js";
 import password_validator from "../middlewares/passwordValidator.js";
 import registerValidator from "../middlewares/registerValidator.js";
 import createHash from "../middlewares/createHash.js";
 import UserController from "../controllers/UserController.js";
 import passport from "passport";
 import isLoggedIn from "../middlewares/isLoggedIn.js";
-import isPasswordValid from "../middlewares/isPasswordValid.js";
 
 const {
   register,

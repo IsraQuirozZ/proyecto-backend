@@ -41,15 +41,9 @@ class MainRouter {
   handlePolicies = (policies) => (req, res, next) => {
     if (policies[0] === "PUBLIC") return next();
     if (!req.cookies.token) {
-      // return res
-      //   .status(401)
-      //   .send({ status: "error", error: "Unauthenticated, No hay cookies" });
-      CustomError.createError({
-        name: "Policies error",
-        cause: "Unauthenticated",
-        message: "Access denied",
-        code: EErrors.AUTH_ERROR,
-      });
+      return res
+        .status(401)
+        .send({ status: "error", error: "Unauthenticated, No hay cookies" });
     }
     let user = jwt.verify(req.cookies.token, config.SECRET_JWT).user;
     if (!policies.includes(user.role?.toUpperCase())) {
