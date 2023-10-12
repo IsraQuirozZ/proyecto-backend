@@ -161,7 +161,6 @@ class CartController {
       return res.sendSuccess(200, cart);
     } catch (error) {
       logger.error(error);
-      // return res.sendServerError(500, error); // error: updating cart
       next(error);
     }
   };
@@ -226,12 +225,19 @@ class CartController {
     try {
       let cartId = req.params.cid;
       let cartFound = await cartService.getCart(cartId);
+      let cartProducts = cartFound.products;
 
-      // if (!cartFound) res.sendUserError(404, "Cart not found");
+      for (const product of cartProducts) {
+        let productId = product.pid;
+        console.log(productId);
+        let productInCart = await productService.getProduct(productId);
+        await productService.updateProduct(productId, {
+          stock: productInCart.stock + product.units,
+        });
+      }
 
-      let cart = await cartService.clearCart(cartId, { products: [] });
-
-      return res.sendSuccess(200, cart);
+      await cartService.clearCart(cartId, { products: [] });
+      return res.sendSuccess(200, "The products in cart were deleted");
     } catch (error) {
       logger.error(error);
       return res.sendServerError(500, error);
@@ -243,10 +249,7 @@ class CartController {
       const cartId = req.params.cid;
       const cart = await cartService.getCart(cartId);
 
-      // NO NECESITA ESTO POR QUE SE MANEJA CON LOS MIDDLEWARES (BORRAR CUANDO LO VEAS JEJE)
-      // if (!cart) {
-      //   return res.sendUserError(404, "Cart not found");
-      // }
+      if (!cart) return res.sendUserError(404, "Cart not found");
 
       if (cart.products.length === 0) {
         return res.sendUserError(400, "No products in cart");

@@ -11,7 +11,6 @@ const {
   deleteProduct,
   clearCart,
   purchase,
-  deleteCart,
 } = CartController;
 
 class CartRouter extends MainRouter {
@@ -19,45 +18,45 @@ class CartRouter extends MainRouter {
     this.get("/", ["ADMIN"], getCarts);
     this.get(
       "/:cid",
-      ["USER", "ADMIN"],
+      ["USER", "ADMIN", "PREMIUM"],
       passportCall("jwt"),
       validateCart,
       getCart
     );
     this.get(
       "/bill/:cid",
-      ["USER", "ADMIN"],
+      ["USER", "ADMIN", "PREMIUM"],
       passportCall("jwt"),
       validateCart,
       getCartBill
     );
+    this.post(
+      "/:cid/purchase",
+      ["USER", "PREMIUM"],
+      passportCall("jwt"),
+      validateCart,
+      purchase
+    );
     this.put(
       "/:cid/product/:pid/:units",
-      ["USER"],
+      ["USER", "PREMIUM"],
       passportCall("jwt"),
       validateCart,
       addProduct
     );
     this.delete(
       "/:cid/product/:pid/:units",
-      ["USER"],
+      ["USER", "PREMIUM"],
       passportCall("jwt"),
       validateCart,
       deleteProduct
     );
     this.delete(
       "/:cid",
-      ["USER"],
+      ["USER", "PREMIUM"],
       passportCall("jwt"),
       validateCart,
       clearCart
-    );
-    this.post(
-      "/:cid/purchase",
-      ["USER"],
-      passportCall("jwt"),
-      validateCart,
-      purchase
     );
   }
 }

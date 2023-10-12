@@ -2,6 +2,8 @@ import { Router } from "express";
 import jwt from "jsonwebtoken";
 import { logger } from "../utils/logger.js";
 import config from "../config/config.js";
+import CustomError from "../middlewares/error/CustomError.js";
+import EErrors from "../middlewares/error/enum.js";
 
 class MainRouter {
   constructor() {
@@ -39,9 +41,15 @@ class MainRouter {
   handlePolicies = (policies) => (req, res, next) => {
     if (policies[0] === "PUBLIC") return next();
     if (!req.cookies.token) {
-      return res
-        .status(401)
-        .send({ status: "error", error: "Unauthenticated" });
+      // return res
+      //   .status(401)
+      //   .send({ status: "error", error: "Unauthenticated, No hay cookies" });
+      CustomError.createError({
+        name: "Policies error",
+        cause: "Unauthenticated",
+        message: "Access denied",
+        code: EErrors.AUTH_ERROR,
+      });
     }
     let user = jwt.verify(req.cookies.token, config.SECRET_JWT).user;
     if (!policies.includes(user.role?.toUpperCase())) {

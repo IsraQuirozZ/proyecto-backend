@@ -108,6 +108,37 @@ class UserController {
     }
   };
 
+  deleteUsers = async (req, res) => {
+    try {
+      const allUsers = await userService.getUsers();
+      const today = new Date();
+
+      const usersToDelete = allUsers.filter((user) => {
+        const dateToCompare = new Date(user.last_connection);
+        const timeDifference = today - dateToCompare;
+        if (isNaN(timeDifference)) {
+          return true;
+        }
+        const daysDifference = timeDifference / (1000 * 60 * 60 * 24);
+        return daysDifference >= 2;
+      });
+
+      for (const user of usersToDelete) {
+        await userService.deleteUser(user._id);
+        await cartService.deleteCart(user.cid);
+        await sendMail(
+          user.email,
+          "Your account was deleted",
+          `<p>We have deleted your account due to lack of inactivity</p> `
+        );
+      }
+
+      return res.sendSuccess(200, { deletedUsers: usersToDelete });
+    } catch (error) {
+      return res.sendServerError(500, error);
+    }
+  };
+
   //REGISTER
   register = (req, res) => {
     return res.sendSuccess(201, "User registred successfully");
@@ -136,14 +167,13 @@ class UserController {
       user = await userService.updateUser(user._id, { last_connection });
       user = new UserDTO(user);
 
-      let token = jwt.sign({ user }, process.env.SECRET_JWT);
+      let token = jwt.sign({ user }, config.SECRET_JWT);
+      res.cookie("token", token, {
+        maxAge: 60 * 60 * 60 * 24 * 7,
+        httpOnly: true,
+      });
 
-      return res
-        .cookie("token", token, {
-          maxAge: 60 * 60 * 24 * 7,
-          httpOnly: true,
-        })
-        .sendSuccess(200, { user });
+      return res.sendSuccess(200, { user });
     } catch (error) {
       logger.error(error);
       return res.sendServerError(500, error);
