@@ -1,36 +1,27 @@
 ###
-POST http://localhost:8080/api/session/current
-
-###
 POST http://localhost:8080/api/session/register HTTP/1.1
 Content-Type: application/json
 
 {
-    "first_name": "Isra",
+    "first_name": "Profe",
     "last_name": "User",
-    "email": "isra@user.com",
+    "email": "profe@user.com",
     "password": "Hola123$",
-    "age": 22
+    "age": 22,
+    "role": "admin"
 }
 
-###
+### 
 POST http://localhost:8080/api/session/login HTTP/1.1
 Content-Type: application/json
 
 {
-    "email": "isra@user.com",
+    "email": "profe@user.com",
     "password": "Hola123$"
 }
-# POST http://localhost:8080/api/session/login HTTP/1.1
-# Content-Type: application/json
-
-# {
-#     "email": "israquirozzmail@gmail.com",
-#     "password": "Hola123$"
-# }
 
 ###
-GET http://localhost:8080/api/session/logout
+DELETE http://localhost:8080/api/session/logout
 
 ### GOOGLE
 GET http://localhost:8080/api/session/google/callback
@@ -40,3 +31,16 @@ POST http://localhost:8080/api/session/forgot-password HTTP/1.1
 Content-Type: application/json
 
 {"email": "israquirozzmail@gmail.com"}
+
+###
+GET http://localhost:8080/api/session/reset-password
+
+###
+POST http://localhost:8080/api/session/confirm-password HTTP/1.1
+Content-Type: application/json
+
+{
+    password: "NewPassword1$", 
+    confirmPassword: "NewPassword1$",
+    token: 
+}

@@ -2,21 +2,25 @@
 GET http://localhost:8080/api/products
 
 ###
-GET http://localhost:8080/api/products/648756a3387dbab73002f32e 
+GET http://localhost:8080/api/products/64876609909621773a0d4e36 
 
 ###
 POST http://localhost:8080/api/products HTTP/1.1
 Content-Type: application/json
 
 {
-    "name": "product",
-    "description": "lorem ipsum dolor sit amet, consectetur",
+    "name": "Producto Premium 3",
+    "description": "Abstract metal wall art sculpture for a modern touch",
     "category": "Art",
-    "price": 20,
+    "price": 89.99,
+    "thumbnail": "imagen Premium",
+    "stock": 25,
+    "rating": 5,
+    "__v": 0
 }
 
 ###
-PUT http://localhost:8080/api/products/648b9b6f3b4ab23a82357f83 HTTP/1.1
+PUT http://localhost:8080/api/products/65284ee67c7cc2ece63e40f6 HTTP/1.1
 Content-Type: application/json
 
 {
@@ -24,4 +28,4 @@ Content-Type: application/json
 }
 
 ###
-DELETE  http://localhost:8080/api/products/648b9b6f3b4ab23a82357a82
+DELETE  http://localhost:8080/api/products/652850549c4015cf744a7c67

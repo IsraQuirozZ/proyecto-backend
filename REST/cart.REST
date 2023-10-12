@@ -3,13 +3,19 @@
 GET http://localhost:8080/api/cart
 
 ### getCart
-GET http://localhost:8080/api/cart/64cc3d666d318b64ea92b221
+GET http://localhost:8080/api/cart/652844c632656bc6442e98e8
 
-### addProducts
-PUT http://localhost:8080/api/cart/650cb363a65e3b7aae3de97c/product/648756a3387dbab73002f32e/5
+### getCartBill
+GET http://localhost:8080/api/cart/bill/652844c632656bc6442e98e8
 
 ### purchase
 POST http://localhost:8080/api/cart/64cabdbf0627c82829900268/purchase
 
+### addProduct
+PUT http://localhost:8080/api/cart/652844c632656bc6442e98e8/product/65284ee67c7cc2ece63e40f6/2
+
+### deleteProduct
+http://localhost:8080/api/cart/652844c632656bc6442e98e8/product/64876609909621773a0d4e36/1
+
 ### clearCart
-DELETE http://localhost:8080/api/cart/64ca5c45e82a548eec605769
+DELETE http://localhost:8080/api/cart/652844c632656bc6442e98e8
