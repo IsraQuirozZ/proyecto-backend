@@ -23,6 +23,7 @@ let schema = new Schema({
   thumbnail: { type: String, required: true },
   stock: { type: Number, default: 25 },
   rating: { type: Number, default: 0 },
+  owner: { type: String, default: "admin" },
 });
 
 schema.plugin(mongoosePaginate);

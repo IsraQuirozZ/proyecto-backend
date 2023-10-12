@@ -34,15 +34,14 @@ class SessionRouter extends MainRouter {
       register
     );
 
-    this.post("/logout", ["USER", "ADMIN"], passportCall("jwt"), logout);
-
-    this.post(
-      "/current",
-      ["USER", "ADMIN"],
+    this.delete(
+      "/logout",
+      ["PREMIUM", "USER", "ADMIN"],
       passportCall("jwt"),
-      authJwt("user"),
-      current
+      logout
     );
+
+    this.get("/current", ["USER", "ADMIN"], current);
 
     this.get(
       "/google",
@@ -61,11 +60,6 @@ class SessionRouter extends MainRouter {
         return res.redirect("/google/success");
       }
     );
-
-    // this.get('/google/logout', ['PUBLIC'], (req, res) => {
-    //   req.session.destroy()
-    //   res.send('success')
-    // })
 
     this.post("/forgot-password", ["PUBLIC"], isLoggedIn, forgotPassword);
 

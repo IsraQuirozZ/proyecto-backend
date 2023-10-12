@@ -6,6 +6,7 @@ import {
 } from "../middlewares/error/generateProductInfo.js";
 import EError from "../middlewares/error/enum.js";
 import { logger } from "../utils/logger.js";
+import sendMail from "../utils/sendMail.js";
 
 class ProductController {
   getProducts = async (req, res) => {
@@ -69,6 +70,7 @@ class ProductController {
         thumbnail,
         stock,
         rating,
+        owner: req.user.email,
       });
       return res.sendSuccess(201, {
         response: newProduct,
@@ -82,19 +84,34 @@ class ProductController {
   updateProduct = async (req, res, next) => {
     try {
       let id = req.params.pid;
+      let product = await productService.getProduct(id);
       let productData = req.body;
+      let user = req.user;
       let response;
+
+      if (!product) return res.sendUserError(400, "The product doesnt exist");
+
       if (Object.entries(productData).length !== 0) {
-        let product = await productService.updateProduct(id, productData);
-        if (product) {
-          response = { product };
+        if (user.role === "admin" || user.email === product.owner) {
+          let updatedProduct = await productService.updateProduct(
+            id,
+            productData
+          );
+          if (updatedProduct) {
+            response = { updatedProduct };
+          } else {
+            CustomError.createError({
+              name: "Product update error",
+              cause: non_existentProductErrorInfo(id),
+              message: "Error trying to update the product",
+              code: EError.DATABASE_ERROR,
+            });
+          }
         } else {
-          CustomError.createError({
-            name: "Product update error",
-            cause: non_existentProductErrorInfo(id),
-            message: "Error trying to update the product",
-            code: EError.DATABASE_ERROR,
-          });
+          return res.sendUserError(
+            400,
+            "You do not have the credentials to modify this product"
+          );
         }
       } else {
         response = "There's nothing to update";
@@ -109,22 +126,32 @@ class ProductController {
   deleteProduct = async (req, res, next) => {
     try {
       let id = req.params.pid;
-      let product = await productService.deleteProduct(id);
-      if (product) {
+      let user = req.user;
+      let product = await productService.getProduct(id);
+
+      if (!product) return res.sendUserError(400, "The product doesnt exist");
+
+      if (user.role === "admin" || user.email === product.owner) {
+        await productService.deleteProduct(id);
+        if (product.owner !== "admin") {
+          sendMail(
+            product.owner,
+            "Your product was deleted",
+            `
+                <p>The product "${product.name}" has been deleted.</p>
+              `
+          );
+        }
         return res.sendSuccess(200, `Product '${product._id}' deleted`);
       } else {
-        // return res.sendUserError(404, "Product not found");
-        CustomError.createError({
-          name: "Product deletion error",
-          cause: non_existentProductErrorInfo(id),
-          message: "Error trying to delete the product",
-          code: EError.DATABASE_ERROR,
-        });
+        return res.sendUserError(
+          400,
+          "You do not have the credentials to delete this product"
+        );
       }
     } catch (error) {
       logger.error(error);
       next(error);
-      // res.sendServerError(500, error);
     }
   };
 }

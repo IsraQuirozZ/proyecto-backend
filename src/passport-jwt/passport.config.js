@@ -33,8 +33,7 @@ const initializePassport = () => {
     "jwt",
     new JWTStrategy(configStrategy, async (jwt_payload, done) => {
       try {
-        console.log("estamos en la strategy");
-        let user = await userService.getUserByEmail(jwt_payload.email);
+        let user = await userService.getUserByEmail(jwt_payload.user.email);
         if (user) {
           return done(null, { ...new UserDTO(user) });
         } else {

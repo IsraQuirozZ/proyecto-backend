@@ -1,17 +1,23 @@
 import MainRouter from "./Router.js";
 import UserController from "../controllers/UserController.js";
-// import passportCall from "../middlewares/passportCall.js";
 
-const { getUsers, getUser, getUserByEmail, updateUser, deleteUser } =
-  UserController;
+const {
+  getUsers,
+  getUser,
+  getUserByEmail,
+  updateUser,
+  deleteUser,
+  deleteUsers,
+} = UserController;
 
 class UserRouter extends MainRouter {
   init() {
-    this.get("/", ["ADMIN"], getUsers);
-    this.get("/:uid", ["ADMIN"], getUser);
+    this.get("/", ["PUBLIC"], getUsers);
+    this.get("/:uid", ["USER", "ADMIN"], getUser);
     this.post("/", ["ADMIN"], getUserByEmail);
-    this.put("/:uid", ["USER", "ADMIN"], updateUser); // Poder cambiar contraseña -->
-    this.delete("/:uid", ["ADMIN"], deleteUser); // y USER para borrar cuenta -->
+    this.put("/:uid", ["USER", "ADMIN"], updateUser);
+    this.delete("/:uid", ["ADMIN"], deleteUser);
+    this.delete("/", ["ADMIN"], deleteUsers);
   }
 }
 
