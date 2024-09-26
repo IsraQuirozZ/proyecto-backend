@@ -15,11 +15,13 @@ let schema = new Schema({
   role: {
     type: String,
     required: true,
-    enum: ["user", "admin"],
+    enum: ["user", "admin", "premium"],
     default: "user",
   },
   password: { type: String, required: true },
   cid: { type: Types.ObjectId, ref: "carts", unique: true },
+  documents: [{ name: String, reference: String }],
+  last_connection: { type: String },
 });
 
 let User = model(collection, schema);

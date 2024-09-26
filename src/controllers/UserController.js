@@ -13,7 +13,7 @@ class UserController {
       let foundUsers = await userService.getUsers();
       let users = [];
 
-      if (foundUsers) {
+      if (foundUsers.length > 0) {
         foundUsers.forEach((user) => {
           users.push(new UserDTO(user));
         });
@@ -65,10 +65,7 @@ class UserController {
       }
 
       let userData = req.body;
-      if (
-        // De momento que no se pueda cambiar ni el rol ni la contraseña
-        Object.entries(userData).length !== 0
-      ) {
+      if (Object.entries(userData).length !== 0) {
         if (
           !("cid" in userData) &&
           !("role" in userData) &&
@@ -108,6 +105,37 @@ class UserController {
     }
   };
 
+  deleteUsers = async (req, res) => {
+    try {
+      const allUsers = await userService.getUsers();
+      const today = new Date();
+
+      const usersToDelete = allUsers.filter((user) => {
+        const dateToCompare = new Date(user.last_connection);
+        const timeDifference = today - dateToCompare;
+        if (isNaN(timeDifference)) {
+          return true;
+        }
+        const daysDifference = timeDifference / (1000 * 60 * 60 * 24);
+        return daysDifference >= 2;
+      });
+
+      for (const user of usersToDelete) {
+        await userService.deleteUser(user._id);
+        await cartService.deleteCart(user.cid);
+        await sendMail(
+          user.email,
+          "Your account was deleted",
+          `<p>We have deleted your account due to lack of inactivity</p> `
+        );
+      }
+
+      return res.sendSuccess(200, { deletedUsers: usersToDelete });
+    } catch (error) {
+      return res.sendServerError(500, error);
+    }
+  };
+
   //REGISTER
   register = (req, res) => {
     return res.sendSuccess(201, "User registred successfully");
@@ -117,6 +145,11 @@ class UserController {
   login = async (req, res) => {
     try {
       let user = await userService.getUserByEmail(req.body.email);
+      let last_connection = new Date().toLocaleString(undefined, {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
+      });
 
       if (!user) {
         return res.sendUserError(400, "Invalid email or password");
@@ -128,17 +161,17 @@ class UserController {
       if (!verified) {
         return res.sendUserError(400, "Invalid email or password");
       }
-
+      user = await userService.updateUser(user._id, { last_connection });
       user = new UserDTO(user);
 
-      let token = jwt.sign({ user }, process.env.SECRET_JWT);
+      let token = jwt.sign({ user }, config.SECRET_JWT);
 
       return res
         .cookie("token", token, {
-          maxAge: 60 * 60 * 24 * 7,
+          maxAge: 60 * 60 * 60 * 24 * 7,
           httpOnly: true,
         })
-        .sendSuccess(200, { user, cookies: req.cookies.token });
+        .sendSuccess(200, { user });
     } catch (error) {
       logger.error(error);
       return res.sendServerError(500, error);
@@ -210,7 +243,7 @@ class UserController {
   confirmPassword = async (req, res) => {
     try {
       let { password, confirmPassword, token } = req.body;
-      // Ya se aplica el middleware donde indica que la contraseña debe tener ciertos caracteres
+
       if (password !== confirmPassword) {
         return res.sendUserError(400, "Passwords do not match");
       }

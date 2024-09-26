@@ -7,6 +7,8 @@ class UserDTO {
     this.email = user.email;
     this.role = user.role;
     this.cid = user.cid;
+    this.documents = user.documents;
+    this.last_connection = user.last_connection;
   }
 }
 

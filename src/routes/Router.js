@@ -2,6 +2,8 @@ import { Router } from "express";
 import jwt from "jsonwebtoken";
 import { logger } from "../utils/logger.js";
 import config from "../config/config.js";
+import CustomError from "../middlewares/error/CustomError.js";
+import EErrors from "../middlewares/error/enum.js";
 
 class MainRouter {
   constructor() {
@@ -41,9 +43,9 @@ class MainRouter {
     if (!req.cookies.token) {
       return res
         .status(401)
-        .send({ status: "error", error: "Unauthenticated" });
+        .send({ status: "error", error: "Unauthenticated, No hay cookies" });
     }
-    let user = jwt.verify(req.cookies.token, config.SECRET_JWT);
+    let user = jwt.verify(req.cookies.token, config.SECRET_JWT).user;
     if (!policies.includes(user.role?.toUpperCase())) {
       return res.status(403).send({ status: "error", error: "Unauthorized" });
     }
